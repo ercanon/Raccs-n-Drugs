@@ -44,5 +44,7 @@ public class FirstPersonMovement : MonoBehaviour
         rigidbody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
 
         //Apply rotation.
+        if (rigidbody.velocity.normalized <= 0)
+        transform.rotation = Quaternion.Slerp (transform.rotation, Quaternion.LookRotation (rigidbody.velocity), Time.deltaTime * 40f);
     }
 }
