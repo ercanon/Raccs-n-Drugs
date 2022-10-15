@@ -38,13 +38,21 @@ public class FirstPersonMovement : MonoBehaviour
         }
 
         // Get targetVelocity from input.
-        Vector2 targetVelocity =new Vector2( Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
+        Vector2 targetVelocity = new Vector2( Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
 
         // Apply movement.
         rigidbody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
 
         //Apply rotation.
-        if (rigidbody.velocity.normalized <= 0)
-        transform.rotation = Quaternion.Slerp (transform.rotation, Quaternion.LookRotation (rigidbody.velocity), Time.deltaTime * 40f);
+        if (rigidbody.velocity.magnitude > 0)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rigidbody.velocity), Time.deltaTime * 10f);
+
+            //Apply Animation
+            if (IsRunning) 
+                anim.Play("Running");
+            else
+                anim.Play("Walking");
+        }
     }
 }
