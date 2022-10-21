@@ -34,8 +34,8 @@ public class ServerTCP : MonoBehaviour
         Socket newClient = serverSocket.Accept();
 		ChatBox.text += "client deceived {" + newClient.RemoteEndPoint + "}";
         clientSocket = newClient;
-        receiveThread = new Thread(Receiving);
-        receiveThread.Start();
+        //receiveThread = new Thread(Receiving);
+        //receiveThread.Start();
     }
     void Receiving()
     {

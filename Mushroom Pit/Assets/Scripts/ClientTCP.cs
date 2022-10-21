@@ -9,12 +9,17 @@ public class ClientTCP : MonoBehaviour
 {
     Socket clientSocket;
     Thread listenThread;
+    //
+    public InputField ServerIP;
+    public InputField Port;
+    public InputField Message;
+    public Text ChatBox;
     public void ConnectToServer()
     {
         Debug.Log("attempt connect");
         clientSocket = new Socket(AddressFamily.InterNetwork,
             SocketType.Stream, ProtocolType.Tcp);
-        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8008);
+        IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(ServerIP.text ?? "127.0.0.1"), int.Parse(Port.text ?? "8008"));
         clientSocket.Connect(ipep);
     }
     public void SendM()

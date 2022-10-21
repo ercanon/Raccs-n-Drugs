@@ -653,6 +653,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d4d74fb446fcd41ab6d8106d0d6c62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ServerIP: {fileID: 1306047538}
+  Port: {fileID: 1335140800}
+  Message: {fileID: 359643046}
+  ChatBox: {fileID: 1093751827}
 --- !u!4 &597467153
 Transform:
   m_ObjectHideFlags: 0
