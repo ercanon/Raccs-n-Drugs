@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
@@ -20,8 +21,7 @@ public class ServerTCP : MonoBehaviour
     public Text ChatBox;
     public void OpenServer()
     {
-        serverSocket = new Socket(AddressFamily.InterNetwork,
-            SocketType.Stream, ProtocolType.Tcp);
+        serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(ServerIP.text ?? "127.0.0.1"), int.Parse(Port.text ?? "8008"));
         serverSocket.Bind(ipep);
         listenThread = new Thread(Listening);
