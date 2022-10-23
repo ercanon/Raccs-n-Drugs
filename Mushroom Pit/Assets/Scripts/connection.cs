@@ -80,8 +80,8 @@ public class connection : MonoBehaviour
 	}
 	void customLog(string x, bool nl = true)
 	{
-		//string shrt = x.TrimEnd('\0');
-		log += x; if (nl) log += '\n';
+		string shrt = x.TrimEnd('\0');
+		log += shrt; if (nl) log += '\n';
 	}
 
 	/*---------------------HOST-------------------*/
