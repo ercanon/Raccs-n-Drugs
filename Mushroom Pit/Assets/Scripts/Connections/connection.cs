@@ -80,6 +80,7 @@ public class connection : MonoBehaviour
 	}
 	void customLog(string x, bool nl = true)
 	{
+		//string shrt = x.TrimEnd('\0');
 		log += x; if (nl) log += '\n';
 	}
 
@@ -186,7 +187,7 @@ public class connection : MonoBehaviour
 					}
 					byte[] data = new byte[1024];
 					data = Encoding.UTF8.GetBytes(enterUserName.text + " joined the server!");
-					socketClient.Send(data, data.Length, SocketFlags.None);
+					socketClient.Send(data);
 
 					threadClient = new Thread(HearServer);
 					threadClient.Start();
