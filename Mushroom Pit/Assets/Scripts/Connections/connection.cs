@@ -22,8 +22,8 @@ public class connection : MonoBehaviour
 	public Text ChatBox;
 	public Text enterMessage;
 	string log;
-	byte[] data;
 	EndPoint remote;
+
 	void Reset()
 	{
 		protocol = Protocol.TCP;
@@ -41,7 +41,6 @@ public class connection : MonoBehaviour
 		if (clients != null) clients.Clear();
 		clients = new List<Socket>();
 		log = null;
-		data = new byte[1024];//memleak?
 		remote = (EndPoint)(new IPEndPoint(IPAddress.Any, 0));
 	}
 	void Awake()
@@ -56,8 +55,23 @@ public class connection : MonoBehaviour
 	public void ChangeProfile(int val)
 	{
 		profile = (Profile)val;
+		switch (profile)
+        {
+			case Profile.client:
+				GameObject.Find("ClientButtons").SetActive(true);
+				GameObject.Find("CreateGame").SetActive(false);
+				break;
+			case Profile.server:
+				GameObject.Find("ClientButtons").SetActive(false);
+				GameObject.Find("CreateGame").SetActive(true);
+				break;
+			default:
+				break;
+
+		}
 		Reset();
 	}
+
 	void Update()
 	{
 		if (log != null) { ChatBox.text += log; log = null; }
@@ -66,15 +80,18 @@ public class connection : MonoBehaviour
 	{
 		log += x; if (nl) log += '\n';
 	}
+
+	/*---------------------HOST-------------------*/
 	public void CreateGame()
 	{
-		if (protocol == Protocol.TCP) socketServer =
-				new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-		else if (protocol == Protocol.UDP) socketServer =
-				new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+		if (protocol == Protocol.TCP) 
+			socketServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+		else if (protocol == Protocol.UDP) 
+			socketServer = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 		IPEndPoint ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
 		socketServer.Bind(ipep);
 		customLog(enterUserName.text + "'s game available at " + socketServer.LocalEndPoint);
+		
 		threadServer = new Thread(WaitingPlayers);
 		threadServer.Start();
 		if (protocol == Protocol.TCP)
@@ -85,26 +102,32 @@ public class connection : MonoBehaviour
 	}
 	void WaitingPlayers()
 	{
-		if (protocol == Protocol.TCP)
+		switch (protocol)
 		{
-			socketServer.Listen(2);
-			Socket newClient = socketServer.Accept();
-			clients.Add(newClient);
-			customLog("client deceived " + clients[^1].RemoteEndPoint);
-			data = Encoding.UTF8.GetBytes("u joined server!");
-			socketServer.Send(data, data.Length, SocketFlags.None);
-		}
-		if (protocol == Protocol.UDP)
-		{
-			int recv = socketServer.ReceiveFrom(data, ref remote);
-			customLog(remote.ToString() + " spoke");
-			socketServer.SendTo(data, data.Length, SocketFlags.None, remote);
-			while (true)
-			{
-				recv = socketServer.ReceiveFrom(data, ref remote);
-				string msg = Encoding.UTF8.GetString(data, 0, recv);
-				socketServer.SendTo(data, recv, SocketFlags.None, remote);
-			}
+			case Protocol.TCP:
+				{
+					socketServer.Listen(2);
+					Socket newClient = socketServer.Accept();
+					clients.Add(newClient);
+					customLog("client deceived " + clients[^1].RemoteEndPoint);
+					break;
+				}
+			case Protocol.UDP:
+				{
+					byte[] data = new byte[1024];
+					int recv = socketServer.ReceiveFrom(data, ref remote);
+					customLog(remote.ToString() + " spoke");
+					socketServer.SendTo(data, data.Length, SocketFlags.None, remote);
+					while (true)
+					{
+						recv = socketServer.ReceiveFrom(data, ref remote);
+						string msg = Encoding.UTF8.GetString(data, 0, recv);
+						socketServer.SendTo(data, recv, SocketFlags.None, remote);
+					}
+					break;
+				}
+			default:
+				break;
 		}
 	}
 	void GatherM()
@@ -114,53 +137,111 @@ public class connection : MonoBehaviour
 			if (clients.Count > 0)
 				foreach (Socket c in clients)
 				{
+					byte[] data = new byte[1024];
 					int recv = c.Receive(data);
-					if (recv == 0) customLog("client disconnected");
+					if (recv == 0)
+					{
+						customLog("client disconnected");
+						clients.Remove(c);
+					}
 					else
 					{
+						c.Send(data);
 						string msg = Encoding.UTF8.GetString(data, 0, recv);
-						customLog(msg);
+						customLog(msg);						
 					}
 				}
 		}
 	}
+
+	/*---------------------CLIENT-------------------*/
 	public void JoinGame()
 	{
-		if (socketClient != null)
+		switch (protocol)
 		{
-			customLog("cannot join again");
-			return;
+			case Protocol.TCP:
+				{
+					if (socketClient != null)
+					{
+						customLog("cannot join again");
+						return;
+					}
+					socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+					IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
+					try
+					{
+						socketClient.Connect(ipep);
+					}
+					catch (SocketException e)
+					{
+						customLog(e.Message);
+						return;
+					}
+					byte[] data = new byte[1024];
+					data = Encoding.UTF8.GetBytes(enterUserName.text + " joined the server!");
+					socketClient.Send(data, data.Length, SocketFlags.None);
+
+					threadClient = new Thread(HearServer);
+					threadClient.Start();
+					break;
+				}
+			case Protocol.UDP:
+				{
+					if (socketClient != null)
+					{
+						customLog("cannot join again");
+						return;
+					}
+					socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+					IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
+					IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+					remote = (EndPoint)sender;
+
+					byte[] data = new byte[1024];
+					data = Encoding.UTF8.GetBytes(enterUserName.text + " joined the server!");
+					socketClient.Send(data, data.Length, SocketFlags.None);
+
+					threadClient = new Thread(HearServer);
+					threadClient.Start();
+					break;
+				}
+			default:
+				break;
 		}
-		socketClient = new Socket(AddressFamily.InterNetwork,
-			SocketType.Stream, ProtocolType.Tcp);
-		IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
-		try
-		{
-			socketClient.Connect(ipep);
-		}
-		catch (SocketException e)
-		{
-			customLog(e.Message);
-			return;
-		}
-		data = Encoding.UTF8.GetBytes(enterUserName.text);
-		socketClient.Send(data, data.Length, SocketFlags.None);
-		threadClient = new Thread(HearServer);
-		threadClient.Start();
 	}
 	void HearServer()
 	{
 		while (true)
 		{
+			byte[] data = new byte[1024];
 			int recv = socketClient.Receive(data);
 			string msg = Encoding.UTF8.GetString(data, 0, recv);
 			customLog(msg);
 		}
 	}
+	public void Disconnect()
+	{
+		socketClient.Close();
+	}
+
+	/*---------------------CHAT-------------------*/
 	public void SendM()
 	{
-		data = Encoding.UTF8.GetBytes(enterMessage.text);
-		socketClient.Send(data, data.Length, SocketFlags.None);
-		enterMessage.text = "";
+		if (profile == Profile.server)
+		{
+			if (clients.Count > 0)
+				foreach (Socket c in clients)
+				{
+					byte[] data = new byte[1024];
+					data = Encoding.UTF8.GetBytes(enterMessage.text);
+					c.Send(data);
+				}
+		}
+		else
+		{
+			byte[] data = new byte[1024];
+			data = Encoding.UTF8.GetBytes(enterMessage.text);
+			socketClient.Send(data);
+		}
 	}
 }
