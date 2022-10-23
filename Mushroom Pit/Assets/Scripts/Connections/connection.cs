@@ -41,7 +41,7 @@ public class connection : MonoBehaviour
 		if (clients != null) clients.Clear();
 		clients = new List<Socket>();
 		log = null;
-		data = new byte[64];//memleak?
+		data = new byte[1024];//memleak?
 		remote = (EndPoint)(new IPEndPoint(IPAddress.Any, 0));
 	}
 	void Awake()
@@ -111,16 +111,17 @@ public class connection : MonoBehaviour
 	{
 		while (true)
 		{
-			foreach (Socket c in clients)
-			{
-				int recv = c.Receive(data);
-				if (recv == 0) customLog("client disconnected");
-				else
+			if (clients.Count > 0)
+				foreach (Socket c in clients)
 				{
-					string msg = Encoding.UTF8.GetString(data, 0, recv);
-					customLog(msg);
+					int recv = c.Receive(data);
+					if (recv == 0) customLog("client disconnected");
+					else
+					{
+						string msg = Encoding.UTF8.GetString(data, 0, recv);
+						customLog(msg);
+					}
 				}
-			}
 		}
 	}
 	public void JoinGame()
