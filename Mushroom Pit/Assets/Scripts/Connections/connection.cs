@@ -92,7 +92,7 @@ public class connection : MonoBehaviour
 			clients.Add(newClient);
 			customLog("client deceived " + clients[^1].RemoteEndPoint);
 			data = Encoding.UTF8.GetBytes("u joined server!");
-			newClient.Send(data, data.Length, SocketFlags.None);
+			socketServer.Send(data, data.Length, SocketFlags.None);
 		}
 		if (protocol == Protocol.UDP)
 		{
@@ -126,13 +126,17 @@ public class connection : MonoBehaviour
 	}
 	public void JoinGame()
 	{
+		if (socketClient != null)
+		{
+			customLog("cannot join again");
+			return;
+		}
 		socketClient = new Socket(AddressFamily.InterNetwork,
 			SocketType.Stream, ProtocolType.Tcp);
 		IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
 		try
 		{
 			socketClient.Connect(ipep);
-			customLog("joined successfully");
 		}
 		catch (SocketException e)
 		{
@@ -152,5 +156,11 @@ public class connection : MonoBehaviour
 			string msg = Encoding.UTF8.GetString(data, 0, recv);
 			customLog(msg);
 		}
+	}
+	public void SendM()
+	{
+		data = Encoding.UTF8.GetBytes(enterMessage.text);
+		socketClient.Send(data, data.Length, SocketFlags.None);
+		enterMessage.text = "";
 	}
 }

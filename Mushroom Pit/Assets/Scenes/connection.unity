@@ -344,9 +344,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 15063643}
+      - m_Target: {fileID: 15063645}
         m_TargetAssemblyTypeName: connection, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: SendM
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
