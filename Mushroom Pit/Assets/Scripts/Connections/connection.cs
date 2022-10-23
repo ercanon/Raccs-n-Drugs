@@ -49,27 +49,29 @@ public class connection : MonoBehaviour
 	}
 	public void ChangeProtocol(int val)
 	{
-		protocol = (Protocol)val;
 		Reset();
+		protocol = (Protocol)val;
 	}
 	public void ChangeProfile(int val)
 	{
+		Reset();
 		profile = (Profile)val;
+
 		switch (profile)
         {
 			case Profile.client:
-				GameObject.Find("ClientButtons").SetActive(true);
-				GameObject.Find("CreateGame").SetActive(false);
+				GameObject.Find("CreateGame").GetComponent<Button>().interactable = false;
+				GameObject.Find("JoinGame").GetComponent<Button>().interactable = true;
+				GameObject.Find("Disconnect").GetComponent<Button>().interactable = true;
 				break;
 			case Profile.server:
-				GameObject.Find("ClientButtons").SetActive(false);
-				GameObject.Find("CreateGame").SetActive(true);
+				GameObject.Find("CreateGame").GetComponent<Button>().interactable = true;
+				GameObject.Find("JoinGame").GetComponent<Button>().interactable = false;
+				GameObject.Find("Disconnect").GetComponent<Button>().interactable = false;
 				break;
 			default:
 				break;
-
 		}
-		Reset();
 	}
 
 	void Update()
@@ -98,6 +100,11 @@ public class connection : MonoBehaviour
 		{
 			threadServerR = new Thread(GatherM);
 			threadServerR.Start();
+		}
+		else if (protocol == Protocol.TCP)
+		{
+			IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+			remote = (EndPoint)(sender);
 		}
 	}
 	void WaitingPlayers()
@@ -227,21 +234,28 @@ public class connection : MonoBehaviour
 	/*---------------------CHAT-------------------*/
 	public void SendM()
 	{
-		if (profile == Profile.server)
+		switch (profile)
 		{
-			if (clients.Count > 0)
-				foreach (Socket c in clients)
+			case Profile.server:
+				{
+					if (clients.Count > 0)
+						foreach (Socket c in clients)
+						{
+							byte[] data = new byte[1024];
+							data = Encoding.UTF8.GetBytes(enterMessage.text);
+							c.Send(data);
+						}
+					break;
+				}
+			case Profile.client:
 				{
 					byte[] data = new byte[1024];
 					data = Encoding.UTF8.GetBytes(enterMessage.text);
-					c.Send(data);
+					socketClient.Send(data);
+					break;
 				}
-		}
-		else
-		{
-			byte[] data = new byte[1024];
-			data = Encoding.UTF8.GetBytes(enterMessage.text);
-			socketClient.Send(data);
-		}
+			default:
+				break;
+        }
 	}
 }
