@@ -229,7 +229,21 @@ public class connection : MonoBehaviour
 	}
 	public void Disconnect()
 	{
-		socketClient.Close();
+		try
+    	{
+        	socketClient.Close();
+			socketClient = null;
+			
+			//byte[] data = new byte[1024];
+			//data = Encoding.UTF8.GetBytes(enterMessage.text);
+			//socketClient.Send(data);
+        	customLog(enterUserName.text + " has been disconnected");
+    	}
+		catch(SocketException e)
+    	{
+			customLog(e.Message);
+    	}
+
 	}
 
 	/*---------------------CHAT-------------------*/
@@ -247,6 +261,7 @@ public class connection : MonoBehaviour
 							c.Send(data);
 						}
 					break;
+					customLog(enterMessage.text);
 				}
 			case Profile.client:
 				{
