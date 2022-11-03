@@ -76,6 +76,13 @@ public class connection : MonoBehaviour
 
 	void Update()
 	{
+		enterMessage.text = "A";
+
+		if (Input.GetKeyDown(KeyCode.Return))
+		{
+			SendM();
+		}
+
 		if (log != null) { ChatBox.text += log; log = null; }
 	}
 	void customLog(string x, bool nl = true)
@@ -260,8 +267,8 @@ public class connection : MonoBehaviour
 							data = Encoding.UTF8.GetBytes(enterMessage.text);
 							c.Send(data);
 						}
-					break;
 					customLog(enterMessage.text);
+					break;
 				}
 			case Profile.client:
 				{
