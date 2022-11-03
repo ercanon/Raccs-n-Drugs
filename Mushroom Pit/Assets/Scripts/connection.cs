@@ -76,7 +76,6 @@ public class connection : MonoBehaviour
 
 	void Update()
 	{
-		if(Input.GetKeyDown(KeyCode.Space)) customLog("Test"); // TEST SCROLLBAR
 		if (log != null) { ChatBox.text += log; log = null; }
 	}
 	void customLog(string x, bool nl = true)
