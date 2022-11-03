@@ -3,11 +3,18 @@ using UnityEngine;
 
 public class FirstPersonMovement : MonoBehaviour
 {
-    public float speed = 5;
+    public float walkSpeed = 5;
 
     [Header("Running")]
     public bool canRun = true;
-    public bool IsRunning { get; private set; }
+    enum RacoonState
+    {
+        idle,
+        walking,
+        running,
+        buffed
+    }
+    private RacoonState rState;
     public float runSpeed = 9;
     public KeyCode runningKey = KeyCode.LeftShift;
 
@@ -16,11 +23,10 @@ public class FirstPersonMovement : MonoBehaviour
     /// <summary> Functions to override movement speed. Will use the last added override. </summary>
     public List<System.Func<float>> speedOverrides = new List<System.Func<float>>();
 
-
-
     void Awake()
     {
-        // Get the rigidbody on this.
+        ChangeState((int)RacoonState.idle);
+
         rigidbody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
     }
@@ -28,14 +34,13 @@ public class FirstPersonMovement : MonoBehaviour
     void FixedUpdate()
     {
         // Update IsRunning from input.
-        IsRunning = canRun && Input.GetKey(runningKey);
+        if (canRun && Input.GetKey(runningKey))
+            ChangeState((int)RacoonState.running);
 
-        // Get targetMovingSpeed.
-        float targetMovingSpeed = IsRunning ? runSpeed : speed;
+        float targetMovingSpeed = rState==RacoonState.running ? runSpeed : walkSpeed;
+
         if (speedOverrides.Count > 0)
-        {
             targetMovingSpeed = speedOverrides[speedOverrides.Count - 1]();
-        }
 
         // Get targetVelocity from input.
         Vector2 targetVelocity = new Vector2( Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
@@ -45,14 +50,35 @@ public class FirstPersonMovement : MonoBehaviour
 
         //Apply rotation.
         if (rigidbody.velocity.magnitude > 0)
-        {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rigidbody.velocity), Time.deltaTime * 10f);
+    }
 
-            //Apply Animation
-            if (IsRunning) 
-                anim.Play("Running");
-            else
+    public void ChangeState(int state)
+    {
+        switch (state)
+        {
+            case 0: //Idle
+                if (rState == RacoonState.idle)
+                    return;
+
+                rState = RacoonState.idle;
+                anim.Play("Idle");
+                break;
+            case 1: // Walking
+                if (rState == RacoonState.walking)
+                    return;
+
+                rState = RacoonState.walking;
                 anim.Play("Walking");
+                break;
+            case 2: //Running
+                if (rState == RacoonState.running)
+                    return;
+
+                rState = RacoonState.running;
+                anim.Play("Running");
+                break;
         }
+        anim.SetInteger("rStateAnim", (int)rState);
     }
 }

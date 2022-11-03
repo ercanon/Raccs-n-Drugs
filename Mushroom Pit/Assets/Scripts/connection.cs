@@ -260,8 +260,8 @@ public class connection : MonoBehaviour
 							data = Encoding.UTF8.GetBytes(enterMessage.text);
 							c.Send(data);
 						}
-					break;
 					customLog(enterMessage.text);
+					break;
 				}
 			case Profile.client:
 				{
