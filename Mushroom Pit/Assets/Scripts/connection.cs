@@ -20,7 +20,7 @@ public class connection : MonoBehaviour
 	public Text enterServerIP;
 	public Text enterServerPort;
 	public Text ChatBox;
-	public Text enterMessage;
+	public InputField enterMessage;
 	string log;
 	EndPoint remote;
 
@@ -76,8 +76,6 @@ public class connection : MonoBehaviour
 
 	void Update()
 	{
-		enterMessage.text = "A";
-
 		if (Input.GetKeyDown(KeyCode.Return))
 		{
 			SendM();
@@ -280,5 +278,7 @@ public class connection : MonoBehaviour
 			default:
 				break;
         }
+
+		enterMessage.text = "";
 	}
 }
