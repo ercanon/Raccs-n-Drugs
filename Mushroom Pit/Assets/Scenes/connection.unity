@@ -167,11 +167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ec63eff66941b439c9f9c1b527a7f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enterUserName: {fileID: 1739632392}
+  enterUserName: {fileID: 912253073}
   enterServerIP: {fileID: 1190016880}
   enterServerPort: {fileID: 1934092134}
   ChatBox: {fileID: 1093751827}
-  enterMessage: {fileID: 1546403501}
+  enterMessage: {fileID: 359643046}
 --- !u!1 &24669729
 GameObject:
   m_ObjectHideFlags: 0
@@ -4461,7 +4461,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1738840884}
   - component: {fileID: 1738840886}
-  - component: {fileID: 1738840885}
   m_Layer: 5
   m_Name: ChatPanel
   m_TagString: Untagged
@@ -4492,36 +4491,6 @@ RectTransform:
   m_AnchoredPosition: {x: -200, y: 0}
   m_SizeDelta: {x: 300, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1738840885
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1738840883}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1738840886
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -16,11 +16,11 @@ public class connection : MonoBehaviour
 	Thread threadServerR;
 	Thread threadClient;
 	List<Socket> clients;
-	public Text enterUserName;
+	public InputField enterUserName; // Changed
 	public Text enterServerIP;
 	public Text enterServerPort;
 	public Text ChatBox;
-	public InputField enterMessage;
+	public InputField enterMessage; // Changed
 	string log;
 	EndPoint remote;
 
@@ -46,6 +46,9 @@ public class connection : MonoBehaviour
 	void Awake()
 	{
 		Reset();
+
+		int randomNumber = Random.Range(1, 100000);
+		enterUserName.text = "Player" + randomNumber;
 	}
 	public void ChangeProtocol(int val)
 	{
@@ -76,7 +79,7 @@ public class connection : MonoBehaviour
 
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Return))
+		if (Input.GetKeyDown(KeyCode.Return)) // Changed
 		{
 			SendM();
 		}
@@ -122,7 +125,7 @@ public class connection : MonoBehaviour
 					socketServer.Listen(2);
 					Socket newClient = socketServer.Accept();
 					clients.Add(newClient);
-					customLog("client deceived " + clients[^1].RemoteEndPoint);
+					customLog("Client deceived " + clients[^1].RemoteEndPoint);
 					break;
 				}
 			case Protocol.UDP:
@@ -154,7 +157,7 @@ public class connection : MonoBehaviour
 					int recv = c.Receive(data);
 					if (recv == 0)
 					{
-						customLog("client disconnected");
+						customLog("Client disconnected");
 						clients.Remove(c);
 					}
 					else
@@ -176,7 +179,7 @@ public class connection : MonoBehaviour
 				{
 					if (socketClient != null)
 					{
-						customLog("cannot join again");
+						customLog("Cannot join again");
 						return;
 					}
 					socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -202,7 +205,7 @@ public class connection : MonoBehaviour
 				{
 					if (socketClient != null)
 					{
-						customLog("cannot join again");
+						customLog("Cannot join again");
 						return;
 					}
 					socketClient = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -279,6 +282,6 @@ public class connection : MonoBehaviour
 				break;
         }
 
-		enterMessage.text = "";
+		enterMessage.text = ""; // Changed
 	}
 }
