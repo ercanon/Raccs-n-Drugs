@@ -15,18 +15,20 @@ public class server : MonoBehaviour
 	[SerializeField] int maxClients = 4;
 	Socket socket;
 	Thread thread;
-	int idAssignIndex = -1;
-	Dictionary<EndPoint, int> clients = new Dictionary<EndPoint, int>();
-	Dictionary<EndPoint, float> pings = new Dictionary<EndPoint, float>();
-	//
-	List<string> history;
+	string myname = null;
+	EndPoint host = null;
+	Dictionary<EndPoint, string> clients = new Dictionary<EndPoint, string>();
 	public Text chat;
 	public InputField entry;
+	public void Reset()
+	{
+
+	}
 	void Awake()
 	{
-		IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, port);
 		socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-		socket.Bind(endPoint);
+		IPEndPoint ep = new IPEndPoint(IPAddress.Any, port);
+		socket.Bind(ep);
 		//socket.Blocking = false;
 		thread = new Thread(Listen);
 		thread.Start();
@@ -42,34 +44,53 @@ public class server : MonoBehaviour
 		int rf = socket.ReceiveFrom(packet, ref who);
 		if (rf > 0) onPackedReceived(packet, who);
 	}
-	private void OnConnect(EndPoint who)
+	private void IConnect(EndPoint where)
+	{
+		socket.SendTo(MessageToData("j; " + myname), where);
+	}
+	private void UConnect(EndPoint who, string name)
 	{
 		if (clients.Count < maxClients)
 		{
-			clients.Add(who, ++idAssignIndex);
-			Broadcast(MessageToData("$who joined the game!"));
+			if (clients.ContainsKey(who))
+			{
+				chat.text += who + " as " + name + " attempted to join, but he's already in, STUPID?";
+			}
+			else
+			{
+				clients.Add(who, name);
+				Broadcast(who + " as " + name + " joined the game!");
+			}
 		}
-		else Debug.Log("cannot override maxClients, sorry");
+		else
+		{
+			chat.text += who + " as " + name + " attempted to join, but we're full, SAD";
+		}
 	}
-	private void OnDisconnect(EndPoint who)
+	private void IDisconnect()
+	{
+		if (host != null)
+		{
+			socket.SendTo(MessageToData("l; " + myname), host);
+		}
+		else
+		{
+			chat.text += "u alone monk!";
+		}
+	}
+	private void UDisconnect(EndPoint who, string name)
 	{
 		if (clients.ContainsKey(who))
 		{
 			clients.Remove(who);
-			Broadcast(MessageToData("$who leaved the game!"));
+			Broadcast(clients[who] + " leaved the game!");
 		}
-		else Debug.Log("x, d.");
-	}
-	private void HandlePing(EndPoint who)
-	{
-		float last = Time.time;
-		if (last - pings[who] > 5.0f)
+		else
 		{
-			OnDisconnect(who);
-			Broadcast(MessageToData("$who timeouted ._."));
+			Broadcast(who + " attempted to leave, though it was never part of this, stayed alone nonetheless");
 		}
-		else pings[who] = last;
 	}
+	private void HandlePing() { }
 	private byte[] MessageToData(string str)
 	{
 		return Encoding.UTF8.GetBytes(str);
@@ -78,49 +99,77 @@ public class server : MonoBehaviour
 	{
 		return Encoding.UTF8.GetString(data);
 	}
+	private void Broadcast(string data)
+	{
+		Broadcast(MessageToData(data));
+	}
 	private void Broadcast(byte[] data)
 	{
-		foreach (KeyValuePair<EndPoint, int> i in clients)
-			Debug.Log(i.Key);// SendPacket(data, i.Key);
+		foreach (var i in clients)
+			SendPacket(data, i.Key);
 	}
 	private void SendPacket(byte[] data, EndPoint who)
 	{
 		socket.SendTo(data, who);
 	}
-	private void onPackedReceived(byte[] data, EndPoint who)
+	private void OnPackedReceived(byte[] data, EndPoint who)
 	{
-		byte[] prefix = { data[0], data[1] };
-		string input = DataToMessage(prefix);
-		switch (input)
+		string prefix = entry.text.Substring(0, 2);
+		switch (prefix)
 		{
 			case "j;":
-				OnConnect(who);
+				var filter = new Regex(@"j; (\w{3,})$").Match(entry.text);
+				string urname = filter.Groups[0].Value;
+				UConnect(who, urname);
 				break;
 			case "l;":
-				OnDisconnect(who);
-				break;
-			case "p;":
-				HandlePing(who);
+				UDisconnect(who, urname);
 				break;
 			default:
-				Broadcast(data);
+				Broadcast(entry.text);
+				chat.text += entry.text;
 				break;
 		}
-		Debug.Log(DataToMessage(data));
+		//entry.text = null;
 	}
-	public void onEntryReceived()
+	public void IInput()
 	{
-		byte[] data = MessageToData(entry.text);
-		onPackedReceived(data, socket.LocalEndPoint);
-		entry.text = null;
+		string prefix = entry.text.Substring(0, 2);
+		switch (prefix)
+		{
+			case "j;":
+				var filter = new Regex(@"j; (\d{3}(?:\.\d{1,}){3}):(\d{4})$");
+				var result = filter.Match(entry.text);
+				IPAddress ip = IPAddress.Parse(result.Groups[0].Value);
+				int port = int.Parse(result.Groups[1].Value);
+				IPEndPoint where = new IPEndPoint(ip, port);
+				IConnect(where);
+				break;
+			case "l;":
+				IDisconnect();
+				break;
+			default:
+				Broadcast(entry.text);
+				chat.text += entry.text;
+				break;
+		}
+		//entry.text = null;
 	}
-	private void ParseConnectionAttempt(string data, ref IPAddress ip, ref int port, ref string name)
+	private void TellIP()
 	{
-		Regex filter = new Regex(@"j; (\d{3}(?:\.\d{1,}){3}):(\d{4}) as (\w{3,})$");//j; 127.0.0.1:8008 as Name
-		var result = filter.Match(data);
-		ip = IPAddress.Parse(result.Groups[0].Value);
-		port = int.Parse(result.Groups[1].Value);
-		name = result.Groups[2].Value;//.ToString();
-		Debug.Log(ip + " " + port + " " + name);
+		//foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+		//{
+		//	if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+		//	{
+		//		Console.WriteLine(ni.Name);
+		//		foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+		//		{
+		//			if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+		//			{
+		//				Console.WriteLine(ip.Address.ToString());
+		//			}
+		//		}
+		//	}
+		//}
 	}
 }
