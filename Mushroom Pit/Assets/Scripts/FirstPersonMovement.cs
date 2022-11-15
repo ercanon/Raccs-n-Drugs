@@ -3,10 +3,6 @@ using UnityEngine;
 
 public class FirstPersonMovement : MonoBehaviour
 {
-    public float walkSpeed = 5;
-
-    [Header("Running")]
-    public bool canRun = true;
     enum RacoonState
     {
         idle,
@@ -14,7 +10,12 @@ public class FirstPersonMovement : MonoBehaviour
         running,
         buffed
     }
+
     private RacoonState rState;
+    public float walkSpeed = 5;
+
+    [Header("Running")]
+    public bool canRun = true;
     public float runSpeed = 9;
     public KeyCode runningKey = KeyCode.LeftShift;
 
@@ -50,7 +51,11 @@ public class FirstPersonMovement : MonoBehaviour
 
         //Apply rotation.
         if (rigidbody.velocity.magnitude > 0)
+        {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rigidbody.velocity), Time.deltaTime * 10f);
+            if (rState != RacoonState.running) ChangeState((int)RacoonState.walking);
+        }
+        else ChangeState((int)RacoonState.idle);
     }
 
     public void ChangeState(int state)
@@ -79,6 +84,6 @@ public class FirstPersonMovement : MonoBehaviour
                 anim.Play("Running");
                 break;
         }
-        anim.SetInteger("rStateAnim", (int)rState);
+        anim.SetInteger("rRacoonAnim", (int)rState);
     }
 }
