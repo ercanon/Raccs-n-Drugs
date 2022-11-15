@@ -6,6 +6,7 @@ using System.Threading;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
+using System.Net.NetworkInformation;
 //manlaig
 public class server : MonoBehaviour
 {
@@ -23,6 +24,10 @@ public class server : MonoBehaviour
 	public void Reset()
 	{
 
+	}
+	void Log(string data)
+	{
+		chat.text = data;// + '\n';
 	}
 	void Awake()
 	{
@@ -42,53 +47,34 @@ public class server : MonoBehaviour
 		byte[] packet = new byte[1024];
 		EndPoint who = new IPEndPoint(IPAddress.Any, port);
 		int rf = socket.ReceiveFrom(packet, ref who);
-		if (rf > 0) onPackedReceived(packet, who);
+		if (rf > 0) UInput(packet, who);
 	}
 	private void IConnect(EndPoint where)
 	{
-		socket.SendTo(MessageToData("j; " + myname), where);
+		socket.SendTo(MessageToData("x; " + myname), where);
 	}
 	private void UConnect(EndPoint who, string name)
 	{
 		if (clients.Count < maxClients)
 		{
-			if (clients.ContainsKey(who))
-			{
-				chat.text += who + " as " + name + " attempted to join, but he's already in, STUPID?";
-			}
-			else
+			if (clients.ContainsKey(who) == false)
 			{
 				clients.Add(who, name);
 				Broadcast(who + " as " + name + " joined the game!");
 			}
+			else Log(who + " as " + name + " attempted to join, but he's already in, STUPID?");
 		}
-		else
-		{
-			chat.text += who + " as " + name + " attempted to join, but we're full, SAD";
-		}
+		else Log(who + " as " + name + " attempted to join, but we're full, SAD");
 	}
 	private void IDisconnect()
 	{
-		if (host != null)
-		{
-			socket.SendTo(MessageToData("l; " + myname), host);
-		}
-		else
-		{
-			chat.text += "u alone monk!";
-		}
+		if (host != null) socket.SendTo(MessageToData("x; " + myname), host);
+		else Log("u alone monk!");
 	}
-	private void UDisconnect(EndPoint who, string name)
+	private void UDisconnect(EndPoint who)
 	{
-		if (clients.ContainsKey(who))
-		{
-			clients.Remove(who);
-			Broadcast(clients[who] + " leaved the game!");
-		}
-		else
-		{
-			Broadcast(who + " attempted to leave, though it was never part of this, stayed alone nonetheless");
-		}
+		if (clients.Remove(who)) Broadcast(clients[who] + " leaved the game!");
+		else Broadcast(who + " attempted to leave, though it was never part of this, stayed alone nonetheless");
 	}
 	private void HandlePing() { }
 	private byte[] MessageToData(string str)
@@ -112,64 +98,69 @@ public class server : MonoBehaviour
 	{
 		socket.SendTo(data, who);
 	}
-	private void OnPackedReceived(byte[] data, EndPoint who)
+	private void UInput(byte[] data, EndPoint who)
 	{
-		string prefix = entry.text.Substring(0, 2);
-		switch (prefix)
+		string input = DataToMessage(data);
+		switch (input.Substring(0, 2))
 		{
-			case "j;":
-				var filter = new Regex(@"j; (\w{3,})$").Match(entry.text);
-				string urname = filter.Groups[0].Value;
-				UConnect(who, urname);
-				break;
-			case "l;":
-				UDisconnect(who, urname);
+			case "x;":
+				UDisconnect(who);
+				var filter = new Regex(@"x; (\w{3,})$").Match(entry.text);
+				if (filter.Success)
+				{
+					string urname = filter.Groups[0].Value;
+					UConnect(who, urname);
+				}
+				else Log("perhaps, just perhaps, u monk?");
 				break;
 			default:
-				Broadcast(entry.text);
-				chat.text += entry.text;
+				Broadcast(input);
+				Log(input);
 				break;
 		}
 		//entry.text = null;
 	}
 	public void IInput()
 	{
-		string prefix = entry.text.Substring(0, 2);
-		switch (prefix)
+		if (entry.text.Length < 2) return;
+		switch (entry.text.Substring(0, 2))
 		{
-			case "j;":
-				var filter = new Regex(@"j; (\d{3}(?:\.\d{1,}){3}):(\d{4})$");
-				var result = filter.Match(entry.text);
-				IPAddress ip = IPAddress.Parse(result.Groups[0].Value);
-				int port = int.Parse(result.Groups[1].Value);
-				IPEndPoint where = new IPEndPoint(ip, port);
-				IConnect(where);
-				break;
-			case "l;":
+			case "x;":
 				IDisconnect();
+				var filter = new Regex(@"x; (\d{3}(?:\.\d{1,}){3}):(\d{4})$").Match(entry.text);
+				if (filter.Success)
+				{
+					IPAddress ip = IPAddress.Parse(filter.Groups[0].Value);
+					int port = int.Parse(filter.Groups[1].Value);
+					IConnect(new IPEndPoint(ip, port));
+				}
+				else Log("perhaps learn how to write? or internal error");
+				break;
+			case "p;":
+				Log(TellIP());
 				break;
 			default:
 				Broadcast(entry.text);
-				chat.text += entry.text;
+				Log(entry.text);
 				break;
 		}
 		//entry.text = null;
 	}
-	private void TellIP()
+	private string TellIP()
 	{
-		//foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
-		//{
-		//	if (ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 || ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-		//	{
-		//		Console.WriteLine(ni.Name);
-		//		foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
-		//		{
-		//			if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-		//			{
-		//				Console.WriteLine(ip.Address.ToString());
-		//			}
-		//		}
-		//	}
-		//}
+		foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+		{
+			if (ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+			{
+				foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+				{
+					if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+					{
+						return ni.Name + ip.Address.ToString();
+					}
+				}
+			}
+		}
+		return null;
 	}
 }
