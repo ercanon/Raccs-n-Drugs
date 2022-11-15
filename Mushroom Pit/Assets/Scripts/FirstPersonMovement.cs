@@ -7,8 +7,7 @@ public class FirstPersonMovement : MonoBehaviour
     {
         idle,
         walking,
-        running,
-        buffed
+        buffed,
     }
 
     private RacoonState rState;
@@ -16,7 +15,7 @@ public class FirstPersonMovement : MonoBehaviour
 
     [Header("Running")]
     public bool canRun = true;
-    public float runSpeed = 9;
+    public float buffSpeed = 9;
     public KeyCode runningKey = KeyCode.LeftShift;
 
     private Rigidbody rigidbody;
@@ -34,11 +33,12 @@ public class FirstPersonMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Update IsRunning from input.
+        /*
         if (canRun && Input.GetKey(runningKey))
-            ChangeState((int)RacoonState.running);
+            ChangeState((int)RacoonState.buffed);
+        */
 
-        float targetMovingSpeed = rState==RacoonState.running ? runSpeed : walkSpeed;
+        float targetMovingSpeed = rState==RacoonState.buffed ? buffSpeed : walkSpeed;
 
         if (speedOverrides.Count > 0)
             targetMovingSpeed = speedOverrides[speedOverrides.Count - 1]();
@@ -53,7 +53,7 @@ public class FirstPersonMovement : MonoBehaviour
         if (rigidbody.velocity.magnitude > 0)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rigidbody.velocity), Time.deltaTime * 10f);
-            if (rState != RacoonState.running) ChangeState((int)RacoonState.walking);
+            if (rState != RacoonState.buffed) ChangeState((int)RacoonState.walking);
         }
         else ChangeState((int)RacoonState.idle);
     }
@@ -76,11 +76,11 @@ public class FirstPersonMovement : MonoBehaviour
                 rState = RacoonState.walking;
                 anim.Play("Walking");
                 break;
-            case 2: //Running
-                if (rState == RacoonState.running)
+            case 2: //Buffed
+                if (rState == RacoonState.buffed)
                     return;
 
-                rState = RacoonState.running;
+                rState = RacoonState.buffed;
                 anim.Play("Running");
                 break;
         }
