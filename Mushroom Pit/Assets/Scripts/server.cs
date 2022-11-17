@@ -27,7 +27,7 @@ public class server : MonoBehaviour
 	}
 	void Log(string data)
 	{
-		chat.text += data;// + '\n';
+		chat.text += data + '\n';
 	}
 	void Awake()
 	{
@@ -127,7 +127,7 @@ public class server : MonoBehaviour
 		{
 			case "x;":
 				IDisconnect();
-				var filter = new Regex(@"x; (\d{3}(?:\.\d{1,}){3}):(\d{4})$").Match(entry.text);
+				var filter = new Regex(@"x; (\d{1,}(?:\.\d{1,}){3}):(\d{4})$").Match(entry.text);
 				if (filter.Success)
 				{
 					IPAddress ip = IPAddress.Parse(filter.Groups[0].Value);
