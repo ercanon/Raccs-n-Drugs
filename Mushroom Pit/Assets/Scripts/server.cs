@@ -16,7 +16,7 @@ public class server : MonoBehaviour
 	[SerializeField] int maxClients = 4;
 	Socket socket;
 	Thread thread;
-	string myname = null;
+	string myname = "isaac";
 	EndPoint host = null;
 	Dictionary<EndPoint, string> clients = new Dictionary<EndPoint, string>();
 	public Text chat;
@@ -51,6 +51,7 @@ public class server : MonoBehaviour
 	}
 	private void IConnect(EndPoint where)
 	{
+		Log("attempt");
 		socket.SendTo(MessageToData("x; " + myname), where);
 	}
 	private void UConnect(EndPoint who, string name)
@@ -108,7 +109,7 @@ public class server : MonoBehaviour
 				var filter = new Regex(@"x; (\w{3,})$").Match(entry.text);
 				if (filter.Success)
 				{
-					string urname = filter.Groups[0].Value;
+					string urname = filter.Groups[1].Value;
 					UConnect(who, urname);
 				}
 				else Log("perhaps, just perhaps, u monk?");
@@ -130,9 +131,10 @@ public class server : MonoBehaviour
 				var filter = new Regex(@"x; (\d{1,}(?:\.\d{1,}){3}):(\d{4})$").Match(entry.text);
 				if (filter.Success)
 				{
-					IPAddress ip = IPAddress.Parse(filter.Groups[0].Value);
-					int port = int.Parse(filter.Groups[1].Value);
-					IConnect(new IPEndPoint(ip, port));
+					IPAddress ip = IPAddress.Parse(filter.Groups[1].Value);
+					int port = int.Parse(filter.Groups[2].Value);
+					IPEndPoint where = new IPEndPoint(ip, port);
+					IConnect(where);
 				}
 				else Log("perhaps learn how to write? or internal error");
 				break;
