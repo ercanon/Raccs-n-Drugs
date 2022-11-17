@@ -298,9 +298,9 @@ MonoBehaviour:
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 576914586}
-        m_TargetAssemblyTypeName: server, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 576914589}
+        m_TargetAssemblyTypeName: pls, Assembly-CSharp
+        m_MethodName: Entry
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -486,8 +486,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a735e57cc2a34294695ee76714db43f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  port: 9000
-  maxClients: 4
   chat: {fileID: 1434757786}
   entry: {fileID: 170427196}
 --- !u!1 &705507993
