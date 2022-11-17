@@ -44,15 +44,19 @@ public class server : MonoBehaviour
 	}
 	void Listen()
 	{
-		byte[] packet = new byte[1024];
-		EndPoint who = new IPEndPoint(IPAddress.Any, port);
-		int rf = socket.ReceiveFrom(packet, ref who);
-		if (rf > 0) UInput(packet, who);
+		while(true)
+		{
+			byte[] packet = new byte[1024];
+			EndPoint who = new IPEndPoint(IPAddress.Any, port);
+			int rf = socket.ReceiveFrom(packet, ref who);
+			if (rf > 0) UInput(packet, who);
+		}
 	}
 	private void IConnect(EndPoint where)
 	{
 		Log("attempt");
-		socket.SendTo(MessageToData("x; " + myname), where);
+		var message = MessageToData("x; " + myname);
+		socket.SendTo(message, message.Length, SocketFlags.None, where);
 	}
 	private void UConnect(EndPoint who, string name)
 	{
@@ -69,7 +73,11 @@ public class server : MonoBehaviour
 	}
 	private void IDisconnect()
 	{
-		if (host != null) socket.SendTo(MessageToData("x; " + myname), host);
+		if (host != null)
+		{
+			var message = MessageToData("x; " + myname);
+			socket.SendTo(message, message.Length, SocketFlags.None, host);
+		}
 		else Log("u alone monk!");
 	}
 	private void UDisconnect(EndPoint who)
@@ -97,7 +105,7 @@ public class server : MonoBehaviour
 	}
 	private void SendPacket(byte[] data, EndPoint who)
 	{
-		socket.SendTo(data, who);
+		socket.SendTo(data, data.Length, SocketFlags.None, who);
 	}
 	private void UInput(byte[] data, EndPoint who)
 	{
@@ -158,7 +166,7 @@ public class server : MonoBehaviour
 				{
 					if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
 					{
-						return ni.Name + " " + ip.Address.ToString();
+						return ni.Name + " -> " + ip.Address.ToString();
 					}
 				}
 			}

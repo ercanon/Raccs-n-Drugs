@@ -103,8 +103,8 @@ public class connection : MonoBehaviour
 		socketServer.Bind(ipep);
 		customLog(enterUserName.text + "'s game available at " + socketServer.LocalEndPoint);
 		
-		threadServer = new Thread(WaitingPlayers);
-		threadServer.Start();
+		//threadServer = new Thread(WaitingPlayers);
+		//threadServer.Start();
 		//if (protocol == Protocol.TCP)
 		//{
 		//	threadServerR = new Thread(GatherM);
