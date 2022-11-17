@@ -201,7 +201,7 @@ public class connection : MonoBehaviour
 
 			byte[] data = new byte[1024];
 			data = Encoding.UTF8.GetBytes(enterUserName.text + " joined the server!");
-			socketClient.Send(data, data.Length, SocketFlags.None);
+			socketClient.Send(data, data.Length, SocketFlags.None); //Posible error.
 
 			threadClient = new Thread(HearServer);
 			threadClient.Start();

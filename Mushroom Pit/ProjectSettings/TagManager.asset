@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Server
   - Client
+  - Cocaine
   layers:
   - Default
   - TransparentFX
