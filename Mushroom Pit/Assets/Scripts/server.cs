@@ -33,7 +33,7 @@ public class server : MonoBehaviour
 	{
 		socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 		IPEndPoint ep = new IPEndPoint(IPAddress.Any, port);
-		socket.Bind(ep);
+		//socket.Bind(ep);
 		//socket.Blocking = false;
 		thread = new Thread(Listen);
 		thread.Start();
@@ -55,6 +55,7 @@ public class server : MonoBehaviour
 	private void IConnect(EndPoint where)
 	{
 		Log("attempt");
+		host = where;
 		var message = MessageToData("x; " + myname);
 		socket.SendTo(message, message.Length, SocketFlags.None, where);
 	}
@@ -151,6 +152,8 @@ public class server : MonoBehaviour
 				break;
 			default:
 				Broadcast(entry.text);
+				var message = MessageToData(entry.text);
+				socket.SendTo(message, message.Length, SocketFlags.None, host);
 				Log(entry.text);
 				break;
 		}
