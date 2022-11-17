@@ -110,7 +110,7 @@ public class connection : MonoBehaviour
 			threadServerR = new Thread(GatherM);
 			threadServerR.Start();
 		}
-		else if (protocol == Protocol.TCP)
+		else if (protocol == Protocol.TCP) // ¿Uso alguno? He comprobado y no noto diferencia.
 		{
 			IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 			remote = (EndPoint)(sender);
