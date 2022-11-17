@@ -65,7 +65,7 @@ public class ServerClient : MonoBehaviour
     public void Client()
     {
         data = new byte[1024];
-        ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8194);
+        ipep = new IPEndPoint(IPAddress.Parse("10.0.203.43"), 8194);
         server = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
         string welcome = "Hello, are you there?";

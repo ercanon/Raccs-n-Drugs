@@ -38,7 +38,7 @@ public class pls : MonoBehaviour
 	}
 	void Listen()
 	{
-		while (true)
+		//while (true)
 		{
 			byte[] data = new byte[1024];
 			EndPoint who = new IPEndPoint(IPAddress.Any, 0);
@@ -136,7 +136,7 @@ public class pls : MonoBehaviour
 				Log("game created, u are server!");
 			}
 			else if (entry.text == "ip;")
-					{
+			{
 				Log(TellIP());
 			}
 			else Log(entry.text);
