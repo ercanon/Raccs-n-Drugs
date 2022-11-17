@@ -11,7 +11,7 @@ using System.Net.NetworkInformation;
 public class server : MonoBehaviour
 {
 	[Tooltip("touch and die")]
-	[SerializeField] int port = 8008;
+	[SerializeField] int port = 8194;
 	[Tooltip("there can only be one king")]
 	[SerializeField] int maxClients = 4;
 	Socket socket;
@@ -27,7 +27,7 @@ public class server : MonoBehaviour
 	}
 	void Log(string data)
 	{
-		chat.text = data;// + '\n';
+		chat.text += data;// + '\n';
 	}
 	void Awake()
 	{
@@ -156,7 +156,7 @@ public class server : MonoBehaviour
 				{
 					if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
 					{
-						return ni.Name + ip.Address.ToString();
+						return ni.Name + " " + ip.Address.ToString();
 					}
 				}
 			}
