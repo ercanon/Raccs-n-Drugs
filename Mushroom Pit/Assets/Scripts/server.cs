@@ -166,7 +166,7 @@ public class server : MonoBehaviour
 				{
 					if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
 					{
-						return ni.Name + " " + ip.Address.ToString();
+						return ni.Name + " -> " + ip.Address.ToString();
 					}
 				}
 			}
