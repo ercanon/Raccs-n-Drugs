@@ -88,11 +88,11 @@ public class server : MonoBehaviour
 	private void HandlePing() { }
 	private byte[] MessageToData(string str)
 	{
-		return Encoding.UTF8.GetBytes(str);
+		return Encoding.ASCII.GetBytes(str);
 	}
 	private string DataToMessage(byte[] data)
 	{
-		return Encoding.UTF8.GetString(data);
+		return Encoding.ASCII.GetString(data);
 	}
 	private void Broadcast(string data)
 	{
