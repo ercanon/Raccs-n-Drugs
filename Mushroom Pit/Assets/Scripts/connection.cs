@@ -15,10 +15,11 @@ public class connection : MonoBehaviour
 	Thread threadServer;
 	Thread threadServerR;
 	Thread threadClient;
-	EndPoint remote;
 
 	//Check for global use
-	List<Socket> clients;
+	EndPoint remote;
+	List<Socket> TCPclients;
+	List<EndPoint> UDPclients;
 
 	public Text enterUserName;
 	public Text enterServerIP;
@@ -43,9 +44,14 @@ public class connection : MonoBehaviour
 			socketClient.Close();
 		}
 
-		if (clients != null) 
-			clients.Clear();
-		clients = new List<Socket>();
+		if (TCPclients != null) 
+			TCPclients.Clear();
+		TCPclients = new List<Socket>();
+
+		if (UDPclients != null)
+			UDPclients.Clear();
+		UDPclients = new List<EndPoint>();
+
 		log = null;
 		remote = (EndPoint)(new IPEndPoint(IPAddress.Any, 0));
 	}
@@ -67,11 +73,13 @@ public class connection : MonoBehaviour
 				GameObject.Find("CreateGame").GetComponent<Button>().interactable = false;
 				GameObject.Find("JoinGame").GetComponent<Button>().interactable = true;
 				GameObject.Find("Disconnect").GetComponent<Button>().interactable = true;
+				GameObject.Find("ServerIP").GetComponent<InputField>().interactable = true;
 				break;
 			case Profile.server:
 				GameObject.Find("CreateGame").GetComponent<Button>().interactable = true;
 				GameObject.Find("JoinGame").GetComponent<Button>().interactable = false;
 				GameObject.Find("Disconnect").GetComponent<Button>().interactable = false;
+				GameObject.Find("ServerIP").GetComponent<InputField>().interactable = false;
 				break;
 			default:
 				break;
@@ -104,7 +112,7 @@ public class connection : MonoBehaviour
 		threadServer = new Thread(WaitingPlayers);
 		threadServer.Start();
 
-		if (protocol == Protocol.TCP)
+		if (protocol == Protocol.UDP)
 		{
 			threadServerR = new Thread(GatherM);
 			threadServerR.Start();
@@ -121,17 +129,17 @@ public class connection : MonoBehaviour
 		{
 			case Protocol.TCP:
 				{
-					socketServer.Listen(2);
+					socketServer.Listen(4);
 					Socket newClient = socketServer.Accept();
-					clients.Add(newClient);
-					customLog("client deceived " + clients[^1].RemoteEndPoint);
+					TCPclients.Add(newClient);
+					customLog("client deceived " + TCPclients[^1].RemoteEndPoint);
 					break;
 				}
 			case Protocol.UDP:
 				{
 					byte[] data = new byte[1024];
 					int recv = socketServer.ReceiveFrom(data, ref remote);
-
+					UDPclients.Add(remote);
 					customLog("client deceived " + remote.ToString());
 					socketServer.SendTo(data, data.Length, SocketFlags.None, remote);
 
@@ -155,19 +163,22 @@ public class connection : MonoBehaviour
 	{
 		while (true)
 		{
-			if (clients.Count > 0)
-				foreach (Socket c in clients)
+			if (TCPclients.Count > 0)
+				foreach (Socket c in TCPclients)
 				{
 					byte[] data = new byte[1024];
 					int recv = c.Receive(data);
+
 					if (recv == 0)
 					{
 						customLog("client disconnected");
-						clients.Remove(c);
+						TCPclients.Remove(c);
 					}
 					else
 					{
-						c.Send(data);
+						foreach (Socket s in TCPclients)
+							s.Send(data);
+
 						string msg = Encoding.UTF8.GetString(data, 0, recv);
 						customLog(msg);
 					}
@@ -236,31 +247,17 @@ public class connection : MonoBehaviour
 	}
 	void HearServer()
 	{
-		switch (protocol)
+		while (true)
 		{
-			case Protocol.TCP:
-				{
-					while (true)
-					{
-						byte[] data = new byte[1024];
-						int recv = socketClient.Receive(data);
-						string msg = Encoding.UTF8.GetString(data, 0, recv);
-						customLog(msg);
-					}
-					break;
-				}
+			byte[] data = new byte[1024];
+			int recv = 0;
+			if (protocol == Protocol.TCP)
+				recv = socketClient.Receive(data);
+			else if (protocol == Protocol.UDP)
+				recv = socketClient.ReceiveFrom(data, ref remote);
 
-			case Protocol.UDP:
-				{
-					while (true)
-					{
-						byte[] data = new byte[1024];
-						int recv = socketClient.ReceiveFrom(data, ref remote);
-						string msg = Encoding.UTF8.GetString(data, 0, recv);
-						customLog(msg);
-					}
-					break;
-				}
+			string msg = Encoding.UTF8.GetString(data, 0, recv);
+			customLog(msg);
 		}
 	}
 	public void Disconnect()
@@ -277,13 +274,34 @@ public class connection : MonoBehaviour
 		{
 			case Profile.server:
 				{
-					if (clients.Count > 0)
-						foreach (Socket c in clients)
-						{
-							byte[] data = new byte[1024];
-							data = Encoding.UTF8.GetBytes(enterMessage.text);
-							c.Send(data);
-						}
+					switch (protocol)
+					{
+						case Protocol.TCP:
+							{
+								if (TCPclients.Count > 0)
+									foreach (Socket c in TCPclients)
+									{
+										byte[] data = new byte[1024];
+										data = Encoding.UTF8.GetBytes(enterMessage.text);
+										c.Send(data);
+									}
+								break;
+							}
+						case Protocol.UDP:
+							{
+								if (UDPclients.Count > 0)
+									foreach (EndPoint c in UDPclients)
+									{
+										byte[] data = new byte[1024];
+										data = Encoding.UTF8.GetBytes(enterMessage.text);
+										socketServer.SendTo(data, data.Length, SocketFlags.None, c);
+									}
+								break;
+							}
+						default:
+							break;
+					}
+
 					customLog(enterMessage.text);
 					break;
 				}
@@ -291,7 +309,11 @@ public class connection : MonoBehaviour
 				{
 					byte[] data = new byte[1024];
 					data = Encoding.UTF8.GetBytes(enterMessage.text);
-					socketClient.Send(data);
+
+					if (protocol == Protocol.TCP)
+						socketClient.Send(data);
+					else if (protocol == Protocol.UDP)
+						socketClient.SendTo(data, data.Length, SocketFlags.None, remote);
 					break;
 				}
 			default:
