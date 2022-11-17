@@ -12,21 +12,21 @@ public class connection : MonoBehaviour
 	enum Profile { server, client }; private Profile profile;
 	Socket socketServer;
 	Socket socketClient;
-	Thread threadServer;
-	Thread threadServerR;
+	//Thread threadServer; uso en UDP?
+	//Thread threadServerR; uso en UDP?
 	Thread threadClient;
 	List<Socket> clients;
-	public InputField enterUserName; // Changed
+	public InputField enterUserName; 
 	public Text enterServerIP;
 	public Text enterServerPort;
 	public Text ChatBox;
-	public InputField enterMessage; // Changed
+	public InputField enterMessage;
 	string log;
 	EndPoint remote;
 
-	void Reset()
+	void Reset() // Maybe not in Awake (posible crash)
 	{
-		protocol = Protocol.TCP;
+		//protocol = Protocol.TCP;
 		profile = Profile.server;
 		if (socketServer != null)
 		{
@@ -79,7 +79,7 @@ public class connection : MonoBehaviour
 
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Return)) // Changed
+		if (Input.GetKeyDown(KeyCode.Return)) 
 		{
 			SendM();
 		}
@@ -95,39 +95,39 @@ public class connection : MonoBehaviour
 	/*---------------------HOST-------------------*/
 	public void CreateGame()
 	{
-		if (protocol == Protocol.TCP) 
-			socketServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-		else if (protocol == Protocol.UDP) 
-			socketServer = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+		/*if (protocol == Protocol.TCP) 
+			socketServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);*/
+		//else if (protocol == Protocol.UDP) 
+		socketServer = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 		IPEndPoint ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
 		socketServer.Bind(ipep);
 		customLog(enterUserName.text + "'s game available at " + socketServer.LocalEndPoint);
 		
 		threadServer = new Thread(WaitingPlayers);
 		threadServer.Start();
-		if (protocol == Protocol.TCP)
-		{
-			threadServerR = new Thread(GatherM);
-			threadServerR.Start();
-		}
-		else if (protocol == Protocol.TCP) // ¿Uso alguno? He comprobado y no noto diferencia.
-		{
-			IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-			remote = (EndPoint)(sender);
-		}
+		//if (protocol == Protocol.TCP)
+		//{
+		//	threadServerR = new Thread(GatherM);
+		//	threadServerR.Start();
+		//}
+		//else if (protocol == Protocol.TCP) // No se sabe.
+		//{
+		//	IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+		//	remote = (EndPoint)(sender);
+		//}
 	}
 	void WaitingPlayers()
 	{
 		switch (protocol)
 		{
-			case Protocol.TCP:
-				{
-					socketServer.Listen(2);
-					Socket newClient = socketServer.Accept();
-					clients.Add(newClient);
-					customLog("Client deceived " + clients[^1].RemoteEndPoint);
-					break;
-				}
+			//case Protocol.TCP:
+			//	{
+			//		socketServer.Listen(2);
+			//		Socket newClient = socketServer.Accept();
+			//		clients.Add(newClient);
+			//		customLog("Client deceived " + clients[^1].RemoteEndPoint);
+			//		break;
+			//	}
 			case Protocol.UDP:
 				{
 					byte[] data = new byte[1024];
@@ -282,6 +282,6 @@ public class connection : MonoBehaviour
 				break;
         }
 
-		enterMessage.text = ""; // Changed
+		enterMessage.text = "";
 	}
 }
