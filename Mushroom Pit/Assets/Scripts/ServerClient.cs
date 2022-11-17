@@ -139,6 +139,7 @@ public class ServerClient : MonoBehaviour
             if (input == "exit")
                 break;
             server.SendTo(Encoding.ASCII.GetBytes(input), remote);
+
             data = new byte[1024];
             recv = server.ReceiveFrom(data, ref remote);
             stringData = Encoding.ASCII.GetString(data, 0, recv);

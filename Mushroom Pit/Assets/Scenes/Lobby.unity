@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.004023661, g: 0.0002196667, b: 0.000000053558782, a: 1}
+  m_IndirectSpecularColor: {r: 0.0040236637, g: 0.00021966682, b: 0.000000053558782, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1192,69 +1192,6 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!1 &832323343
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 832323346}
-  - component: {fileID: 832323345}
-  - component: {fileID: 832323344}
-  m_Layer: 0
-  m_Name: Cocaine Bale
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!111 &832323344
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 832323343}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations:
-  - {fileID: 0}
-  - {fileID: 7400000, guid: f23c28044ee96d4419b19d2097eb4dc8, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
---- !u!114 &832323345
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 832323343}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5f1e04761b4fc942b1bf3096a28553f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &832323346
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 832323343}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.092, y: 0.36, z: -7.519}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3775821201761253364}
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 353.52, z: 0}
 --- !u!1 &844042997
 GameObject:
   m_ObjectHideFlags: 0
@@ -2962,7 +2899,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh42028
+  m_Name: pb_Mesh24666
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3616,25 +3553,63 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1662924323303999630, guid: c563e73cb4642e24eb524b23b5846330, type: 3}
   m_PrefabInstance: {fileID: 1196090125209119418}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &869499309154662686
-GameObject:
+--- !u!1001 &957378772757941311
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3775821201761253364}
-  - component: {fileID: 5592125966005780842}
-  - component: {fileID: 4079475231647800757}
-  - component: {fileID: 9009633800547674020}
-  m_Layer: 0
-  m_Name: Cocaine Mesh
-  m_TagString: Cocaine
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6525636938614650114, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525636938614650114, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.772
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525636938614650114, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.818
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525636938614650114, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.926
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525636938614650114, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525636938614650114, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525636938614650114, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525636938614650114, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525636938614650114, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525636938614650114, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 353.52
+      objectReference: {fileID: 0}
+    - target: {fileID: 6525636938614650114, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7131665908812577768, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+      propertyPath: m_Name
+      value: Cocaine Bag
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
 --- !u!1001 &1196090125209119418
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3752,64 +3727,6 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 2d5e3ff2e19c551468291ffa1abf1d0c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c563e73cb4642e24eb524b23b5846330, type: 3}
---- !u!4 &3775821201761253364
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 869499309154662686}
-  m_LocalRotation: {x: -0.49999836, y: 0.4999982, z: 0.50000167, w: 0.50000185}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 15, y: 15, z: 15}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 832323346}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -89.9996, y: 0, z: 0}
---- !u!23 &4079475231647800757
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 869499309154662686}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: -4246479402191905792, guid: e875fcc558f000a498cb6b7109ff947a, type: 3}
-  - {fileID: -7198559261415225722, guid: e875fcc558f000a498cb6b7109ff947a, type: 3}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1001 &5546061344901400394
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3879,24 +3796,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
---- !u!33 &5592125966005780842
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 869499309154662686}
-  m_Mesh: {fileID: -5495902117074765545, guid: e875fcc558f000a498cb6b7109ff947a, type: 3}
---- !u!65 &9009633800547674020
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 869499309154662686}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.019, y: 0.019, z: 0.0065}
-  m_Center: {x: 0.008920763, y: -0.030860009, z: 0.000017008277}
