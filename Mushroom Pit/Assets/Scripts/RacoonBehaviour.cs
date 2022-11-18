@@ -83,6 +83,8 @@ public class RacoonBehaviour : MonoBehaviour
                 rState = RacoonState.buffed;
                 anim.Play("Running");
                 break;
+            default:
+                break;
         }
         anim.SetInteger("rRacoonAnim", (int)rState);
     }
