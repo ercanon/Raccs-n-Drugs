@@ -112,12 +112,10 @@ public class connection : MonoBehaviour
 		threadServer = new Thread(WaitingPlayers);
 		threadServer.Start();
 
+		threadServerR = new Thread(GatherM);
+		threadServerR.Start();
+
 		if (protocol == Protocol.UDP)
-		{
-			threadServerR = new Thread(GatherM);
-			threadServerR.Start();
-		}
-		else if (protocol == Protocol.UDP)
 		{
 			IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 			remote = (EndPoint)(sender);
@@ -132,7 +130,7 @@ public class connection : MonoBehaviour
 					socketServer.Listen(4);
 					Socket newClient = socketServer.Accept();
 					TCPclients.Add(newClient);
-					customLog("client deceived " + TCPclients[^1].RemoteEndPoint);
+					customLog("client deceived " + TCPclients[^1].RemoteEndPoint.ToString());
 					break;
 				}
 			case Protocol.UDP:
@@ -141,17 +139,10 @@ public class connection : MonoBehaviour
 					int recv = socketServer.ReceiveFrom(data, ref remote);
 					UDPclients.Add(remote);
 					customLog("client deceived " + remote.ToString());
-					socketServer.SendTo(data, data.Length, SocketFlags.None, remote);
 
-					while (true)
-					{
-						data = new byte[1024];
-						recv = socketServer.ReceiveFrom(data, ref remote);
-						string msg = Encoding.UTF8.GetString(data, 0, recv);
-						customLog(msg);
-
-						socketServer.SendTo(data, recv, SocketFlags.None, remote);
-					}
+					socketServer.SendTo(data, recv, SocketFlags.None, remote);
+					string msg = Encoding.UTF8.GetString(data, 0, recv);
+					customLog(msg);
 					break;
 				}
 			default:
@@ -161,28 +152,63 @@ public class connection : MonoBehaviour
 
 	void GatherM()
 	{
-		while (true)
+		switch (protocol)
 		{
-			if (TCPclients.Count > 0)
-				foreach (Socket c in TCPclients)
+			case Protocol.TCP:
 				{
-					byte[] data = new byte[1024];
-					int recv = c.Receive(data);
-
-					if (recv == 0)
+					while (true)
 					{
-						customLog("client disconnected");
-						TCPclients.Remove(c);
-					}
-					else
-					{
-						foreach (Socket s in TCPclients)
-							s.Send(data);
+						if (TCPclients.Count > 0)
+							foreach (Socket c in TCPclients)
+							{
+								byte[] data = new byte[1024];
+								int recv = c.Receive(data);
+								if (recv == 0)
+								{
+									customLog("client disconnected");
+									TCPclients.Remove(c);
+								}
+								else
+								{
+									foreach (Socket s in TCPclients)
+										c.Send(data);
 
-						string msg = Encoding.UTF8.GetString(data, 0, recv);
-						customLog(msg);
+									string msg = Encoding.UTF8.GetString(data, 0, recv);
+									customLog(msg);
+								}
+							}
 					}
+					break;
 				}
+			case Protocol.UDP:
+				{
+					while (true)
+					{
+						if (UDPclients.Count > 0)
+							foreach (EndPoint c in UDPclients)
+							{
+								EndPoint client = c;
+								byte[] data = new byte[1024];
+								int recv = socketServer.ReceiveFrom(data, ref client);
+								if (recv == 0)
+								{
+									customLog("client disconnected");
+									UDPclients.Remove(c);
+								}
+								else
+								{
+									foreach (EndPoint s in UDPclients)
+										socketServer.SendTo(data, recv, SocketFlags.None, s);
+
+									string msg = Encoding.UTF8.GetString(data, 0, recv);
+									customLog(msg);
+								}
+							}
+					}
+					break;
+				}
+			default:
+				break;
 		}
 	}
 
@@ -262,8 +288,7 @@ public class connection : MonoBehaviour
 	}
 	public void Disconnect()
 	{
-		socketServer.Shutdown(SocketShutdown.Both);
-		socketServer.Close();
+		Reset((int)protocol, (int)profile);
 	}
 
 	/*---------------------CHAT-------------------*/
