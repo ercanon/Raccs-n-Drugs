@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class FirstPersonMovement : MonoBehaviour
+public class RacoonBehaviour : MonoBehaviour
 {
     enum RacoonState
     {

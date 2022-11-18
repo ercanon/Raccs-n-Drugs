@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3293569437944551730}
   - component: {fileID: 6167358307430997}
   - component: {fileID: 8710300558158728707}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Racoon
   m_TagString: Player
   m_Icon: {fileID: 0}

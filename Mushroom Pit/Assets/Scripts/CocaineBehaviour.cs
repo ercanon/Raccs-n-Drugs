@@ -15,4 +15,13 @@ public class CocaineBehaviour : MonoBehaviour
     {
         
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            other.gameObject.GetComponent<RacoonBehaviour>().ChangeState(2);
+            Destroy(gameObject);
+        }
+    }
 }
