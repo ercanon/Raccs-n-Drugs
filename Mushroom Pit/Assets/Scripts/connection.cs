@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class connection : MonoBehaviour
 {
-	enum Protocol { TCP, UDP }; private Protocol protocol;
+	enum Protocol { UDP, TCP }; private Protocol protocol;
 	enum Profile { server, client }; private Profile profile;
 	Socket socketServer;
 	Socket socketClient;
@@ -21,11 +21,11 @@ public class connection : MonoBehaviour
 	List<Socket> TCPclients;
 	List<EndPoint> UDPclients;
 
-	public Text enterUserName;
+	public InputField enterUserName;
 	public Text enterServerIP;
 	public Text enterServerPort;
 	public Text ChatBox;
-	public Text enterMessage;
+	public InputField enterMessage;
 	string log;
 
 	void Reset(int prot, int prof)
@@ -57,7 +57,9 @@ public class connection : MonoBehaviour
 	}
 	void Awake()
 	{
-		Reset((int)profile, (int)protocol);
+		Reset((int)protocol, (int)profile);
+
+		enterUserName.text = "Player" + (int)Random.Range(1, 100000);
 	}
 	public void ChangeProtocol(int val)
 	{
@@ -89,12 +91,18 @@ public class connection : MonoBehaviour
 	/*---------------------TEXT-------------------*/
 	void Update()
 	{
-		if (log != null) { ChatBox.text += log; log = null; }
+		if (log != null) { ChatBox.text += "\n";  ChatBox.text += log; log = null; } // ChatBox.text += "\n" -> Made for a jump before the message. Only happen 1 time.
+
+		if (Input.GetKeyDown(KeyCode.Return))
+        {
+			SendM();
+			enterMessage.text = "";
+        }
 	}
 	void customLog(string x, bool nl = true)
 	{
 		string shrt = x.TrimEnd('\0');
-		log += shrt; if (nl) log += '\n';
+		log += shrt; //if (nl) log += '\n';
 	}
 
 	/*---------------------HOST-------------------*/
@@ -292,7 +300,7 @@ public class connection : MonoBehaviour
 	}
 
 	/*---------------------CHAT-------------------*/
-	public void SendM()
+	void SendM()
 	{
 		//No working with UDP
 		switch (profile)
