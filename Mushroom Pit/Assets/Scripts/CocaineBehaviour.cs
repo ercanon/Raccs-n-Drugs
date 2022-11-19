@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class CocaineBehaviour : MonoBehaviour
 {
+    [HideInInspector]
+    public GameplayScript gameplayScript;
+    public bool isBuffed;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,8 +24,16 @@ public class CocaineBehaviour : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<RacoonBehaviour>().ChangeState(2);
-            Destroy(gameObject);
+            if (isBuffed)
+            {
+                other.gameObject.GetComponent<RacoonBehaviour>().ChangeState(2);
+                gameplayScript.DeleteList();
+            }
+            else 
+            {
+                gameplayScript.UpdateList(gameObject);
+                Destroy(gameObject);
+            }
         }
     }
 }

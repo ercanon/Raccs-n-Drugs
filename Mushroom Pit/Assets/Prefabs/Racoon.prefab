@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 666099294089068777}
+  - component: {fileID: 8710300558158728707}
   - component: {fileID: 657704177452197801}
   - component: {fileID: 286622131060231992}
   - component: {fileID: 3293569437944551730}
   - component: {fileID: 6167358307430997}
-  - component: {fileID: 8710300558158728707}
   m_Layer: 6
   m_Name: Racoon
   m_TagString: Player
@@ -38,6 +38,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8710300558158728707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177229643556919891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97fca36bd81de7c4cafce7bbf02ca611, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 5
+  buffSpeed: 8
 --- !u!95 &657704177452197801
 Animator:
   serializedVersion: 4
@@ -101,22 +115,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.11377762, y: 0.10807443, z: 0.28913447}
   m_Center: {x: 0, y: 0.054000735, z: 0.008737325}
---- !u!114 &8710300558158728707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 177229643556919891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97fca36bd81de7c4cafce7bbf02ca611, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkSpeed: 5
-  canRun: 1
-  buffSpeed: 9
-  runningKey: 304
 --- !u!1 &211898399233784114
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,15 +8,12 @@ public class RacoonBehaviour : MonoBehaviour
         idle,
         walking,
         buffed,
+        dead
     }
 
     private RacoonState rState;
     public float walkSpeed = 5;
-
-    [Header("Running")]
-    public bool canRun = true;
-    public float buffSpeed = 9;
-    public KeyCode runningKey = KeyCode.LeftShift;
+    public float buffSpeed = 8;
 
     private Rigidbody rigidbody;
     private Animator anim;
@@ -33,29 +30,34 @@ public class RacoonBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
-        /*
-        if (canRun && Input.GetKey(runningKey))
-            ChangeState((int)RacoonState.buffed);
-        */
-
-        float targetMovingSpeed = rState==RacoonState.buffed ? buffSpeed : walkSpeed;
-
-        if (speedOverrides.Count > 0)
-            targetMovingSpeed = speedOverrides[speedOverrides.Count - 1]();
-
-        // Get targetVelocity from input.
-        Vector2 targetVelocity = new Vector2( Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
-
-        // Apply movement.
-        rigidbody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
-
-        //Apply rotation.
-        if (rigidbody.velocity.magnitude > 0)
+        if (rState != RacoonState.dead)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rigidbody.velocity), Time.deltaTime * 10f);
-            if (rState != RacoonState.buffed) ChangeState((int)RacoonState.walking);
+            /*
+            if (canRun && Input.GetKey(runningKey))
+                ChangeState((int)RacoonState.buffed);
+            */
+
+            float targetMovingSpeed = rState == RacoonState.buffed ? buffSpeed : walkSpeed;
+
+            if (speedOverrides.Count > 0)
+                targetMovingSpeed = speedOverrides[speedOverrides.Count - 1]();
+
+            // Get targetVelocity from input.
+            Vector2 targetVelocity = new Vector2(Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
+
+            // Apply movement.
+            rigidbody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
+
+            //Apply rotation.
+            if (rigidbody.velocity.magnitude > 0)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rigidbody.velocity), Time.deltaTime * 10f);
+                if (rState != RacoonState.buffed)
+                    ChangeState((int)RacoonState.walking);
+            }
+            else if (rState != RacoonState.buffed)
+                ChangeState((int)RacoonState.idle);
         }
-        else ChangeState((int)RacoonState.idle);
     }
 
     public void ChangeState(int state)
@@ -69,6 +71,7 @@ public class RacoonBehaviour : MonoBehaviour
                 rState = RacoonState.idle;
                 anim.Play("Idle");
                 break;
+            
             case 1: // Walking
                 if (rState == RacoonState.walking)
                     return;
@@ -76,16 +79,31 @@ public class RacoonBehaviour : MonoBehaviour
                 rState = RacoonState.walking;
                 anim.Play("Walking");
                 break;
+            
             case 2: //Buffed
                 if (rState == RacoonState.buffed)
                     return;
 
                 rState = RacoonState.buffed;
-                anim.Play("Running");
+                anim.Play("Idle Buff");
                 break;
+
+            case 3: //Dead
+                if (rState == RacoonState.dead)
+                    return;
+
+                rState = RacoonState.dead;
+                break;
+
             default:
                 break;
         }
         anim.SetInteger("rRacoonAnim", (int)rState);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+            collision.gameObject.GetComponent<RacoonBehaviour>().ChangeState((int)RacoonState.dead);
     }
 }
