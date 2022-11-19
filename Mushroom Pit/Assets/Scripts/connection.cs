@@ -5,6 +5,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class connection : MonoBehaviour
 {
@@ -44,7 +45,7 @@ public class connection : MonoBehaviour
 			socketClient.Close();
 		}
 
-		if (TCPclients != null) 
+		if (TCPclients != null)
 			TCPclients.Clear();
 		TCPclients = new List<Socket>();
 
@@ -72,12 +73,14 @@ public class connection : MonoBehaviour
 		switch (profile)
 		{
 			case Profile.client:
+				GameObject.Find("StartGame").GetComponent<Button>().interactable = false;
 				GameObject.Find("CreateGame").GetComponent<Button>().interactable = false;
 				GameObject.Find("JoinGame").GetComponent<Button>().interactable = true;
 				GameObject.Find("Disconnect").GetComponent<Button>().interactable = true;
 				GameObject.Find("ServerIP").GetComponent<InputField>().interactable = true;
 				break;
 			case Profile.server:
+				GameObject.Find("StartGame").GetComponent<Button>().interactable = true;
 				GameObject.Find("CreateGame").GetComponent<Button>().interactable = true;
 				GameObject.Find("JoinGame").GetComponent<Button>().interactable = false;
 				GameObject.Find("Disconnect").GetComponent<Button>().interactable = false;
@@ -91,13 +94,15 @@ public class connection : MonoBehaviour
 	/*---------------------TEXT-------------------*/
 	void Update()
 	{
-		if (log != null) { ChatBox.text += "\n";  ChatBox.text += log; log = null; } // ChatBox.text += "\n" -> Made for a jump before the message. Only happen 1 time.
+		if (log != null) { ChatBox.text += "\n"; ChatBox.text += log; log = null; } // ChatBox.text += "\n" -> Made for a jump before the message. Only happen 1 time.
 
 		if (Input.GetKeyDown(KeyCode.Return))
-        {
+		{
 			SendM();
 			enterMessage.text = "";
-        }
+		}
+
+		if (Input.GetKeyDown(KeyCode.F1)) SceneManager.LoadScene(1);
 	}
 	void customLog(string x, bool nl = true)
 	{
@@ -302,7 +307,7 @@ public class connection : MonoBehaviour
 	/*---------------------CHAT-------------------*/
 	void SendM()
 	{
-		//No working with UDP
+		//No working with UDP -> not true. Is working
 		switch (profile)
 		{
 			case Profile.server:
@@ -352,5 +357,11 @@ public class connection : MonoBehaviour
 			default:
 				break;
 		}
+	}
+
+	/*---------------------STARTGAME-------------------*/
+	public void Start()
+	{
+
 	}
 }
