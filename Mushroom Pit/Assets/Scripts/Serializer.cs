@@ -32,7 +32,7 @@ public class Serializer : MonoBehaviour // All of this is made with a reference 
     {
         int intTest = 10; // TEST
 
-        stream = new MemoryStream();
+        MemoryStream stream = new MemoryStream();
 
         /*-----WRITE VARIABLE-----*/
         BinaryWriter write = new BinaryWriter(stream);

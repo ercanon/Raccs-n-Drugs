@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class connection : MonoBehaviour
 {
@@ -19,8 +20,9 @@ public class connection : MonoBehaviour
 
 	//Check for global use
 	EndPoint remote;
-	List<Socket> TCPclients;
-	List<EndPoint> UDPclients;
+	[HideInInspector]
+	public List<Socket> TCPclients;
+	public List<EndPoint> UDPclients;
 
 	public InputField enterUserName;
 	public Text enterServerIP;
@@ -28,6 +30,9 @@ public class connection : MonoBehaviour
 	public Text ChatBox;
 	public InputField enterMessage;
 	string log;
+
+	[HideInInspector]
+	public GameplayScript gameManager;
 
 	void Reset(int prot, int prof)
 	{
@@ -61,6 +66,7 @@ public class connection : MonoBehaviour
 		Reset((int)protocol, (int)profile);
 
 		enterUserName.text = "Player" + (int)Random.Range(1, 100000);
+		gameManager = null;
 	}
 	public void ChangeProtocol(int val)
 	{
@@ -95,14 +101,14 @@ public class connection : MonoBehaviour
 	void Update()
 	{
 		if (log != null) { ChatBox.text += "\n"; ChatBox.text += log; log = null; } // ChatBox.text += "\n" -> Made for a jump before the message. Only happen 1 time.
-
+		
 		if (Input.GetKeyDown(KeyCode.Return))
 		{
 			SendM();
 			enterMessage.text = "";
 		}
 
-		if (Input.GetKeyDown(KeyCode.F1)) SceneManager.LoadScene(1);
+		Serialize();
 	}
 	void customLog(string x, bool nl = true)
 	{
@@ -184,7 +190,8 @@ public class connection : MonoBehaviour
 								else
 								{
 									foreach (Socket s in TCPclients)
-										c.Send(data);
+										if (c!=s)
+											c.Send(data);
 
 									string msg = Encoding.UTF8.GetString(data, 0, recv);
 									customLog(msg);
@@ -211,7 +218,8 @@ public class connection : MonoBehaviour
 								else
 								{
 									foreach (EndPoint s in UDPclients)
-										socketServer.SendTo(data, recv, SocketFlags.None, s);
+										if(c!=s)
+											socketServer.SendTo(data, recv, SocketFlags.None, s);
 
 									string msg = Encoding.UTF8.GetString(data, 0, recv);
 									customLog(msg);
@@ -307,7 +315,6 @@ public class connection : MonoBehaviour
 	/*---------------------CHAT-------------------*/
 	void SendM()
 	{
-		//No working with UDP -> not true. Is working
 		switch (profile)
 		{
 			case Profile.server:
@@ -352,6 +359,8 @@ public class connection : MonoBehaviour
 						socketClient.Send(data);
 					else if (protocol == Protocol.UDP)
 						socketClient.SendTo(data, data.Length, SocketFlags.None, remote);
+
+					customLog(enterMessage.text);
 					break;
 				}
 			default:
@@ -359,9 +368,81 @@ public class connection : MonoBehaviour
 		}
 	}
 
-	/*---------------------STARTGAME-------------------*/
-	public void Start()
+	public void SendDataClient(string var)
 	{
+		byte[] data = new byte[1024];
+		data = Encoding.UTF8.GetBytes(var);
 
+		if (protocol == Protocol.TCP)
+			socketClient.Send(data);
+		else if (protocol == Protocol.UDP)
+			socketClient.SendTo(data, data.Length, SocketFlags.None, remote);
+	}
+	public void SendDataClient(byte[] var)
+	{
+		if (protocol == Protocol.TCP)
+			socketClient.Send(var);
+		else if (protocol == Protocol.UDP)
+			socketClient.SendTo(var, var.Length, SocketFlags.None, remote);
+	}
+
+	public void Serialize()
+	{
+		if (gameManager != null)
+		{
+			MemoryStream stream = new MemoryStream();
+			BinaryWriter write = new BinaryWriter(stream);
+
+			//Racoon Positions
+			foreach(GameObject rac in gameManager.racoonList)
+				write.Write(rac.transform.position.ToString());
+
+			SendDataClient(stream.ToArray());
+		}
+	}
+
+	public void Deserialize(byte[] data)
+	{
+		if (gameManager != null)
+		{
+			// Read what we got in the bytes (saved data).
+			MemoryStream stream = new MemoryStream();
+			stream.Write(data, 0, data.Length);
+
+			BinaryReader reader = new BinaryReader(stream);
+			stream.Seek(0, SeekOrigin.Begin);
+
+			/*-----READ-----*/ // DEBEN DE ESTAR ORDENADOS ESTOS DATOS.
+			foreach (GameObject rac in gameManager.racoonList)
+				rac.transform.position = StringToVector3(reader.ReadString());
+		}
+	}
+
+	public static Vector3 StringToVector3(string sVector)
+	{
+		// Remove the parentheses
+		if (sVector.StartsWith("(") && sVector.EndsWith(")"))
+		{
+			sVector = sVector.Substring(1, sVector.Length - 2);
+		}
+
+		// split the items
+		string[] sArray = sVector.Split(',');
+
+		// store as a Vector3
+		Vector3 result = new Vector3(
+			float.Parse(sArray[0]),
+			float.Parse(sArray[1]),
+			float.Parse(sArray[2]));
+
+		return result;
+	}
+
+
+	/*---------------------GAME-------------------*/
+	public void LaunchGame()
+	{
+		GameObject.Find("Level").GetComponent<GameplayScript>().enabled = true;
+		GameObject.Find("UI").SetActive(false);
 	}
 }

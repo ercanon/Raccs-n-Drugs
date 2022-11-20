@@ -1,32 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameplayScript : MonoBehaviour
 {
     public GameObject racoon;
     public GameObject cocaine;
-    private List<GameObject> cocaineList;
-    private bool spawnCocaine;
+
+    [HideInInspector]
+    public List<GameObject> cocaineList;
+    public List<GameObject> racoonList;
+    public connection serverConnection;
+
+    private bool spawnCocaine = false;
+    private bool cameraTransition = true;
     private Transform playableArea;
 
     public int maxCocaineBags;
-    public float offsetCocaineSapwn;
+    public float offsetCocaineSpawn;
 
     void Awake()
     {
         playableArea = transform.GetChild(0);
         cocaineList = new List<GameObject>();
+        racoonList = new List<GameObject>();
+        serverConnection = GameObject.Find("Server").GetComponent<connection>();
+    }
 
-        spawnCocaine = true;
+    private void OnEnable()
+    {
+        serverConnection.gameManager = this;
 
-        //Aqui el spawn del racoon
-        //Ej: Instantiate(racoon);
+        Transform[] pos = GameObject.Find("RacoonSpawn").GetComponentsInChildren<Transform>();
+        for (int i = 0; i <= serverConnection.UDPclients.Count; i++)
+        {
+            if (i >= 4)
+                break;
+            racoonList.Add(Instantiate(racoon, pos[i+1].position, pos[i+1].rotation));
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (cameraTransition)
+        {
+            Transform camera = GameObject.Find("Main Camera").transform;
+            Transform gamePos = GameObject.Find("CameraGamePosition").transform;
+
+            camera.transform.position = Vector3.Lerp(camera.transform.position, gamePos.position, 2 * Time.deltaTime);
+            camera.transform.rotation = Quaternion.Lerp(camera.transform.rotation, gamePos.rotation, 2 * Time.deltaTime);
+
+            if (Vector3.Distance(camera.transform.position, gamePos.position) < 0.15) 
+                cameraTransition = false;
+        }
+
         if (spawnCocaine)
         {
             cocaineList.Clear();
@@ -34,9 +63,9 @@ public class GameplayScript : MonoBehaviour
             for (int i = 0; i < maxCocaineBags; i++)
             {
                 Vector3 randPosition = new Vector3(
-                    playableArea.position.x + Random.Range(offsetCocaineSapwn, playableArea.GetComponent<Renderer>().bounds.size.x - offsetCocaineSapwn),
+                    playableArea.position.x + Random.Range(offsetCocaineSpawn, playableArea.GetComponent<Renderer>().bounds.size.x - offsetCocaineSpawn),
                     cocaine.transform.position.y,
-                    playableArea.position.z - Random.Range(offsetCocaineSapwn, playableArea.GetComponent<Renderer>().bounds.size.z - offsetCocaineSapwn));
+                    playableArea.position.z - Random.Range(offsetCocaineSpawn, playableArea.GetComponent<Renderer>().bounds.size.z - offsetCocaineSpawn));
 
                 GameObject obj = Instantiate(cocaine, randPosition, cocaine.transform.rotation);
                 cocaineList.Add(obj);
@@ -48,7 +77,7 @@ public class GameplayScript : MonoBehaviour
             spawnCocaine = false;
         }
 
-        if (cocaineList.Count <= 0)
+        if (!cameraTransition && cocaineList.Count <= 0)
             spawnCocaine = true;
     }
 
@@ -57,8 +86,8 @@ public class GameplayScript : MonoBehaviour
 
     public void DeleteList()
     {
-        foreach (GameObject cocaine in cocaineList)
-            Destroy(cocaine);
+        foreach (GameObject coc in cocaineList)
+            Destroy(coc);
 
         cocaineList.Clear();
     }
