@@ -22,12 +22,19 @@ public class connection : MonoBehaviour
 	List<Socket> TCPclients;
 	List<EndPoint> UDPclients;
 
+	// UI
 	public InputField enterUserName;
 	public Text enterServerIP;
 	public Text enterServerPort;
 	public Text ChatBox;
 	public InputField enterMessage;
 	string log;
+
+	// Scenes
+	public GameObject InitScene;
+	public GameObject LobbyScene;
+	public GameObject InitUI;
+	[SerializeField] bool startBool;
 
 	void Reset(int prot, int prof)
 	{
@@ -60,6 +67,9 @@ public class connection : MonoBehaviour
 	{
 		Reset((int)protocol, (int)profile);
 
+		InitScene.SetActive(true);
+		LobbyScene.SetActive(false);
+		InitUI.SetActive(true);
 		enterUserName.text = "Player" + (int)Random.Range(1, 100000);
 	}
 	public void ChangeProtocol(int val)
@@ -102,7 +112,13 @@ public class connection : MonoBehaviour
 			enterMessage.text = "";
 		}
 
-		if (Input.GetKeyDown(KeyCode.F1)) SceneManager.LoadScene(1);
+		// Scene change.
+		if (startBool) 
+		{
+			InitScene.SetActive(false);
+			LobbyScene.SetActive(true);
+			InitUI.SetActive(false);
+		}
 	}
 	void customLog(string x, bool nl = true)
 	{
@@ -296,7 +312,15 @@ public class connection : MonoBehaviour
 				recv = socketClient.ReceiveFrom(data, ref remote);
 
 			string msg = Encoding.UTF8.GetString(data, 0, recv);
-			customLog(msg);
+
+			if (msg == "True" && startBool == false)
+			{
+				startBool = true;
+			}
+			else
+			{
+				customLog(msg);
+			}
 		}
 	}
 	public void Disconnect()
@@ -307,7 +331,6 @@ public class connection : MonoBehaviour
 	/*---------------------CHAT-------------------*/
 	void SendM()
 	{
-		//No working with UDP -> not true. Is working
 		switch (profile)
 		{
 			case Profile.server:
@@ -359,9 +382,17 @@ public class connection : MonoBehaviour
 		}
 	}
 
-	/*---------------------STARTGAME-------------------*/
-	public void Start()
+	/*---------------------START BUTTON-------------------*/
+	public void StartButton()
 	{
+		startBool = true;
 
+		if (UDPclients.Count > 0)
+			foreach (EndPoint c in UDPclients)
+			{
+				byte[] data = new byte[1024];
+				data = Encoding.UTF8.GetBytes(startBool.ToString());
+				socketServer.SendTo(data, data.Length, SocketFlags.None, c);
+			}
 	}
 }
