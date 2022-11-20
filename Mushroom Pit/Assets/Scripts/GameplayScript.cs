@@ -37,7 +37,8 @@ public class GameplayScript : MonoBehaviour
         {
             if (i >= 4)
                 break;
-            racoonList.Add(Instantiate(racoon, pos[i+1].position, pos[i+1].rotation));
+            GameObject actRac = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
+            racoonList.Add(actRac);
         }
     }
 

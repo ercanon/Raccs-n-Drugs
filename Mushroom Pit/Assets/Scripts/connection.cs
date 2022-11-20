@@ -108,7 +108,7 @@ public class connection : MonoBehaviour
 			enterMessage.text = "";
 		}
 
-		Serialize();
+		AutoSerialize();
 	}
 	void customLog(string x, bool nl = true)
 	{
@@ -142,30 +142,33 @@ public class connection : MonoBehaviour
 	}
 	void WaitingPlayers()
 	{
-		switch (protocol)
+		if (gameManager == null)
 		{
-			case Protocol.TCP:
-				{
-					socketServer.Listen(4);
-					Socket newClient = socketServer.Accept();
-					TCPclients.Add(newClient);
-					customLog("client deceived " + TCPclients[^1].RemoteEndPoint.ToString());
-					break;
-				}
-			case Protocol.UDP:
-				{
-					byte[] data = new byte[1024];
-					int recv = socketServer.ReceiveFrom(data, ref remote);
-					UDPclients.Add(remote);
-					customLog("client deceived " + remote.ToString());
+			switch (protocol)
+			{
+				case Protocol.TCP:
+					{
+						socketServer.Listen(4);
+						Socket newClient = socketServer.Accept();
+						TCPclients.Add(newClient);
+						customLog("client deceived " + TCPclients[^1].RemoteEndPoint.ToString());
+						break;
+					}
+				case Protocol.UDP:
+					{
+						byte[] data = new byte[1024];
+						int recv = socketServer.ReceiveFrom(data, ref remote);
+						UDPclients.Add(remote);
+						customLog("client deceived " + remote.ToString());
 
-					socketServer.SendTo(data, recv, SocketFlags.None, remote);
-					string msg = Encoding.UTF8.GetString(data, 0, recv);
-					customLog(msg);
+						socketServer.SendTo(data, recv, SocketFlags.None, remote);
+						string msg = Encoding.UTF8.GetString(data, 0, recv);
+						customLog(msg);
+						break;
+					}
+				default:
 					break;
-				}
-			default:
-				break;
+			}
 		}
 	}
 
@@ -221,8 +224,13 @@ public class connection : MonoBehaviour
 										if(c!=s)
 											socketServer.SendTo(data, recv, SocketFlags.None, s);
 
-									string msg = Encoding.UTF8.GetString(data, 0, recv);
-									customLog(msg);
+									if (gameManager == null)
+									{
+										string msg = Encoding.UTF8.GetString(data, 0, recv);
+										customLog(msg);
+									}
+									else
+										AutoDeserialize(data);
 								}
 							}
 					}
@@ -303,8 +311,13 @@ public class connection : MonoBehaviour
 			else if (protocol == Protocol.UDP)
 				recv = socketClient.ReceiveFrom(data, ref remote);
 
-			string msg = Encoding.UTF8.GetString(data, 0, recv);
-			customLog(msg);
+			if (gameManager == null)
+			{
+				string msg = Encoding.UTF8.GetString(data, 0, recv);
+				customLog(msg);
+			}
+			else
+				AutoDeserialize(data);
 		}
 	}
 	public void Disconnect()
@@ -386,7 +399,7 @@ public class connection : MonoBehaviour
 			socketClient.SendTo(var, var.Length, SocketFlags.None, remote);
 	}
 
-	public void Serialize()
+	public void AutoSerialize()
 	{
 		if (gameManager != null)
 		{
@@ -401,7 +414,7 @@ public class connection : MonoBehaviour
 		}
 	}
 
-	public void Deserialize(byte[] data)
+	public void AutoDeserialize(byte[] data)
 	{
 		if (gameManager != null)
 		{
@@ -418,6 +431,16 @@ public class connection : MonoBehaviour
 		}
 	}
 
+
+	/*---------------------GAME-------------------*/
+	public void LaunchGame()
+	{
+		GameObject.Find("Level").GetComponent<GameplayScript>().enabled = true;
+		GameObject.Find("UI").SetActive(false);
+	}
+
+
+	/*---------------------HELPERS-------------------*/
 	public static Vector3 StringToVector3(string sVector)
 	{
 		// Remove the parentheses
@@ -436,13 +459,5 @@ public class connection : MonoBehaviour
 			float.Parse(sArray[2]));
 
 		return result;
-	}
-
-
-	/*---------------------GAME-------------------*/
-	public void LaunchGame()
-	{
-		GameObject.Find("Level").GetComponent<GameplayScript>().enabled = true;
-		GameObject.Find("UI").SetActive(false);
 	}
 }
