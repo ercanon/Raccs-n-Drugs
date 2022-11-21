@@ -11,7 +11,7 @@ public class GameplayScript : MonoBehaviour
     [HideInInspector]
     public List<GameObject> cocaineList;
     public List<GameObject> racoonList;
-    public connection serverConnection;
+    //public connection serverConnection;
 
     private bool spawnCocaine = false;
     private bool cameraTransition = true;
@@ -25,21 +25,21 @@ public class GameplayScript : MonoBehaviour
         playableArea = transform.GetChild(0);
         cocaineList = new List<GameObject>();
         racoonList = new List<GameObject>();
-        serverConnection = GameObject.Find("Server").GetComponent<connection>();
+        //serverConnection = GameObject.Find("Server").GetComponent<connection>();
     }
 
     private void OnEnable()
     {
-        serverConnection.gameManager = this;
+        //serverConnection.gameManager = this;
 
         Transform[] pos = GameObject.Find("RacoonSpawn").GetComponentsInChildren<Transform>();
-        for (int i = 0; i <= serverConnection.UDPclients.Count; i++)
-        {
-            if (i >= 4)
-                break;
-            GameObject actRac = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
+        //for (int i = 0; i <= serverConnection.UDPclients.Count; i++)
+        //{
+        //    if (i >= 4)
+        //        break;
+            GameObject actRac = Instantiate(racoon, pos[1].position, pos[1].rotation);
             racoonList.Add(actRac);
-        }
+        //}
     }
 
     // Update is called once per frame
