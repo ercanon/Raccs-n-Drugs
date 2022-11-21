@@ -22,7 +22,7 @@ public class ServerClient : MonoBehaviour
     // Serializer
     static MemoryStream stream;
     bool connectedS, loggedC;
-    float x, y, z;
+    float x, y, z, dx, dy, dz;
 
     // Canvas Connection
     enum Profile { server, client }; Profile profile;
@@ -33,6 +33,10 @@ public class ServerClient : MonoBehaviour
 
     // Server
     Socket newsock;
+    private Vector3 newPosRaccoon;
+    private Vector3 newPosRaccoon2;
+    public bool posChanged = false;
+    public GameObject Racoon2;
 
     // Client
     Socket server;
@@ -40,12 +44,14 @@ public class ServerClient : MonoBehaviour
     // SerializeContent
     [SerializeField] bool startBool;
     Transform racoon;
+    Transform racoonc;
 
     private void Awake()
     {
         serverIP.interactable = false;
 
-        racoon = GameObject.Find("Racoon").GetComponent<Transform>();
+        //racoon = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Transform>();
+        //racoonc = GameObject.FindGameObjectsWithTag("Player")[1].GetComponent<Transform>();
     }
 
     public void ChangeProfile(int prof)
@@ -88,6 +94,21 @@ public class ServerClient : MonoBehaviour
         {
             chatBox.text += textSend + "\n";
             textSend = "";
+        }
+
+        if (profile == Profile.client && posChanged)
+        {
+            GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<RacoonBehaviour>().enabled = false;
+            GameObject.FindGameObjectsWithTag("Player")[0].transform.position = newPosRaccoon;
+            posChanged = false;
+
+        }
+
+        if (profile == Profile.server && posChanged)
+        {
+            GameObject.FindGameObjectsWithTag("Player")[1].GetComponent<RacoonBehaviour>().enabled = false;
+            GameObject.FindGameObjectsWithTag("Player")[1].transform.position = newPosRaccoon;
+            posChanged = false;
         }
     }
 
@@ -176,12 +197,17 @@ public class ServerClient : MonoBehaviour
         BinaryWriter write = new BinaryWriter(stream);
 
         write.Write(startBool);
-        write.Write(racoon.position.x);
-        write.Write(racoon.position.y);
-        write.Write(racoon.position.z);
+        Vector3 xd;
+        if (profile == Profile.server)
+            xd = GameObject.FindGameObjectsWithTag("Player")[0].transform.position;
+        else
+            xd = GameObject.FindGameObjectsWithTag("Player")[1].transform.position;
+        write.Write(xd.x);
+        write.Write(xd.y);
+        write.Write(xd.z);
 
-        if (connectedS) newsock.SendTo(stream.ToArray(), stream.ToArray().Length, SocketFlags.None, remote);
-        else if (loggedC) server.SendTo(stream.ToArray(), stream.ToArray().Length, SocketFlags.None, remote);
+       // if (connectedS) newsock.SendTo(stream.ToArray(), stream.ToArray().Length, SocketFlags.None, remote);
+        server.SendTo(stream.ToArray(), stream.ToArray().Length, SocketFlags.None, remote);
     }
 
     void Deserialize()
@@ -189,11 +215,14 @@ public class ServerClient : MonoBehaviour
         stream = new MemoryStream(data);
         BinaryReader reader = new BinaryReader(stream);
         stream.Seek(0, SeekOrigin.Begin);
-
+        Debug.Log("this is boolean state: "+startBool);
         startBool = reader.ReadBoolean();
         x = reader.ReadSingle();
         y = reader.ReadSingle();
         z = reader.ReadSingle();
+        newPosRaccoon = new Vector3((float)x, (float)y, (float)z);
+        posChanged = true;
+
     }
 
     /*----- FUNCTIONS -----*/
@@ -203,6 +232,6 @@ public class ServerClient : MonoBehaviour
     {
         GameObject.Find("Level").GetComponent<GameplayScript>().enabled = true;
         GameObject.Find("UI").SetActive(false);
-        startBool = false;
+        //startBool = false;
     }
 }

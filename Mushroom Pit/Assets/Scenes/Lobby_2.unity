@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.0040236637, g: 0.00021966682, b: 0.000000053558782, a: 1}
+  m_IndirectSpecularColor: {r: 0.004023661, g: 0.0002196667, b: 0.000000053558782, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -176,6 +176,8 @@ MonoBehaviour:
   createB: {fileID: 792353308}
   joinB: {fileID: 792353307}
   disconnectB: {fileID: 226243681}
+  posChanged: 0
+  Racoon2: {fileID: 1626478654}
   startBool: 0
 --- !u!1 &86099808
 GameObject:
@@ -577,7 +579,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh177180
+  m_Name: pb_Mesh80940
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -865,6 +867,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 15, y: 0, z: 0}
+--- !u!1 &1626478654 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 177229643556919891, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
+  m_PrefabInstance: {fileID: 5546061344901400394}
+  m_PrefabAsset: {fileID: 0}
 --- !u!850595691 &1698656017
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -1332,7 +1339,7 @@ PrefabInstance:
       objectReference: {fileID: 880121486}
     - target: {fileID: 1676281799494127411, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
       propertyPath: m_VersionIndex
-      value: 2838
+      value: 2841
       objectReference: {fileID: 0}
     - target: {fileID: 1676281799494127412, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
       propertyPath: m_Mesh

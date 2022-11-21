@@ -20,6 +20,9 @@ public class GameplayScript : MonoBehaviour
     public int maxCocaineBags;
     public float offsetCocaineSpawn;
 
+    GameObject racoonMe;
+    GameObject racoonYou;
+
     void Awake()
     {
         playableArea = transform.GetChild(0);
@@ -37,8 +40,8 @@ public class GameplayScript : MonoBehaviour
         //{
         //    if (i >= 4)
         //        break;
-            GameObject actRac = Instantiate(racoon, pos[1].position, pos[1].rotation);
-            racoonList.Add(actRac);
+        racoonMe = Instantiate(racoon, pos[1].position, pos[1].rotation);
+        racoonYou = Instantiate(racoon, pos[2].position, pos[2].rotation);
         //}
     }
 
