@@ -15,9 +15,9 @@ public class bruh : MonoBehaviour
 	Thread thread;
 	int port = 9000;
 	int maxClients = 4;
-	Vector3 me;
+	GameObject me;
 	string localIP;
-	Dictionary<EndPoint, Vector3> peers;
+	Dictionary<EndPoint, GameObject> peers;
 	EndPoint lastPacket = null;
 	byte[] packet = null;
 	public Text chat;
@@ -30,6 +30,10 @@ public class bruh : MonoBehaviour
 	private string chatHistory = null;
 	private void Log(string data) { chatHistory += data + '\n'; }
 	Vector3 spawnRand() { return new Vector3(Random.Range(-9, -5), 0, Random.Range(7, 15)); }
+	void spawn(EndPoint who)
+	{
+		peers.Add(who, Instantiate(racoon, spawnRand(), Quaternion.identity));
+	}
 	Vector3 spawnRand0() { return new Vector3(-5, 0, 7); }
 	private void Reset()
 	{
@@ -64,7 +68,7 @@ public class bruh : MonoBehaviour
 				{
 					if (peers.Count < maxClients)
 					{
-						peers.Add(who, spawnRand0());
+						spawn(who);
 						Log("[" + who + "] joined");
 						Broadcast(Encoding.ASCII.GetBytes("join " + who));
 					}
@@ -81,8 +85,8 @@ public class bruh : MonoBehaviour
 							IPEndPoint new_who = new IPEndPoint(ip, port);
 							if (peers.ContainsKey(new_who) == false)
 							{
-								peers.Add(new_who, spawnRand0());
-								Log("[" + who + "] joined");
+								spawn(new_who);
+								Log("[" + new_who + "] joined");
 							}
 							continue;
 						}
@@ -105,9 +109,9 @@ public class bruh : MonoBehaviour
 		BinaryWriter writer = new BinaryWriter(stream);
 		writer.Write(transition);
 		//writer.Write(localIP);
-		writer.Write(me.x);
-		writer.Write(me.y);
-		writer.Write(me.z);
+		writer.Write(me.transform.position.x);
+		writer.Write(me.transform.position.y);
+		writer.Write(me.transform.position.z);
 		return stream.ToArray();
 	}
 	private void Deserialize(byte[] data)
@@ -125,8 +129,7 @@ public class bruh : MonoBehaviour
 		EndPoint who = lastPacket;
 		if (peers.ContainsKey(who))
 		{
-			var target = peers[who];
-			target.Set(x, y, z);
+			peers[who].transform.position.Set(x, y, z);
 		}
 		if (transition == false && begun)
 		{
@@ -145,12 +148,7 @@ public class bruh : MonoBehaviour
 		if (transition == false)
 		{
 			transition = true;
-			me = GameObject.FindGameObjectWithTag("Player").transform.position;
-			//Instantiate(racoon, me, Quaternion.identity);
-			foreach (var player in peers)
-			{
-				Instantiate(racoon, player.Value, Quaternion.identity);
-			}
+			me = GameObject.FindGameObjectWithTag("Player");
 			GameObject.Find("UI").SetActive(false);
 		}
 	}
