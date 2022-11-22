@@ -17,7 +17,9 @@ public class bruh : MonoBehaviour
 	int maxClients = 4;
 	GameObject me;
 	string localIP;
-	Dictionary<EndPoint, GameObject> peers;
+	int assignID = -1;
+	Dictionary<EndPoint, int> peers;
+	List<GameObject> players;
 	EndPoint lastPacket = null;
 	byte[] packet = null;
 	public Text chat;
@@ -29,12 +31,6 @@ public class bruh : MonoBehaviour
 	//
 	private string chatHistory = null;
 	private void Log(string data) { chatHistory += data + '\n'; }
-	Vector3 spawnRand() { return new Vector3(Random.Range(-9, -5), 0, Random.Range(7, 15)); }
-	void spawn(EndPoint who)
-	{
-		peers.Add(who, Instantiate(racoon, spawnRand0(), Quaternion.identity));
-	}
-	Vector3 spawnRand0() { return new Vector3(-5, 0, 7); }
 	private void Reset()
 	{
 		socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -42,8 +38,8 @@ public class bruh : MonoBehaviour
 		socket.Bind(new IPEndPoint(IPAddress.Any, port));
 		thread = new Thread(Listen);
 		thread.Start();
-		peers = new Dictionary<EndPoint, GameObject>();
-		me = Instantiate(racoon, spawnRand0(), Quaternion.identity);
+		peers = new Dictionary<EndPoint, int>();
+		me = Instantiate(racoon, new Vector3(-5, 0, 7), Quaternion.identity);
 	}
 	public void PingX()
 	{
@@ -68,7 +64,7 @@ public class bruh : MonoBehaviour
 				{
 					if (peers.Count < maxClients)
 					{
-						spawn(who);
+						peers.Add(who, ++assignID);
 						Log("[" + who + "] joined");
 						Broadcast(Encoding.ASCII.GetBytes("join " + who));
 					}
@@ -85,7 +81,7 @@ public class bruh : MonoBehaviour
 							IPEndPoint new_who = new IPEndPoint(ip, port);
 							if (peers.ContainsKey(new_who) == false)
 							{
-								spawn(new_who);
+								peers.Add(new_who, ++assignID);
 								Log("[" + new_who + "] joined");
 							}
 							continue;
@@ -129,7 +125,7 @@ public class bruh : MonoBehaviour
 		EndPoint who = lastPacket;
 		if (peers.ContainsKey(who))
 		{
-			peers[who].transform.position.Set(x, y, z);
+			players[peers[who]].transform.position.Set(x, y, z);
 		}
 		if (transition == false && begun)
 		{
@@ -149,6 +145,10 @@ public class bruh : MonoBehaviour
 		{
 			transition = true;
 			me = GameObject.FindGameObjectWithTag("Player");
+			for (int i = 0; i < peers.Count; ++i)
+			{
+				players.Add(Instantiate(racoon, new Vector3(0, 0, 0), Quaternion.identity));
+			}
 			GameObject.Find("UI").SetActive(false);
 		}
 	}
