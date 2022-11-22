@@ -32,7 +32,7 @@ public class bruh : MonoBehaviour
 	Vector3 spawnRand() { return new Vector3(Random.Range(-9, -5), 0, Random.Range(7, 15)); }
 	void spawn(EndPoint who)
 	{
-		peers.Add(who, Instantiate(racoon, spawnRand(), Quaternion.identity));
+		peers.Add(who, Instantiate(racoon, spawnRand0(), Quaternion.identity));
 	}
 	Vector3 spawnRand0() { return new Vector3(-5, 0, 7); }
 	private void Reset()
@@ -43,7 +43,7 @@ public class bruh : MonoBehaviour
 		thread = new Thread(Listen);
 		thread.Start();
 		peers = new Dictionary<EndPoint, GameObject>();
-		me = Instantiate(racoon, spawnRand(), Quaternion.identity);
+		me = Instantiate(racoon, spawnRand0(), Quaternion.identity);
 	}
 	public void PingX()
 	{
