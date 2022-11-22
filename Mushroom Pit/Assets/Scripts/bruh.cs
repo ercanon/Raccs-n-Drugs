@@ -16,8 +16,9 @@ public class bruh : MonoBehaviour
 	int port = 9000;
 	int maxClients = 4;
 	Vector3 me;
+	string localIP;
 	Dictionary<EndPoint, Vector3> peers;
-	byte[] packet;
+	byte[] packet = null;
 	public Text chat;
 	public InputField entry;
 	//
@@ -85,7 +86,8 @@ public class bruh : MonoBehaviour
 							continue;
 						}
 					}
-					packet = data;
+					packet = new byte[1024];
+					data.CopyTo(packet, 0);
 				}
 			}
 		}
@@ -100,7 +102,7 @@ public class bruh : MonoBehaviour
 		MemoryStream stream = new MemoryStream();
 		BinaryWriter writer = new BinaryWriter(stream);
 		writer.Write(transition);
-		writer.Write(socket.LocalEndPoint.ToString());
+		writer.Write(localIP);
 		writer.Write(me.x);
 		writer.Write(me.y);
 		writer.Write(me.z);
@@ -116,6 +118,7 @@ public class bruh : MonoBehaviour
 		float x = reader.ReadSingle();
 		float y = reader.ReadSingle();
 		float z = reader.ReadSingle();
+		Debug.Log(ip);
 		EndPoint who = new IPEndPoint(IPAddress.Parse(ip), port);
 		if (peers.ContainsKey(who))
 		{
@@ -130,6 +133,7 @@ public class bruh : MonoBehaviour
 	private void Awake()
 	{
 		Reset();
+		localIP = TellIP();
 		Log(TellIP());
 		transition = false;
 	}
@@ -146,9 +150,12 @@ public class bruh : MonoBehaviour
 	private void Update()
 	{
 		if (packet != null)
+		{
 			Deserialize(packet);
+			packet = null;
+		}
 		Broadcast(Serialize());
-		if(chatHistory!=null)
+		if (chatHistory != null)
 		{
 			chat.text += chatHistory;
 			chatHistory = null;
