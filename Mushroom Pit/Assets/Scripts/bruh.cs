@@ -25,7 +25,8 @@ public class bruh : MonoBehaviour
 	public GameObject cocaine;
 	bool transition;
 	//
-	private void Log(string data) { chat.text += data + '\n'; }
+	private string chatHistory = null;
+	private void Log(string data) { chatHistory += data + '\n'; }
 	Vector3 spawnRand() { return new Vector3(Random.Range(-9, -5), 0, Random.Range(7, 15)); }
 	Vector3 spawnRand0() { return new Vector3(-5, 0, 7); }
 	private void Reset()
@@ -147,6 +148,11 @@ public class bruh : MonoBehaviour
 		if (packet != null)
 			Deserialize(packet);
 		Broadcast(Serialize());
+		if(chatHistory!=null)
+		{
+			chat.text += chatHistory;
+			chatHistory = null;
+		}
 		//
 		if (transition)
 		{
