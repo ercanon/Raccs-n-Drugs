@@ -42,8 +42,8 @@ public class bruh : MonoBehaviour
 		socket.Bind(new IPEndPoint(IPAddress.Any, port));
 		thread = new Thread(Listen);
 		thread.Start();
-		peers = new Dictionary<EndPoint, Vector3>();
-		me = spawnRand();
+		peers = new Dictionary<EndPoint, GameObject>();
+		me = Instantiate(racoon, spawnRand(), Quaternion.identity);
 	}
 	public void PingX()
 	{
