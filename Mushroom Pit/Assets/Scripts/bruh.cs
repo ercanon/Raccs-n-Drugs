@@ -123,13 +123,13 @@ public class bruh : MonoBehaviour
 		//Debug.Log(ip);
 		//EndPoint who = new IPEndPoint(IPAddress.Parse(ip), port);
 		EndPoint who = lastPacket;
-		if (peers.ContainsKey(who))
-		{
-			players[peers[who]].transform.position.Set(x, y, z);
-		}
 		if (transition == false && begun)
 		{
 			StartGame();
+		}
+		if (peers.ContainsKey(who))
+		{
+			players[peers[who]].transform.position.Set(x, y, z);
 		}
 	}
 	private void Awake()
