@@ -142,13 +142,17 @@ public class bruh : MonoBehaviour
 	}
 	public void StartGame()
 	{
-		transition = true;
-		Instantiate(racoon, me, Quaternion.identity);
-		foreach (var player in peers)
+		if (transition == false)
 		{
-			Instantiate(racoon, player.Value, Quaternion.identity);
+			transition = true;
+			me = GameObject.FindGameObjectWithTag("Player").transform.position;
+			//Instantiate(racoon, me, Quaternion.identity);
+			foreach (var player in peers)
+			{
+				Instantiate(racoon, player.Value, Quaternion.identity);
+			}
+			GameObject.Find("UI").SetActive(false);
 		}
-		GameObject.Find("UI").SetActive(false);
 	}
 	private void Update()
 	{
