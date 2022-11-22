@@ -27,6 +27,7 @@ public class bruh : MonoBehaviour
 	//
 	private void Log(string data) { chat.text += data + '\n'; }
 	Vector3 spawnRand() { return new Vector3(Random.Range(-9, -5), 0, Random.Range(7, 15)); }
+	Vector3 spawnRand0() { return new Vector3(-5, 0, 7); }
 	private void Reset()
 	{
 		socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
@@ -60,6 +61,8 @@ public class bruh : MonoBehaviour
 				{
 					if (peers.Count < maxClients)
 					{
+						peers.Add(who, spawnRand0());
+						Log("[" + who + "] joined");
 						Broadcast(Encoding.ASCII.GetBytes("join " + who));
 					}
 				}
@@ -75,7 +78,7 @@ public class bruh : MonoBehaviour
 							IPEndPoint new_who = new IPEndPoint(ip, port);
 							if (peers.ContainsKey(new_who) == false)
 							{
-								peers.Add(new_who, spawnRand());
+								peers.Add(new_who, spawnRand0());
 								Log("[" + who + "] joined");
 							}
 							continue;
