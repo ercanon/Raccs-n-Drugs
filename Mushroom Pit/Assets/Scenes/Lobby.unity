@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.0040236614, g: 0.00021966675, b: 0.000000053558782, a: 1}
+  m_IndirectSpecularColor: {r: 0.004023661, g: 0.0002196667, b: 0.000000053558782, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -276,7 +276,7 @@ PrefabInstance:
     - target: {fileID: 6762012698965867874, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 15063646}
     - target: {fileID: 6762012698965867874, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -287,11 +287,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762012698965867874, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LaunchGame
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6762012698965867874, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
       value: StartGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 6762012698965867874, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: bruh, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 6762012698965867874, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
@@ -541,7 +545,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh39474
+  m_Name: pb_Mesh120658
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1234,7 +1238,7 @@ PrefabInstance:
       objectReference: {fileID: 880121486}
     - target: {fileID: 1676281799494127411, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
       propertyPath: m_VersionIndex
-      value: 2847
+      value: 2853
       objectReference: {fileID: 0}
     - target: {fileID: 1676281799494127412, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
       propertyPath: m_Mesh
@@ -1706,7 +1710,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7986348984646565913, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7999832275115794546, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
       propertyPath: m_StaticEditorFlags

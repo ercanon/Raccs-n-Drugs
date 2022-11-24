@@ -121,6 +121,7 @@ public class bruh : MonoBehaviour
 		float x = reader.ReadSingle();
 		float y = reader.ReadSingle();
 		float z = reader.ReadSingle();
+		Debug.Log(new Vector3(x,y,z));
 		//Debug.Log(ip);
 		//EndPoint who = new IPEndPoint(IPAddress.Parse(ip), port);
 		EndPoint who = lastPacket;
@@ -130,8 +131,7 @@ public class bruh : MonoBehaviour
 		}
 		if (peers.ContainsKey(who) && players.Count > 0)
 		{
-			players[peers[who]].transform.position.Set(x, y, z);
-			Debug.Log(players[peers[who]].name);
+			players[peers[who]].transform.position = new Vector3(x, y, z);
 		}
 	}
 	private void Awake()
@@ -146,7 +146,6 @@ public class bruh : MonoBehaviour
 		if (transition == false)
 		{
 			transition = true;
-			me = GameObject.FindGameObjectWithTag("Player");
 			for (int i = 0; i < peers.Count; ++i)
 			{
 				players.Add(Instantiate(racoon, new Vector3(0, 0, 0), Quaternion.identity));

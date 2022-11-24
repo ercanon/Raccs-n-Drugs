@@ -104,7 +104,7 @@ public class RacoonBehaviour : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-            collision.gameObject.GetComponent<RacoonBehaviour>().ChangeState((int)RacoonState.dead);
+        //if (collision.gameObject.CompareTag("Player"))
+            //collision.gameObject.GetComponent<RacoonBehaviour>().ChangeState((int)RacoonState.dead);
     }
 }
