@@ -40,6 +40,7 @@ public class bruh : MonoBehaviour
 		thread.Start();
 		peers = new Dictionary<EndPoint, int>();
 		me = Instantiate(racoon, new Vector3(-5, 0, 7), Quaternion.identity);
+		players = new List<GameObject>();
 	}
 	public void PingX()
 	{
@@ -127,9 +128,10 @@ public class bruh : MonoBehaviour
 		{
 			StartGame();
 		}
-		if (peers.ContainsKey(who))
+		if (peers.ContainsKey(who) && players.Count > 0)
 		{
 			players[peers[who]].transform.position.Set(x, y, z);
+			Debug.Log(players[peers[who]].name);
 		}
 	}
 	private void Awake()
