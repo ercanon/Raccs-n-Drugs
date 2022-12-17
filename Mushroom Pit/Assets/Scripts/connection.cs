@@ -183,8 +183,8 @@ public class connection : MonoBehaviour
 		ServerGather = new Thread(GatherM);
 		ServerGather.Start();
 
-		clients.Add(socket.RemoteEndPoint, socket);
-		Send(Serialize((int)Serial.posList));
+		//clients.Add(socket.RemoteEndPoint, socket);
+		//Send(Serialize((int)Serial.posList));
 	}
 	
 	void WaitingPlayers()
@@ -282,7 +282,7 @@ public class connection : MonoBehaviour
 				break;
 		}
 
-		
+		/*
 		while (true)
 		{
 			if (clients.Count > 0)
@@ -314,7 +314,7 @@ public class connection : MonoBehaviour
 					}
 				}
 		}
-		
+		*/
 	}
 
 
