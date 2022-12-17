@@ -5,7 +5,6 @@ public class RacoonBehaviour : MonoBehaviour
 {
     enum RacoonState
     {
-        onPause,
         idle,
         walking,
         buffed,
@@ -24,7 +23,7 @@ public class RacoonBehaviour : MonoBehaviour
 
     void Awake()
     {
-        ChangeState((int)RacoonState.onPause);
+        ChangeState((int)RacoonState.idle);
 
         rigidbody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
@@ -32,7 +31,7 @@ public class RacoonBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (rState != RacoonState.dead && rState != RacoonState.onPause)
+        if (rState != RacoonState.dead)
         {
             /*
             if (canRun && Input.GetKey(runningKey))
@@ -66,14 +65,7 @@ public class RacoonBehaviour : MonoBehaviour
     {
         switch (state)
         {
-            case 0: //On Pause
-                if (rState == RacoonState.onPause)
-                    return;
-
-                rState = RacoonState.onPause;
-                anim.Play("Idle");
-                break;
-            case 1: //Idle
+            case 0: //Idle
                 if (rState == RacoonState.idle)
                     return;
 
@@ -81,7 +73,7 @@ public class RacoonBehaviour : MonoBehaviour
                 anim.Play("Idle");
                 break;
             
-            case 2: // Walking
+            case 1: // Walking
                 if (rState == RacoonState.walking)
                     return;
 
@@ -89,7 +81,7 @@ public class RacoonBehaviour : MonoBehaviour
                 anim.Play("Walking");
                 break;
             
-            case 3: //Buffed
+            case 2: //Buffed
                 if (rState == RacoonState.buffed)
                     return;
 
@@ -97,7 +89,7 @@ public class RacoonBehaviour : MonoBehaviour
                 anim.Play("Idle Buff");
                 break;
 
-            case 4: //Dead
+            case 3: //Dead
                 if (rState == RacoonState.dead)
                     return;
 
