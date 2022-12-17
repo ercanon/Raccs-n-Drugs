@@ -183,8 +183,6 @@ public class connection : MonoBehaviour
 		ServerGather = new Thread(GatherM);
 		ServerGather.Start();
 
-		//clients.Add(socket.RemoteEndPoint, socket);
-		//Send(Serialize((int)Serial.posList));
 		JoinGame(true);
 	}
 	
@@ -202,18 +200,22 @@ public class connection : MonoBehaviour
 				}
 			case Protocol.UDP:
 				{
-					IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-					remote = (EndPoint)(sender);
-					byte[] data = new byte[1024];
-					int recv = socketHost.ReceiveFrom(data, ref remote);
-					clients.Add(remote, null);
-					customLog("client deceived " + remote.ToString());
+					while (true)
+					{
+						IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+						remote = (EndPoint)(sender);
 
-					socketHost.SendTo(data, recv, SocketFlags.None, remote);
-					string msg = Encoding.UTF8.GetString(data, 0, recv);
-					customLog(msg);
+						byte[] data = new byte[1024];
+						int recv = socketHost.ReceiveFrom(data, ref remote);
+						clients.Add(remote, null);
+						customLog("client deceived " + remote.ToString());
 
-					SendData(Serialize((int)Serial.posList));
+						socketHost.SendTo(data, recv, SocketFlags.None, remote);
+						//string msg = Encoding.UTF8.GetString(data, 0, recv);
+						//customLog(msg);
+
+						SendData(Serialize((int)Serial.posList));
+					}
 					break;
 				}
 			default:
@@ -222,66 +224,11 @@ public class connection : MonoBehaviour
 	}
 
 	void GatherM()
-	{
-		switch (protocol)
-		{
-			case Protocol.TCP:
-				{
-					while (true)
-					{
-						if (clients.Count > 0)
-							foreach (Socket c in clients.Values)
-							{
-								byte[] data = new byte[1024];
-								int recv = c.Receive(data);
-								if (recv == 0)
-								{
-									customLog("client disconnected");
-									clients.Remove(c.RemoteEndPoint);
-								}
-								else
-								{
-									foreach (Socket s in clients.Values)
-										if (c!=s)
-											c.Send(data);
-								}
-							}
-					}
-					break;
-				}
-			case Protocol.UDP:
-				{
-					while (true)
-					{
-						if (clients.Count > 0)
-							foreach (EndPoint c in clients.Keys)
-							{
-								EndPoint client = c;
-								byte[] data = new byte[1024];
-								int recv = socketHost.ReceiveFrom(data, ref client);
-								if (recv == 0)
-								{
-									customLog("client disconnected");
-									clients.Remove(c);
-								}
-								else
-								{
-									foreach (EndPoint s in clients.Keys)
-										if(c!=s)
-											socketHost.SendTo(data, recv, SocketFlags.None, s);
-								}
-							}
-					}
-					break;
-				}
-			default:
-				break;
-		}
-
-		/*
+	{		
 		while (true)
 		{
 			if (clients.Count > 0)
+			{
 				foreach (var r in clients)
 				{
 					byte[] data = new byte[1024];
@@ -289,7 +236,10 @@ public class connection : MonoBehaviour
 					if (protocol == Protocol.TCP)
 						recv = r.Value.Receive(data);
 					else if (protocol == Protocol.UDP)
-						recv = r.Key.ReceiveFrom(data, ref r.Key);
+					{
+						EndPoint client = r.Key;
+						recv = socketHost.ReceiveFrom(data, ref client);
+					}
 
 					if (recv == 0)
 					{
@@ -299,18 +249,19 @@ public class connection : MonoBehaviour
 					else
 					{
 						foreach (var s in clients)
+						{
 							if (r.Key != s.Key)
 							{
 								if (protocol == Protocol.TCP)
 									r.Value.Send(data);
 								else if (protocol == Protocol.UDP)
-									r.Key.SendTo(data, recv, SocketFlags.None, s);
-
+									socketHost.SendTo(data, recv, SocketFlags.None, s.Key);
 							}
+						}
 					}
 				}
+			}
 		}
-		*/
 	}
 
 
@@ -331,7 +282,7 @@ public class connection : MonoBehaviour
 					socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 					IPEndPoint ipep = null;
 					if (isHost)
-						ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), int.Parse(enterServerPort.text));
+						ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
 					else
 						ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
 
@@ -363,7 +314,7 @@ public class connection : MonoBehaviour
 					socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 					IPEndPoint ipep = null;
 					if (isHost)
-						ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), int.Parse(enterServerPort.text));
+						ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
 					else
 						ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
 
@@ -388,11 +339,10 @@ public class connection : MonoBehaviour
 		while (true)
 		{
 			byte[] data = new byte[1024];
-			int recv = 0;
 			if (protocol == Protocol.TCP)
-				recv = socket.Receive(data);
+				socket.Receive(data);
 			else if (protocol == Protocol.UDP)
-				recv = socket.ReceiveFrom(data, ref remote);
+				socket.ReceiveFrom(data, ref remote);
 
 			if (data != null)
 			{
