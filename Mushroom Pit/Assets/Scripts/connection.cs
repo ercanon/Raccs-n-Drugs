@@ -339,16 +339,18 @@ public class connection : MonoBehaviour
 		while (true)
 		{
 			byte[] data = new byte[1024];
+			int recv = 0;
 			if (protocol == Protocol.TCP)
-				socket.Receive(data);
+				recv = socket.Receive(data);
 			else if (protocol == Protocol.UDP)
-				socket.ReceiveFrom(data, ref remote);
+				recv = socket.ReceiveFrom(data, ref remote);
 
 			if (data != null)
 			{
 				Deserialize(data, remote);
-				//string msg = Encoding.UTF8.GetString(data, 0, recv);
-				//customLog(msg);
+
+				string msg = Encoding.UTF8.GetString(data, 0, recv);
+				customLog(msg);
 			}
 		}
 	}
