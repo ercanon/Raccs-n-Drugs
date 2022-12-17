@@ -2258,7 +2258,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6762012698765990963}
   m_HandleRect: {fileID: 6762012698765990960}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4845,7 +4845,7 @@ Transform:
   m_Children:
   - {fileID: 6762012699518475374}
   - {fileID: 6762012699285218977}
-  - {fileID: 1033238508743034708}
+  - {fileID: 1296640802296586085}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5130,7 +5130,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Server
---- !u!1001 &533880190589421501
+--- !u!1001 &1783674182441836428
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -5447,8 +5447,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
---- !u!4 &1033238508743034708 stripped
+--- !u!4 &1296640802296586085 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
-  m_PrefabInstance: {fileID: 533880190589421501}
+  m_PrefabInstance: {fileID: 1783674182441836428}
   m_PrefabAsset: {fileID: 0}
