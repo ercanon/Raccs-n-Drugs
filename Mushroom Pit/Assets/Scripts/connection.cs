@@ -13,7 +13,7 @@ public class connection : MonoBehaviour
 	enum Protocol { UDP, TCP }; private Protocol protocol;
 	enum Profile { server, client }; private Profile profile;
 	enum Serial { start, posList, position }; private Serial serial;
-	//Try one socket
+	Socket socketHost;
 	Socket socket;
 	Thread ServerWaiting;
 	Thread ServerGather;
@@ -47,10 +47,10 @@ public class connection : MonoBehaviour
 		protocol = (Protocol)prot;
 		profile = (Profile)prof;
 
-		if (socket != null)
+		if (socketHost != null)
 		{
-			socket.Shutdown(SocketShutdown.Both);
-			socket.Close();
+			socketHost.Shutdown(SocketShutdown.Both);
+			socketHost.Close();
 		}
 		if (socket != null)
 		{
@@ -149,12 +149,12 @@ public class connection : MonoBehaviour
 		
 		if (Input.GetKeyDown(KeyCode.Return))
 		{
-			SendM();
+			SendMessage();
 			enterMessage.text = "";
 		}
 
 		if(gameStart)
-			Send(Serialize((int)Serial.position));
+			SendData(Serialize((int)Serial.position));
 	}
 	
 	void customLog(string x, bool nl = true)
@@ -169,13 +169,13 @@ public class connection : MonoBehaviour
 	public void CreateGame()
 	{
 		if (protocol == Protocol.TCP)
-			socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			socketHost = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		else if (protocol == Protocol.UDP)
-			socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+			socketHost = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
 		IPEndPoint ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
-		socket.Bind(ipep);
-		customLog(enterUserName.text + "'s game available at " + socket.LocalEndPoint);
+		socketHost.Bind(ipep);
+		customLog(enterUserName.text + "'s game available at " + socketHost.LocalEndPoint);
 
 		ServerWaiting = new Thread(WaitingPlayers);
 		ServerWaiting.Start();
@@ -185,6 +185,7 @@ public class connection : MonoBehaviour
 
 		//clients.Add(socket.RemoteEndPoint, socket);
 		//Send(Serialize((int)Serial.posList));
+		//JoinGame(true);
 	}
 	
 	void WaitingPlayers()
@@ -193,8 +194,8 @@ public class connection : MonoBehaviour
 		{
 			case Protocol.TCP:
 				{
-					socket.Listen(4);
-					Socket newClient = socket.Accept();
+					socketHost.Listen(4);
+					Socket newClient = socketHost.Accept();
 					clients.Add(newClient.RemoteEndPoint, newClient);
 					customLog("client deceived " + newClient.RemoteEndPoint.ToString());
 					break;
@@ -204,12 +205,12 @@ public class connection : MonoBehaviour
 					IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 					remote = (EndPoint)(sender);
 					byte[] data = new byte[1024];
-					int recv = socket.ReceiveFrom(data, ref remote);
+					int recv = socketHost.ReceiveFrom(data, ref remote);
 					clients.Add(remote, null);
-					Send(Serialize((int)Serial.posList));
+					SendData(Serialize((int)Serial.posList));
 					customLog("client deceived " + remote.ToString());
 
-					socket.SendTo(data, recv, SocketFlags.None, remote);
+					socketHost.SendTo(data, recv, SocketFlags.None, remote);
 					string msg = Encoding.UTF8.GetString(data, 0, recv);
 					customLog(msg);
 					break;
@@ -259,7 +260,7 @@ public class connection : MonoBehaviour
 							{
 								EndPoint client = c;
 								byte[] data = new byte[1024];
-								int recv = socket.ReceiveFrom(data, ref client);
+								int recv = socketHost.ReceiveFrom(data, ref client);
 								if (recv == 0)
 								{
 									customLog("client disconnected");
@@ -269,7 +270,7 @@ public class connection : MonoBehaviour
 								{
 									foreach (EndPoint s in clients.Keys)
 										if(c!=s)
-											socket.SendTo(data, recv, SocketFlags.None, s);
+											socketHost.SendTo(data, recv, SocketFlags.None, s);
 
 									string msg = Encoding.UTF8.GetString(data, 0, recv);
 									customLog(msg);
@@ -320,7 +321,7 @@ public class connection : MonoBehaviour
 
 
 	/*---------------------CLIENT-------------------*/
-	public void JoinGame()
+	public void JoinGame(bool isHost = false)
 	{
 		switch (protocol)
 		{
@@ -333,7 +334,11 @@ public class connection : MonoBehaviour
 					}
 
 					socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-					IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
+					IPEndPoint ipep = null;
+					if (isHost)
+						ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), int.Parse(enterServerPort.text));
+					else
+						ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
 
 					try
 					{
@@ -361,7 +366,11 @@ public class connection : MonoBehaviour
 					}
 
 					socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-					IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
+					IPEndPoint ipep = null;
+					if (isHost)
+						ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), int.Parse(enterServerPort.text));
+					else
+						ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
 
 					byte[] data = new byte[1024];
 					data = Encoding.UTF8.GetBytes(enterUserName.text + " joined the server!");
@@ -399,7 +408,7 @@ public class connection : MonoBehaviour
 		}
 	}
 
-	private void Send(byte[] data)
+	private void SendData(byte[] data)
 	{
 		if (protocol == Protocol.TCP)
 			socket.Send(data);
@@ -415,44 +424,35 @@ public class connection : MonoBehaviour
 
 
 	/*---------------------CHAT-------------------*/
-	void SendM()
+	void SendMessage()
 	{
-		switch (profile)
-		{
-			case Profile.server:
-				{
-					if (clients.Count > 0)
-						foreach (var r in clients)
-						{
-							byte[] data = new byte[1024];
-							data = Encoding.UTF8.GetBytes(enterMessage.text);
+		byte[] data = new byte[1024];
+		data = Encoding.UTF8.GetBytes(enterMessage.text);
 
-							if (protocol == Protocol.TCP)
-								r.Value.Send(data);
-							else if (protocol == Protocol.UDP)
-								socket.SendTo(data, data.Length, SocketFlags.None, r.Key);
-						}
+		if (protocol == Protocol.TCP)
+			socket.Send(data);
+		else if (protocol == Protocol.UDP)
+			socket.SendTo(data, data.Length, SocketFlags.None, remote);
 
-					customLog(enterMessage.text);
-					break;
-				}
-			case Profile.client:
-				{
-					byte[] data = new byte[1024];
-					data = Encoding.UTF8.GetBytes(enterMessage.text);
+		customLog(enterMessage.text);
 
-					if (protocol == Protocol.TCP)
-						socket.Send(data);
-					else if (protocol == Protocol.UDP)
-						socket.SendTo(data, data.Length, SocketFlags.None, remote);
+		/*
+		//Profile.server:{
+		if (clients.Count > 0)
+			foreach (var r in clients)
+			{
+				byte[] data = new byte[1024];
+				data = Encoding.UTF8.GetBytes(enterMessage.text);
 
-					customLog(enterMessage.text);
-					break;
-				}
-			default:
-				break;
-        }
-    }
+				if (protocol == Protocol.TCP)
+					r.Value.Send(data);
+				else if (protocol == Protocol.UDP)
+					socket.SendTo(data, data.Length, SocketFlags.None, r.Key);
+			}
+
+		customLog(enterMessage.text);
+		*/
+	}
 
 
 
@@ -520,7 +520,7 @@ public class connection : MonoBehaviour
 	/*---------------------GAME-------------------*/
 	public void LaunchGame()
 	{
-		Send(Serialize((int)Serial.start));
+		SendData(Serialize((int)Serial.start));
 
 		GameObject.Find("Level").GetComponent<GameplayScript>().enabled = true;
 		GameObject.Find("UI").SetActive(false);
@@ -531,7 +531,9 @@ public class connection : MonoBehaviour
 		{
 			if (i >= 4)
 				break;
-			racoonList.Add(Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation));
+			GameObject rac = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
+			rac.GetComponent<RacoonBehaviour>().ChangeState(1);
+			racoonList.Add(rac);
 		}
 	}
 }
