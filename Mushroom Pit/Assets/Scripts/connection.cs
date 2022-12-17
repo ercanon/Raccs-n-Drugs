@@ -185,7 +185,7 @@ public class connection : MonoBehaviour
 
 		//clients.Add(socket.RemoteEndPoint, socket);
 		//Send(Serialize((int)Serial.posList));
-		//JoinGame(true);
+		JoinGame(true);
 	}
 	
 	void WaitingPlayers()
@@ -207,12 +207,13 @@ public class connection : MonoBehaviour
 					byte[] data = new byte[1024];
 					int recv = socketHost.ReceiveFrom(data, ref remote);
 					clients.Add(remote, null);
-					SendData(Serialize((int)Serial.posList));
 					customLog("client deceived " + remote.ToString());
 
 					socketHost.SendTo(data, recv, SocketFlags.None, remote);
 					string msg = Encoding.UTF8.GetString(data, 0, recv);
 					customLog(msg);
+
+					SendData(Serialize((int)Serial.posList));
 					break;
 				}
 			default:
@@ -243,9 +244,6 @@ public class connection : MonoBehaviour
 									foreach (Socket s in clients.Values)
 										if (c!=s)
 											c.Send(data);
-
-									string msg = Encoding.UTF8.GetString(data, 0, recv);
-									customLog(msg);
 								}
 							}
 					}
@@ -271,9 +269,6 @@ public class connection : MonoBehaviour
 									foreach (EndPoint s in clients.Keys)
 										if(c!=s)
 											socketHost.SendTo(data, recv, SocketFlags.None, s);
-
-									string msg = Encoding.UTF8.GetString(data, 0, recv);
-									customLog(msg);
 								}
 							}
 					}

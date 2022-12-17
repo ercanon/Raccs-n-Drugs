@@ -308,6 +308,10 @@ PrefabInstance:
       value: ChangeProfile
       objectReference: {fileID: 0}
     - target: {fileID: 6762012700510240487, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6762012700510240487, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 15063645}
