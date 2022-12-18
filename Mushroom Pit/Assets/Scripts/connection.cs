@@ -202,20 +202,15 @@ public class connection : MonoBehaviour
 				}
 			case Protocol.UDP:
 				{
-					while (true)
-					{
-						IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-						remote = (EndPoint)(sender);
+					IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+					remote = (EndPoint)(sender);
 
-						byte[] data = new byte[1024];
-						int recv = socketHost.ReceiveFrom(data, ref remote);
-						clients.Add(remote, null);
-						customLog("client deceived " + remote.ToString(), "Server");
+					byte[] data = new byte[1024];
+					int recv = socketHost.ReceiveFrom(data, ref remote);
+					clients.Add(remote, null);
+					customLog("client deceived " + remote.ToString(), "Server");
 
-						socketHost.SendTo(data, recv, SocketFlags.None, remote);
-
-						//SendData(Serialize((int)Serial.posList), socketHost, remote);
-					}
+					socketHost.SendTo(data, recv, SocketFlags.None, remote);
 					break;
 				}
 			default:
@@ -227,33 +222,36 @@ public class connection : MonoBehaviour
 	{		
 		while (true)
 		{
-			foreach (var r in clients)
+			if (clients.Count > 0)
 			{
-				byte[] data = new byte[1024];
-				int recv = 0;
-				if (protocol == Protocol.TCP)
-					recv = r.Value.Receive(data);
-				else if (protocol == Protocol.UDP)
+				foreach (KeyValuePair<EndPoint, Socket> r in clients)
 				{
-					EndPoint client = r.Key;
-					recv = socketHost.ReceiveFrom(data, ref client);
-				}
-
-				if (recv == 0)
-				{
-					customLog("client disconnected", "Server");
-					clients.Remove(r.Key);
-				}
-				else
-				{
-					foreach (var s in clients)
+					byte[] data = new byte[1024];
+					int recv = 0;
+					if (protocol == Protocol.TCP)
+						recv = r.Value.Receive(data);
+					else if (protocol == Protocol.UDP)
 					{
-						if (r.Key != s.Key)
+						EndPoint client = r.Key;
+						recv = socketHost.ReceiveFrom(data, ref client);
+					}
+
+					if (recv == 0)
+					{
+						customLog("client disconnected", "Server");
+						clients.Remove(r.Key);
+					}
+					else
+					{
+						foreach (KeyValuePair<EndPoint, Socket> s in clients)
 						{
-							if (protocol == Protocol.TCP)
-								s.Value.Send(data);
-							else if (protocol == Protocol.UDP)
-								socketHost.SendTo(data, recv, SocketFlags.None, s.Key);
+							if (r.Key != s.Key)
+							{
+								if (protocol == Protocol.TCP)
+									s.Value.Send(data);
+								else if (protocol == Protocol.UDP)
+									socketHost.SendTo(data, recv, SocketFlags.None, s.Key);
+							}
 						}
 					}
 				}
