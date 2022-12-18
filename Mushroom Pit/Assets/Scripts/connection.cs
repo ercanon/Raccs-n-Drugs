@@ -154,13 +154,15 @@ public class connection : MonoBehaviour
 		}
 
 		if(gameStart)
-			SendData(Serialize((int)Serial.position));
+			SendData(Serialize((int)Serial.position), socket, remote);
 	}
 	
 	void customLog(string x, bool nl = true)
 	{
 		string shrt = x.TrimEnd('\0');
-		log += shrt; //if (nl) log += '\n';
+		log += "[" + "] ";
+		log += shrt; 
+		if (nl) log += '\n';
 	}
 
 
@@ -211,10 +213,8 @@ public class connection : MonoBehaviour
 						customLog("client deceived " + remote.ToString());
 
 						socketHost.SendTo(data, recv, SocketFlags.None, remote);
-						//string msg = Encoding.UTF8.GetString(data, 0, recv);
-						//customLog(msg);
 
-						SendData(Serialize((int)Serial.posList));
+						SendData(Serialize((int)Serial.posList), socketHost, remote);
 					}
 					break;
 				}
@@ -253,7 +253,7 @@ public class connection : MonoBehaviour
 							if (r.Key != s.Key)
 							{
 								if (protocol == Protocol.TCP)
-									r.Value.Send(data);
+									s.Value.Send(data);
 								else if (protocol == Protocol.UDP)
 									socketHost.SendTo(data, recv, SocketFlags.None, s.Key);
 							}
@@ -262,6 +262,14 @@ public class connection : MonoBehaviour
 				}
 			}
 		}
+	}
+
+	private void SendData(byte[] data, Socket sender, EndPoint receiver)
+	{
+		if (protocol == Protocol.TCP)
+			sender.Send(data);
+		else if (protocol == Protocol.UDP)
+			sender.SendTo(data, data.Length, SocketFlags.None, receiver);
 	}
 
 
@@ -282,7 +290,7 @@ public class connection : MonoBehaviour
 					socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 					IPEndPoint ipep = null;
 					if (isHost)
-						ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
+						ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), int.Parse(enterServerPort.text));
 					else
 						ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
 
@@ -314,7 +322,7 @@ public class connection : MonoBehaviour
 					socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 					IPEndPoint ipep = null;
 					if (isHost)
-						ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
+						ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), int.Parse(enterServerPort.text));
 					else
 						ipep = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
 
@@ -347,20 +355,12 @@ public class connection : MonoBehaviour
 
 			if (data != null)
 			{
-				Deserialize(data, remote);
+				Deserialize(data);
 
 				string msg = Encoding.UTF8.GetString(data, 0, recv);
 				customLog(msg);
 			}
 		}
-	}
-
-	private void SendData(byte[] data)
-	{
-		if (protocol == Protocol.TCP)
-			socket.Send(data);
-		else if (protocol == Protocol.UDP)
-			socket.SendTo(data, data.Length, SocketFlags.None, remote);
 	}
 
 	public void Disconnect()
@@ -434,7 +434,7 @@ public class connection : MonoBehaviour
 		return stream.ToArray();
 	}
 
-	private void Deserialize(byte[] data, EndPoint sender)
+	private void Deserialize(byte[] data)
 	{
 		MemoryStream stream = new MemoryStream(data);
 		BinaryReader reader = new BinaryReader(stream);
@@ -467,7 +467,7 @@ public class connection : MonoBehaviour
 	/*---------------------GAME-------------------*/
 	public void LaunchGame()
 	{
-		SendData(Serialize((int)Serial.start));
+		SendData(Serialize((int)Serial.start), socket, remote);
 
 		GameObject.Find("Level").GetComponent<GameplayScript>().enabled = true;
 		GameObject.Find("UI").SetActive(false);
