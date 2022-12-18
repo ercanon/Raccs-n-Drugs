@@ -157,11 +157,11 @@ public class connection : MonoBehaviour
 			SendData(Serialize((int)Serial.position), socket, remote);
 	}
 	
-	void customLog(string x, bool nl = true)
+	void customLog(string data, string sender, bool nl = true)
 	{
-		string shrt = x.TrimEnd('\0');
-		log += "[" + "] ";
-		log += shrt; 
+		string message = data.TrimEnd('\0');
+		log += "[" + sender + "] ";
+		log += message; 
 		if (nl) log += '\n';
 	}
 
@@ -177,7 +177,7 @@ public class connection : MonoBehaviour
 
 		IPEndPoint ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
 		socketHost.Bind(ipep);
-		customLog(enterUserName.text + "'s game available at " + socketHost.LocalEndPoint);
+		customLog(enterUserName.text + "'s game available at " + socketHost.LocalEndPoint, "Server");
 
 		ServerWaiting = new Thread(WaitingPlayers);
 		ServerWaiting.Start();
@@ -197,7 +197,7 @@ public class connection : MonoBehaviour
 					socketHost.Listen(4);
 					Socket newClient = socketHost.Accept();
 					clients.Add(newClient.RemoteEndPoint, newClient);
-					customLog("client deceived " + newClient.RemoteEndPoint.ToString());
+					customLog("client deceived " + newClient.RemoteEndPoint.ToString(), "Server");
 					break;
 				}
 			case Protocol.UDP:
@@ -210,7 +210,7 @@ public class connection : MonoBehaviour
 						byte[] data = new byte[1024];
 						int recv = socketHost.ReceiveFrom(data, ref remote);
 						clients.Add(remote, null);
-						customLog("client deceived " + remote.ToString());
+						customLog("client deceived " + remote.ToString(), "Server");
 
 						socketHost.SendTo(data, recv, SocketFlags.None, remote);
 
@@ -243,7 +243,7 @@ public class connection : MonoBehaviour
 
 					if (recv == 0)
 					{
-						customLog("client disconnected");
+						customLog("client disconnected", "Server");
 						clients.Remove(r.Key);
 					}
 					else
@@ -283,7 +283,7 @@ public class connection : MonoBehaviour
 				{
 					if (socket != null)
 					{
-						customLog("cannot join again");
+						customLog("cannot join again", "Local");
 						return;
 					}
 
@@ -300,7 +300,7 @@ public class connection : MonoBehaviour
 					}
 					catch (SocketException e)
 					{
-						customLog(e.Message);
+						customLog(e.Message, "Error");
 						return;
 					}
 					byte[] data = new byte[1024];
@@ -315,7 +315,7 @@ public class connection : MonoBehaviour
 				{
 					if (socket != null)
 					{
-						customLog("cannot join again");
+						customLog("cannot join again", "Local");
 						return;
 					}
 
@@ -358,7 +358,7 @@ public class connection : MonoBehaviour
 				Deserialize(data);
 
 				string msg = Encoding.UTF8.GetString(data, 0, recv);
-				customLog(msg);
+				customLog(msg, "Local");
 			}
 		}
 	}
@@ -381,7 +381,7 @@ public class connection : MonoBehaviour
 		else if (protocol == Protocol.UDP)
 			socket.SendTo(data, data.Length, SocketFlags.None, remote);
 
-		customLog(enterMessage.text);
+		customLog(enterMessage.text, "Local");
 
 		/*
 		//Profile.server:{
