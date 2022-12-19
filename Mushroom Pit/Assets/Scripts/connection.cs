@@ -312,21 +312,19 @@ public class connection : MonoBehaviour
 		else
 			remote = new IPEndPoint(IPAddress.Parse(enterServerIP.text), int.Parse(enterServerPort.text));
 
-		if (protocol == Protocol.TCP)
+		try
 		{
-			try
-			{
+			if (protocol == Protocol.TCP)
 				socket.Connect(remote);
-			}
-			catch (SocketException e)
-			{
-				customLog(e.Message, "Error");
-				return;
-			}
+			else if (protocol == Protocol.UDP)
+				SendData(Serialize((int)TypeData.chat, enterUserName.text + " joined the server!", "Server"), socket, remote);
 		}
-
-		if (SendData(Serialize((int)TypeData.chat, enterUserName.text + " joined the server!", "Server"), socket, remote) == 0)
+		catch (SocketException e)
+		{
+			customLog(e.Message, "Error");
 			remote = (new IPEndPoint(IPAddress.Any, 0));
+			return;
+		}
 
 		ClientListen = new Thread(Listen);
 		ClientListen.Start();
