@@ -20,10 +20,10 @@ public class connection : MonoBehaviour
 	Thread ServerGather;
 	Thread ClientListen;
 
-	//Check for global use
-	EndPoint remote;
 	[HideInInspector]
-	Dictionary<EndPoint, Socket> clients;
+	EndPoint remote;
+	//Dictionary<EndPoint, Socket> clients;
+	List<EndPoint> clients;
 
 	public InputField enterUserName;
 	public Text enterServerIP;
@@ -61,7 +61,7 @@ public class connection : MonoBehaviour
 
 		if (clients != null)
 			clients.Clear();
-		clients = new Dictionary<EndPoint, Socket>();
+		clients = new List<EndPoint>();
 
 		if (racoonList != null)
 			racoonList.Clear();
@@ -109,36 +109,6 @@ public class connection : MonoBehaviour
 			default:
 				break;
 		}
-	}
-
-	public int PosKeyDict(EndPoint key)
-    {
-		if (clients.ContainsKey(key))
-		{
-			int i = 0;
-			foreach (EndPoint k in clients.Keys)
-			{
-				if (key == k)
-					return i;
-				i++;
-			}
-		}
-		return -1;
-    }
-
-	public int PosValueDict(Socket value)
-	{
-		if (clients.ContainsValue(value))
-		{
-			int i = 0;
-			foreach (Socket s in clients.Values)
-			{
-				if (value == s)
-					return i;
-				i++;
-			}
-		}
-		return -1;
 	}
 
 	private string TellIP()
@@ -214,7 +184,6 @@ public class connection : MonoBehaviour
 	{
 		socketHost.Listen(1);
 		Socket newClient = socketHost.Accept();
-		clients.Add(newClient.RemoteEndPoint, newClient);
 		customLog("client deceived " + newClient.RemoteEndPoint.ToString(), "Server");
 	}
 
@@ -236,17 +205,17 @@ public class connection : MonoBehaviour
 			{
 				EndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 				recv = socketHost.ReceiveFrom(data, ref sender);
-				if (clients.ContainsKey(sender) == false)
+				if (clients.Contains(sender) == false)
 				{
-					clients.Add(sender, null);
+					clients.Add(sender);
 					customLog("client deceived " + sender.ToString(), "Server");
 					socketHost.SendTo(data, recv, SocketFlags.None, sender);
 				}
 
 				foreach (var reciber in clients)
 				{
-					if (sender.ToString() != reciber.Key.ToString())
-						socketHost.SendTo(data, recv, SocketFlags.None, reciber.Key);
+					if (sender.ToString() != reciber.ToString())
+						socketHost.SendTo(data, recv, SocketFlags.None, reciber);
 				}
 			}
 
@@ -391,7 +360,7 @@ public class connection : MonoBehaviour
 				writer.Write(gameStart);
 				break;
 			case 1: //Position List Racoon
-				writer.Write(clients.Keys.Count-1);
+				writer.Write(clients.Count-1);
 				break;
 			case 2:	//Chat
 				writer.Write(message);
