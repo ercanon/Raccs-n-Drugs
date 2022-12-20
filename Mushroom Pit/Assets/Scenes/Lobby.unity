@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.0040236637, g: 0.00021966682, b: 0.000000053558782, a: 1}
+  m_IndirectSpecularColor: {r: 0.0040236614, g: 0.00021966675, b: 0.000000053558782, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -172,7 +172,6 @@ MonoBehaviour:
   enterServerPort: {fileID: 663193973}
   ChatBox: {fileID: 663193977}
   enterMessage: {fileID: 663193976}
-  gameManager: {fileID: 1650901491}
   racoon: {fileID: 0}
 --- !u!1 &86099808
 GameObject:
@@ -266,6 +265,10 @@ PrefabInstance:
     - target: {fileID: 6762012698854398029, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: CreateGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 6762012698965867874, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6762012698965867874, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -516,7 +519,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-48238
+  m_Name: pb_Mesh-17856
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -793,17 +796,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 15, y: 0, z: 0}
---- !u!114 &1650901491 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7986348984646565913, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
-  m_PrefabInstance: {fileID: 1676281799983992430}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3032813a14c224749bad66739be4deac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!850595691 &1698656017
 LightingSettings:
   m_ObjectHideFlags: 0
