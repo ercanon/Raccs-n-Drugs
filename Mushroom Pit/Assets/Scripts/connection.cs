@@ -427,11 +427,11 @@ public class connection : MonoBehaviour
 	/*---------------------GAME-------------------*/
 	public void LaunchGame()
 	{
-		SendData(Serialize((int)TypeData.start), socket, remote);
-
 		GameObject.Find("Level").GetComponent<GameplayScript>().enabled = true;
 		GameObject.Find("UI").SetActive(false);
+
 		gameStart = true;
+		SendData(Serialize((int)TypeData.start), socket, remote);
 
 		Transform[] pos = GameObject.Find("RacoonSpawn").GetComponentsInChildren<Transform>();
 		for (int i = 0; i <= clients.Count; i++)
