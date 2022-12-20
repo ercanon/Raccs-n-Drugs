@@ -76,7 +76,7 @@ public class connection : MonoBehaviour
 
 		enterUserName.text = "Player" + (int)Random.Range(1, 100);
 		gameStart = false;
-		sizeClients = -1;
+		sizeClients = 0;
 	}
 	
 	public void ChangeProtocol(int val)
@@ -436,7 +436,7 @@ public class connection : MonoBehaviour
 	/*---------------------GAME-------------------*/
 	public void LaunchGame(int size = 0)
 	{
-		GameObject.Find("Level").GetComponent<GameplayScript>().enabled = true;
+		gameObject.GetComponent<GameplayScript>().enabled = true;
 		GameObject.Find("UI").SetActive(false);
 
 		gameStart = true;
