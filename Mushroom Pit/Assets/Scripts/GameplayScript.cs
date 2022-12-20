@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class GameplayScript : MonoBehaviour
 {
-    public GameObject racoon;
     public GameObject cocaine;
 
     [HideInInspector]
@@ -13,15 +12,21 @@ public class GameplayScript : MonoBehaviour
 
     private bool spawnCocaine = false;
     private bool cameraTransition = true;
-    private Transform playableArea;
 
     public int maxCocaineBags;
     public float offsetCocaineSpawn;
+
+    private Transform playableArea;
+    private Transform camera;
+    private Transform gamePos;
 
     void Awake()
     {
         playableArea = transform.GetChild(0);
         cocaineList = new List<GameObject>();
+
+        camera = GameObject.Find("Main Camera").transform;
+        gamePos = GameObject.Find("CameraGamePosition").transform;
     }
 
     // Update is called once per frame
@@ -29,9 +34,6 @@ public class GameplayScript : MonoBehaviour
     {
         if (cameraTransition)
         {
-            Transform camera = GameObject.Find("Main Camera").transform;
-            Transform gamePos = GameObject.Find("CameraGamePosition").transform;
-
             camera.transform.position = Vector3.Lerp(camera.transform.position, gamePos.position, 2 * Time.deltaTime);
             camera.transform.rotation = Quaternion.Lerp(camera.transform.rotation, gamePos.rotation, 2 * Time.deltaTime);
 
@@ -40,28 +42,31 @@ public class GameplayScript : MonoBehaviour
         }
 
         if (spawnCocaine)
-        {
-            cocaineList.Clear();
-
-            for (int i = 0; i < maxCocaineBags; i++)
-            {
-                Vector3 randPosition = new Vector3(
-                    playableArea.position.x + Random.Range(offsetCocaineSpawn, playableArea.GetComponent<Renderer>().bounds.size.x - offsetCocaineSpawn),
-                    cocaine.transform.position.y,
-                    playableArea.position.z - Random.Range(offsetCocaineSpawn, playableArea.GetComponent<Renderer>().bounds.size.z - offsetCocaineSpawn));
-
-                GameObject obj = Instantiate(cocaine, randPosition, cocaine.transform.rotation);
-                cocaineList.Add(obj);
-
-                obj.GetComponent<CocaineBehaviour>().gameplayScript = this;
-                obj.GetComponent<CocaineBehaviour>().isBuffed = i+1 >= maxCocaineBags ? true : false;
-            }
-
-            spawnCocaine = false;
-        }
+            SpawnCocaine();
 
         if (!cameraTransition && cocaineList.Count <= 0)
             spawnCocaine = true;
+    }
+
+    public void SpawnCocaine()
+    {
+        cocaineList.Clear();
+
+        for (int i = 0; i < maxCocaineBags; i++)
+        {
+            Vector3 randPosition = new Vector3(
+                playableArea.position.x + Random.Range(offsetCocaineSpawn, playableArea.GetComponent<Renderer>().bounds.size.x - offsetCocaineSpawn),
+                cocaine.transform.position.y,
+                playableArea.position.z - Random.Range(offsetCocaineSpawn, playableArea.GetComponent<Renderer>().bounds.size.z - offsetCocaineSpawn));
+
+            GameObject obj = Instantiate(cocaine, randPosition, cocaine.transform.rotation);
+            obj.GetComponent<CocaineBehaviour>().gameplayScript = this;
+            obj.GetComponent<CocaineBehaviour>().isBuffed = i + 1 >= maxCocaineBags ? true : false;
+            cocaineList.Add(obj);
+        }
+
+
+        spawnCocaine = false;
     }
 
     public void UpdateList(GameObject obj)

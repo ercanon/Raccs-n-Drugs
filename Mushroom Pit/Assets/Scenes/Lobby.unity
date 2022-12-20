@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 15063644}
   - component: {fileID: 15063645}
-  - component: {fileID: 15063646}
   m_Layer: 0
   m_Name: Server
   m_TagString: Manager
@@ -173,24 +172,7 @@ MonoBehaviour:
   enterServerPort: {fileID: 663193973}
   ChatBox: {fileID: 663193977}
   enterMessage: {fileID: 663193976}
-  racoon: {fileID: 0}
---- !u!114 &15063646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 15063643}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3032813a14c224749bad66739be4deac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   racoon: {fileID: 177229643556919891, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
-  cocaine: {fileID: 7131665908812577768, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
-  cocaineList: []
-  maxCocaineBags: 6
-  offsetCocaineSpawn: 2
 --- !u!1 &86099808
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,7 +519,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-23920
+  m_Name: pb_Mesh-2244
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1230,7 +1212,7 @@ PrefabInstance:
       objectReference: {fileID: 880121486}
     - target: {fileID: 1676281799494127411, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
       propertyPath: m_VersionIndex
-      value: 2838
+      value: 2847
       objectReference: {fileID: 0}
     - target: {fileID: 1676281799494127412, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
       propertyPath: m_Mesh
@@ -1700,10 +1682,6 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
-    - target: {fileID: 7986348984646565913, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7999832275115794546, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
@@ -1772,6 +1750,5 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7986348984646565913, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c454d65b3babb9448bdcfa5d7ecfd287, type: 3}

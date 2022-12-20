@@ -13,7 +13,8 @@ public class connection : MonoBehaviour
 	/*---------------------VARIABLES-------------------*/
 	enum Protocol { UDP, TCP }; private Protocol protocol;
 	enum Profile { server, client }; private Profile profile;
-	enum TypeData { start, posList, chat, position }; private TypeData typeData;
+	enum TypeData { start, posList, chat, raccsPositions, CocainePositions }; private TypeData typeData;
+	
 	Socket socketHost;
 	Socket socket;
 	Thread ServerWaiting;
@@ -32,7 +33,8 @@ public class connection : MonoBehaviour
 	public Text ChatBox;
 	public InputField enterMessage;
 	string log;
-	bool gameStart;
+
+	private GameplayScript gameplay;
 
 	public GameObject racoon;
 	private List<GameObject> racoonList;
@@ -75,8 +77,8 @@ public class connection : MonoBehaviour
 		Reset((int)protocol, (int)profile);
 
 		enterUserName.text = "Player" + (int)Random.Range(1, 100);
-		gameStart = false;
-		sizeClients = 0;
+		gameplay = GameObject.Find("Level").GetComponent<GameplayScript>();
+		sizeClients = -1;
 	}
 	
 	public void ChangeProtocol(int val)
@@ -140,14 +142,14 @@ public class connection : MonoBehaviour
 			enterMessage.text = "";
 		}
 
-		if (gameStart)
+		if (gameplay.enabled)
 		{
 			if (sizeClients > -1)
 			{
 				LaunchGame(sizeClients);
 				sizeClients = -1;
 			}
-			SendData(Serialize((int)TypeData.position), socket, remote);
+			SendData(Serialize((int)TypeData.raccsPositions), socket, remote);
 		}
 	}
 	
@@ -362,7 +364,7 @@ public class connection : MonoBehaviour
 		switch (type)
 		{
 			case 0:	//Start
-				writer.Write(gameStart);
+				writer.Write(gameplay.enabled);
 				writer.Write(clients.Count);
 				break;
 			case 1: //Position List Racoon
@@ -372,13 +374,22 @@ public class connection : MonoBehaviour
 				writer.Write(message);
 				writer.Write(sender);
 				break;
-			case 3: //Position
+			case 3: //RaccsPosition
 				if (posRacoonList < 4)
 				{
 					writer.Write(posRacoonList);
 					writer.Write(racoonList[posRacoonList].transform.position.x);
 					writer.Write(racoonList[posRacoonList].transform.position.y);
 					writer.Write(racoonList[posRacoonList].transform.position.z);
+				}
+				break;
+			case 4: //CocainePosition
+				writer.Write(gameplay.cocaineList.Count);
+				for (int i = 0; i < gameplay.cocaineList.Count; i++)
+				{
+					writer.Write(gameplay.cocaineList[i].transform.position.x);
+					writer.Write(gameplay.cocaineList[i].transform.position.y);
+					writer.Write(gameplay.cocaineList[i].transform.position.z);
 				}
 				break;
 			default:
@@ -398,9 +409,9 @@ public class connection : MonoBehaviour
 		switch (type)
 		{
 			case 0: //Start
-				if (gameStart == false)
+				if (gameplay.enabled == false)
 				{
-					gameStart = reader.ReadBoolean();
+					gameplay.enabled = reader.ReadBoolean();
 					sizeClients = reader.ReadInt32();
 				}
 				break;
@@ -412,12 +423,18 @@ public class connection : MonoBehaviour
 				break;
 			case 3: //Position
 				int posSend = reader.ReadInt32();
-				float x = reader.ReadSingle();
-				float y = reader.ReadSingle();
-				float z = reader.ReadSingle();
+				float xR = reader.ReadSingle();
+				float yR = reader.ReadSingle();
+				float zR = reader.ReadSingle();
 
-				if (racoonList.Count > 0 && posSend != posRacoonList)
-						racoonList[posSend].transform.position = new Vector3(x, y, z);
+				if (racoonList.Count > 0)
+						racoonList[posSend].transform.position = new Vector3(xR, yR, zR);
+				break;
+			case 4: //CocainePosition
+
+				break;
+			default:
+				customLog("No package has been send", "Error");
 				break;
 		}
 	}
@@ -436,20 +453,20 @@ public class connection : MonoBehaviour
 	/*---------------------GAME-------------------*/
 	public void LaunchGame(int size = 0)
 	{
-		gameObject.GetComponent<GameplayScript>().enabled = true;
+		gameplay.enabled = true;
 		GameObject.Find("UI").SetActive(false);
 
-		gameStart = true;
 		SendData(Serialize((int)TypeData.start), socket, remote);
 
 		if (size <= 0) 
 			size = clients.Count;
 
 		Transform[] pos = GameObject.Find("RacoonSpawn").GetComponentsInChildren<Transform>();
-		for (int i = 0; i <= size; i++)
+		for (int i = 0; i < size; i++)
 		{
 			if (i > 4)
 				break;
+
 			GameObject rac = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
 			rac.GetComponent<RacoonBehaviour>().ChangeState(1);
 			racoonList.Add(rac);

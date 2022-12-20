@@ -26,7 +26,7 @@ public class CocaineBehaviour : MonoBehaviour
         {
             if (isBuffed)
             {
-                other.gameObject.GetComponent<RacoonBehaviour>().ChangeState(2);
+                other.gameObject.GetComponent<RacoonBehaviour>().ChangeState(3);
                 gameplayScript.DeleteList();
             }
             else 
