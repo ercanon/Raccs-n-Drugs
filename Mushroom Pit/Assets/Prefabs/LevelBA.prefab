@@ -1191,16 +1191,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1676281799112538794}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3032813a14c224749bad66739be4deac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   racoon: {fileID: 177229643556919891, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
   cocaine: {fileID: 7131665908812577768, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
+  racoonList: []
   cocaineList: []
+  cameraTransition: 0
   maxCocaineBags: 6
   offsetCocaineSpawn: 2
+  conect: {fileID: 0}
 --- !u!1 &1676281799279953265
 GameObject:
   m_ObjectHideFlags: 0
