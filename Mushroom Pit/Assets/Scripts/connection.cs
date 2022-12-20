@@ -24,6 +24,7 @@ public class connection : MonoBehaviour
 	EndPoint remote;
 	//Dictionary<EndPoint, Socket> clients;
 	List<EndPoint> clients;
+	int sizeClients;
 
 	public InputField enterUserName;
 	public Text enterServerIP;
@@ -32,9 +33,6 @@ public class connection : MonoBehaviour
 	public InputField enterMessage;
 	string log;
 	bool gameStart;
-
-	[HideInInspector]
-	public GameplayScript gameManager;
 
 	public GameObject racoon;
 	private List<GameObject> racoonList;
@@ -76,9 +74,9 @@ public class connection : MonoBehaviour
 	{
 		Reset((int)protocol, (int)profile);
 
-		enterUserName.text = "Player" + (int)Random.Range(1, 100000);
-		gameManager = null;
+		enterUserName.text = "Player" + (int)Random.Range(1, 100);
 		gameStart = false;
+		sizeClients = -1;
 	}
 	
 	public void ChangeProtocol(int val)
@@ -142,8 +140,15 @@ public class connection : MonoBehaviour
 			enterMessage.text = "";
 		}
 
-		if(gameStart)
+		if (gameStart)
+		{
+			if (sizeClients > -1)
+			{
+				LaunchGame(sizeClients);
+				sizeClients = -1;
+			}
 			SendData(Serialize((int)TypeData.position), socket, remote);
+		}
 	}
 	
 	void customLog(string data, string sender, bool nl = true)
@@ -358,6 +363,7 @@ public class connection : MonoBehaviour
 		{
 			case 0:	//Start
 				writer.Write(gameStart);
+				writer.Write(clients.Count);
 				break;
 			case 1: //Position List Racoon
 				writer.Write(clients.Count-1);
@@ -392,8 +398,11 @@ public class connection : MonoBehaviour
 		switch (type)
 		{
 			case 0: //Start
-				if (gameStart == false && reader.ReadBoolean())
-					LaunchGame();
+				if (gameStart == false)
+				{
+					gameStart = reader.ReadBoolean();
+					sizeClients = reader.ReadInt32();
+				}
 				break;
 			case 1:	//Position List Racoon
 				posRacoonList = reader.ReadInt32();
@@ -425,7 +434,7 @@ public class connection : MonoBehaviour
 
 
 	/*---------------------GAME-------------------*/
-	public void LaunchGame()
+	public void LaunchGame(int size = 0)
 	{
 		GameObject.Find("Level").GetComponent<GameplayScript>().enabled = true;
 		GameObject.Find("UI").SetActive(false);
@@ -433,10 +442,13 @@ public class connection : MonoBehaviour
 		gameStart = true;
 		SendData(Serialize((int)TypeData.start), socket, remote);
 
+		if (size <= 0) 
+			size = clients.Count;
+
 		Transform[] pos = GameObject.Find("RacoonSpawn").GetComponentsInChildren<Transform>();
-		for (int i = 0; i <= clients.Count; i++)
+		for (int i = 0; i <= size; i++)
 		{
-			if (i >= 4)
+			if (i > 4)
 				break;
 			GameObject rac = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
 			rac.GetComponent<RacoonBehaviour>().ChangeState(1);
