@@ -207,7 +207,7 @@ public class connection : MonoBehaviour
 				if (clients.Contains(sender) == false)
 				{
 					clients.Add(sender);
-					SendData(Serialize((int)TypeData.posList), socket, remote);
+					SendData(Serialize((int)TypeData.posList), socketHost, sender);
 					customLog("client deceived " + sender.ToString(), "Server");
 					socketHost.SendTo(data, recv, SocketFlags.None, sender);
 				}
