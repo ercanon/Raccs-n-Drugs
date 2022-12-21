@@ -6,7 +6,7 @@ public class CocaineBehaviour : MonoBehaviour
 {
     [HideInInspector]
     public GameplayScript gameplayScript;
-    public bool isBuffed;
+    public bool isBuffed = false;
 
     private void OnTriggerEnter(Collider other)
     {
