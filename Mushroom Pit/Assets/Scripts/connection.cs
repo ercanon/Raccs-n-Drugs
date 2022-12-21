@@ -177,7 +177,7 @@ public class connection : MonoBehaviour
 		ServerGather.Start();
 
 		JoinGame(true);
-		gameplay.posRacoonList = gameplay.racoonList.Count;
+		
 	}
 
 	void WaitingPlayers()
@@ -207,6 +207,7 @@ public class connection : MonoBehaviour
 				if (clients.Contains(sender) == false)
 				{
 					clients.Add(sender);
+					SendData(Serialize((int)TypeData.posList), socket, remote);
 					customLog("client deceived " + sender.ToString(), "Server");
 					socketHost.SendTo(data, recv, SocketFlags.None, sender);
 				}
@@ -403,7 +404,7 @@ public class connection : MonoBehaviour
 		switch (type)
 		{
 			case 0: //Start
-					gameplay.LaunchGame(reader.ReadInt32());
+				gameplay.LaunchGame(reader.ReadInt32());
 				break;
 			case 1:	//Position List Racoon
 				gameplay.posRacoonList = reader.ReadInt32();
