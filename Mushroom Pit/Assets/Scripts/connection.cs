@@ -198,9 +198,8 @@ public class connection : MonoBehaviour
 			if (protocol == Protocol.TCP)
 			{
 				recv = socketHost.Receive(data);
-				if (recv == 0) 
-					;
-				socketHost.Send(data);
+				if (recv != 0) 
+					socketHost.Send(data);
 			}
 			else if (protocol == Protocol.UDP)
 			{

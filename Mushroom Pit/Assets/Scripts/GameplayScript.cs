@@ -12,7 +12,6 @@ public class GameplayScript : MonoBehaviour
     public List<GameObject> racoonList;
     public List<GameObject> cocaineList;
 
-    private bool spawnCocaine = false;
     public bool cameraTransition = false;
 
     public int maxCocaineBags;
@@ -21,7 +20,7 @@ public class GameplayScript : MonoBehaviour
     [HideInInspector]
     public connection conect;
     private Transform playableArea;
-    private Transform camera;
+    private Transform mainCamera;
     private Transform gamePos;
 
 
@@ -43,7 +42,7 @@ public class GameplayScript : MonoBehaviour
         Reset(); 
 
         playableArea = transform.GetChild(0);
-        camera = GameObject.Find("Main Camera").transform;
+        mainCamera = GameObject.Find("Main Camera").transform;
         gamePos = GameObject.Find("CameraGamePosition").transform;
     }
 
@@ -52,21 +51,18 @@ public class GameplayScript : MonoBehaviour
     {
         if (cameraTransition)
         {
-            camera.transform.position = Vector3.Lerp(camera.transform.position, gamePos.position, 2 * Time.deltaTime);
-            camera.transform.rotation = Quaternion.Lerp(camera.transform.rotation, gamePos.rotation, 2 * Time.deltaTime);
+            mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, gamePos.position, 2 * Time.deltaTime);
+            mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, gamePos.rotation, 2 * Time.deltaTime);
 
-            if (Vector3.Distance(camera.transform.position, gamePos.position) < 0.15)
+            if (Vector3.Distance(mainCamera.transform.position, gamePos.position) < 0.15)
             {
                 cameraTransition = false;
                 DeleteList();
             }
         }
 
-        if (spawnCocaine)
+        if (cocaineList.Count <= 0)
             SpawnCocaine();
-
-        if (!cameraTransition && cocaineList.Count <= 0)
-            spawnCocaine = true;
     }
 
     private void FixedUpdate()
@@ -119,9 +115,6 @@ public class GameplayScript : MonoBehaviour
             obj.GetComponent<CocaineBehaviour>().isBuffed = i + 1 >= maxCocaineBags ? true : false;
             cocaineList.Add(obj);
         }
-
-
-        spawnCocaine = false;
     }
 
     public void UpdateCocaine(Vector3 position, int posRacoon, bool isBuffed = false)

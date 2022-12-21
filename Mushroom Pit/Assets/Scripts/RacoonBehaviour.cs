@@ -16,7 +16,7 @@ public class RacoonBehaviour : MonoBehaviour
     public float walkSpeed = 5;
     public float buffSpeed = 8;
 
-    private Rigidbody rigidbody;
+    private Rigidbody rBody;
     private Animator anim;
 
     /// <summary> Functions to override movement speed. Will use the last added override. </summary>
@@ -26,7 +26,7 @@ public class RacoonBehaviour : MonoBehaviour
     {
         ChangeState((int)RacoonState.onPause);
 
-        rigidbody = GetComponent<Rigidbody>();
+        rBody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
     }
 
@@ -48,12 +48,12 @@ public class RacoonBehaviour : MonoBehaviour
             Vector2 targetVelocity = new Vector2(Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
 
             // Apply movement.
-            rigidbody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
+            rBody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
 
             //Apply rotation.
-            if (rigidbody.velocity.magnitude > 0)
+            if (rBody.velocity.magnitude > 0)
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rigidbody.velocity), Time.deltaTime * 10f);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rBody.velocity), Time.deltaTime * 10f);
                 if (rState != RacoonState.buffed)
                     ChangeState((int)RacoonState.walking);
             }
