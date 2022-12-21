@@ -61,8 +61,8 @@ public class GameplayScript : MonoBehaviour
             }
         }
 
-        if (cocaineList.Count <= 0 && posRacoonList == 0) ;
-            //SpawnCocaine();
+        if (cocaineList.Count <= 0 && posRacoonList == 0)
+            SpawnCocaine();
     }
 
     private void FixedUpdate()
