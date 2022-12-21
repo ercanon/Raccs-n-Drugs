@@ -177,6 +177,7 @@ public class connection : MonoBehaviour
 		ServerGather.Start();
 
 		JoinGame(true);
+		gameplay.posRacoonList = 0;
 	}
 
 	void WaitingPlayers()
