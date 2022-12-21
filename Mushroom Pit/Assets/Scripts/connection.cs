@@ -26,7 +26,6 @@ public class connection : MonoBehaviour
 	//Dictionary<EndPoint, Socket> clients;
 	List<EndPoint> clients;
 	List<byte[]> pendingData;
-	private int posRacoonList;
 
 	public InputField enterUserName;
 	public Text enterServerIP;
@@ -63,7 +62,6 @@ public class connection : MonoBehaviour
 			pendingData.Clear();
 		pendingData = new List<byte[]>();
 
-		posRacoonList = 0;
 		log = null;
 		remote = (new IPEndPoint(IPAddress.Any, 0));
 
@@ -367,13 +365,14 @@ public class connection : MonoBehaviour
 				writer.Write(sender);
 				break;
 			case 3: //RaccsPosition
-				if (posRacoonList < 4)
+				int rListPos = gameplay.posRacoonList;
+				if (rListPos < 4)
 				{
-					Vector3 pos = gameplay.racoonList[posRacoonList].transform.position;
+					Vector3 pos = gameplay.racoonList[rListPos].transform.position;
 					writer.Write(pos.x);
 					writer.Write(pos.y);
 					writer.Write(pos.z);
-					writer.Write(posRacoonList);
+					writer.Write(rListPos);
 				}
 				break;
 			case 4: //CocainePosition	
@@ -383,7 +382,6 @@ public class connection : MonoBehaviour
 					Vector3 pos = gameplay.cocaineList[i].transform.position;
 					writer.Write(pos.x);
 					writer.Write(pos.y);
-					writer.Write(pos.z);
 					writer.Write(pos.z);
 				}
 				break;
@@ -407,7 +405,7 @@ public class connection : MonoBehaviour
 					gameplay.LaunchGame(reader.ReadInt32());
 				break;
 			case 1:	//Position List Racoon
-				posRacoonList = reader.ReadInt32();
+				gameplay.posRacoonList = reader.ReadInt32();
 				break;
 			case 2:	//Chat
 				customLog(reader.ReadString(), reader.ReadString());

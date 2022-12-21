@@ -11,6 +11,7 @@ public class GameplayScript : MonoBehaviour
     [HideInInspector]
     public List<GameObject> racoonList;
     public List<GameObject> cocaineList;
+    public int posRacoonList;
 
     public bool cameraTransition = false;
 
@@ -35,6 +36,7 @@ public class GameplayScript : MonoBehaviour
         if (racoonList != null)
             racoonList.Clear();
         racoonList = new List<GameObject>();
+        posRacoonList = -1;
     }
 
     void Awake()
@@ -61,7 +63,7 @@ public class GameplayScript : MonoBehaviour
             }
         }
 
-        if (cocaineList.Count <= 0)
+        if (cocaineList.Count <= 0 && posRacoonList == 0)
             SpawnCocaine();
     }
 
@@ -89,6 +91,8 @@ public class GameplayScript : MonoBehaviour
 
             GameObject rac = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
             rac.GetComponent<RacoonBehaviour>().ChangeState(1);
+            if (posRacoonList != i)
+                rac.GetComponent<RacoonBehaviour>().enabled = false;
             racoonList.Add(rac);
         }
     }
@@ -115,6 +119,8 @@ public class GameplayScript : MonoBehaviour
             obj.GetComponent<CocaineBehaviour>().isBuffed = i + 1 >= maxCocaineBags ? true : false;
             cocaineList.Add(obj);
         }
+
+        conect.SendClientData(4);
     }
 
     public void UpdateCocaine(Vector3 position, int posRacoon, bool isBuffed = false)
