@@ -177,7 +177,6 @@ public class connection : MonoBehaviour
 		ServerGather.Start();
 
 		JoinGame(true);
-		
 	}
 
 	void WaitingPlayers()
@@ -460,5 +459,6 @@ public class connection : MonoBehaviour
 	public void LaunchGame()
     {
 		gameplay.LaunchGame(clients.Count);
-    }
+		SendClientData((int)TypeData.start);
+	}
 }

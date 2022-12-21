@@ -61,8 +61,8 @@ public class GameplayScript : MonoBehaviour
             }
         }
 
-        if (cocaineList.Count <= 0 && posRacoonList == 0)
-            SpawnCocaine();
+        if (cocaineList.Count <= 0 && posRacoonList == 0) ;
+            //SpawnCocaine();
     }
 
     private void FixedUpdate()
@@ -77,9 +77,6 @@ public class GameplayScript : MonoBehaviour
     {
         cameraTransition = true;
         GameObject.Find("UI").SetActive(false);
-
-        //SendStart
-        conect.SendClientData(0);
 
         Transform[] pos = GameObject.Find("RacoonSpawn").GetComponentsInChildren<Transform>();
         for (int i = 0; i < size; i++)
