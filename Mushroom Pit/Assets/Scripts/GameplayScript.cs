@@ -41,8 +41,6 @@ public class GameplayScript : MonoBehaviour
 
     void Awake()
     {
-        Reset(); 
-
         playableArea = transform.GetChild(0);
         mainCamera = GameObject.Find("Main Camera").transform;
         gamePos = GameObject.Find("CameraGamePosition").transform;
