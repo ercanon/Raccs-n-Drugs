@@ -12,11 +12,13 @@ public class RacoonBehaviour : MonoBehaviour
         charging,
         dead
     }
-
+    public bool haschanged;
     private RacoonState rState;
     public float walkSpeed = 5;
     public float buffSpeed = 8;
     public float rotateSpeed = 3.5f;
+    public bool quiet = true;
+    public int charges = 4;
     [HideInInspector]
     public bool owned = false;
 
@@ -29,7 +31,7 @@ public class RacoonBehaviour : MonoBehaviour
     void Awake()
     {
         ChangeState((int)RacoonState.onPause);
-
+        
         rBody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
     }
@@ -42,6 +44,9 @@ public class RacoonBehaviour : MonoBehaviour
             {
                 if (rState != RacoonState.buffed)
                 {
+                    
+                    quiet = true;
+                    charges = 4;
                     float targetMovingSpeed = walkSpeed;
 
                     if (speedOverrides.Count > 0)
@@ -64,9 +69,21 @@ public class RacoonBehaviour : MonoBehaviour
                 }
                 else
                 {
+                    if (quiet)
+                    {
+                        rBody.velocity = Vector3.zero;
+                        quiet = false;
+                    }
                     transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
                     if (Input.GetKeyDown("space"))
+                    {                        
                         ChangeState((int)RacoonState.charging);
+                        charges = charges - 1;
+                    }
+                    if (charges == 0)
+                    {
+                        rState = RacoonState.walking;
+                    }
                 }
             }
         }
@@ -115,7 +132,7 @@ public class RacoonBehaviour : MonoBehaviour
 
                 rBody.velocity = transform.forward * buffSpeed;
 
-                rState = RacoonState.charging;
+                rState = RacoonState.buffed;
                 break;
 
             case 5: //Dead
