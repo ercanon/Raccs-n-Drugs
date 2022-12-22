@@ -69,16 +69,11 @@ public class RacoonBehaviour : MonoBehaviour
                 }
                 else
                 {
-                    if (quiet)
-                    {
-                        rBody.velocity = Vector3.zero;
-                        quiet = false;
-                    }
                     transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
                     if (Input.GetKeyDown("space"))
                     {                        
                         ChangeState((int)RacoonState.charging);
-                        charges = charges - 1;
+                        
                     }
                     if (charges == 0)
                     {
@@ -131,6 +126,7 @@ public class RacoonBehaviour : MonoBehaviour
                     return;
 
                 rBody.velocity = transform.forward * buffSpeed;
+                charges = charges - 1;
 
                 rState = RacoonState.buffed;
                 break;
