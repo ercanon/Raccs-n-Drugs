@@ -19,10 +19,9 @@ public class GameplayScript : MonoBehaviour
 
     public int maxCocaineBags = 6;
     public float offsetCocaineSpawn = 2f;
-    [HideInInspector]
-    public bool cocaineCanSpawn = false;
 
     [HideInInspector]
+    public bool cocaineCanSpawn = false;
     public connection conect;
     private Transform playableArea;
     private Transform mainCamera;
