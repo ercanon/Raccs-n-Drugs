@@ -144,7 +144,7 @@ public class GameplayScript : MonoBehaviour
     public void DeleteList()
     {
         foreach (CocaineBehaviour cocaScript in cocaineList)
-            Destroy(cocaScript);
+            Destroy(cocaScript.gameObject);
 
         cocaineList.Clear();
     }
