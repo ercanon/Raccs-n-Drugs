@@ -9,6 +9,9 @@ public class GameplayScript : MonoBehaviour
     public GameObject cocaine;
   
 
+    public List<Material> playerMaterial;
+    public List<Material> MaterialList;
+
     [HideInInspector]
     public List<GameObject> racoonList;
     public List<GameObject> cocaineList;
@@ -24,8 +27,6 @@ public class GameplayScript : MonoBehaviour
     private Transform playableArea;
     private Transform mainCamera;
     private Transform gamePos;
-
-
 
     public void Reset()
     {
@@ -43,7 +44,7 @@ public class GameplayScript : MonoBehaviour
     {
         playableArea = transform.GetChild(0);
         mainCamera = GameObject.Find("Main Camera").transform;
-        gamePos = GameObject.Find("CameraGamePosition").transform;
+        gamePos = GameObject.Find("CameraGamePosition").transform;                                         
     }
 
     // Update is called once per frame
@@ -84,9 +85,11 @@ public class GameplayScript : MonoBehaviour
 
             GameObject rac = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
             rac.GetComponent<RacoonBehaviour>().ChangeState(1);
+            //rac.SetColor("PlayerColor" + (i + 1), playersColor[i]);
             if (posRacoonList == i)
                 rac.GetComponent<RacoonBehaviour>().owned = true;
             racoonList.Add(rac);
+            rac.transform.GetChild(0).GetComponent<Renderer>().material = MaterialList[i];
         }
     }
 
