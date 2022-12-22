@@ -9,6 +9,7 @@ public class RacoonBehaviour : MonoBehaviour
         idle,
         walking,
         buffed,
+        charging,
         dead
     }
 
@@ -16,8 +17,6 @@ public class RacoonBehaviour : MonoBehaviour
     public float walkSpeed = 5;
     public float buffSpeed = 8;
     public float rotateSpeed = 3.5f;
-    public float rotate = 0;
-    public bool quiet = true;
     [HideInInspector]
     public bool owned = false;
 
@@ -39,48 +38,35 @@ public class RacoonBehaviour : MonoBehaviour
     {
         if (owned && rState != RacoonState.dead && rState != RacoonState.onPause)
         {
-            /*
-            if (canRun && Input.GetKey(runningKey))
-                ChangeState((int)RacoonState.buffed);
-            */
-            if (rState != RacoonState.buffed)
+            if (rState != RacoonState.charging)
             {
-                float targetMovingSpeed = rState == RacoonState.buffed ? buffSpeed : walkSpeed;
-
-                if (speedOverrides.Count > 0)
-                    targetMovingSpeed = speedOverrides[speedOverrides.Count - 1]();
-
-                // Get targetVelocity from input.
-                Vector2 targetVelocity = new Vector2(Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
-
-                // Apply movement.
-                rBody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
-
-                //Apply rotation.
                 if (rState != RacoonState.buffed)
                 {
+                    float targetMovingSpeed = walkSpeed;
+
+                    if (speedOverrides.Count > 0)
+                        targetMovingSpeed = speedOverrides[speedOverrides.Count - 1]();
+
+                    // Get targetVelocity from input.
+                    Vector2 targetVelocity = new Vector2(Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
+
+                    // Apply movement.
+                    rBody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
+
+                    //Apply rotation.
                     if (rBody.velocity.magnitude > 0)
                     {
                         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rBody.velocity), Time.deltaTime * 10f);
-                        if (rState != RacoonState.buffed)
-                            ChangeState((int)RacoonState.walking);
+                        ChangeState((int)RacoonState.walking);
                     }
+                    else
+                        ChangeState((int)RacoonState.idle);
                 }
                 else
-                    ChangeState((int)RacoonState.idle);
-            }
-            if (rState == RacoonState.buffed)
-            {
-                if (quiet)
                 {
-                    rBody.velocity = Vector3.zero;
-                    quiet = false;
-                }
-                //rotate = (Input.GetAxis("Horizontal") * rotateSpeed) * Time.deltaTime;
-                transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
-                if (Input.GetKeyDown("space"))
-                {
-                    rBody.velocity = transform.forward * buffSpeed;
+                    transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
+                    if (Input.GetKeyDown("space"))
+                        ChangeState((int)RacoonState.charging);
                 }
             }
         }
@@ -117,11 +103,22 @@ public class RacoonBehaviour : MonoBehaviour
                 if (rState == RacoonState.buffed)
                     return;
 
+                rBody.velocity = Vector3.zero;
+
                 rState = RacoonState.buffed;
                 anim.Play("Idle Buff");
                 break;
 
-            case 4: //Dead
+            case 4: //Charging
+                if (rState == RacoonState.charging)
+                    return;
+
+                rBody.velocity = transform.forward * buffSpeed;
+
+                rState = RacoonState.charging;
+                break;
+
+            case 5: //Dead
                 if (rState == RacoonState.dead)
                     return;
 
