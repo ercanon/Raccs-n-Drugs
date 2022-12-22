@@ -98,22 +98,22 @@ public class GameplayScript : MonoBehaviour
 
     public void SpawnCocaine()
     {
-        
-            for (int i = 0; i < maxCocaineBags; i++)
-            {
-                Vector3 randPosition = new Vector3(
-                    playableArea.position.x + Random.Range(offsetCocaineSpawn, playableArea.GetComponent<Renderer>().bounds.size.x - offsetCocaineSpawn),
-                    cocaine.transform.position.y,
-                    playableArea.position.z - Random.Range(offsetCocaineSpawn, playableArea.GetComponent<Renderer>().bounds.size.z - offsetCocaineSpawn));
+        for (int i = 0; i < maxCocaineBags; i++)
+        {
+            Vector3 bounds = playableArea.GetComponent<Renderer>().bounds.size;
+            Debug.Log(playableArea.localPosition.ToString());
+            Vector3 randPosition = new Vector3(
+                (playableArea.position.x - bounds.x / 2) + Random.Range(offsetCocaineSpawn, bounds.x - offsetCocaineSpawn),
+                cocaine.transform.position.y,
+                (playableArea.position.z - bounds.z / 2) + Random.Range(offsetCocaineSpawn, bounds.z - offsetCocaineSpawn));
 
-                GameObject obj = Instantiate(cocaine, randPosition, cocaine.transform.rotation);
-                obj.GetComponent<CocaineBehaviour>().gameplayScript = this;
-                obj.GetComponent<CocaineBehaviour>().isBuffed = i + 1 >= maxCocaineBags ? true : false;
-                cocaineList.Add(obj);
-            }
+            GameObject obj = Instantiate(cocaine, randPosition, cocaine.transform.rotation);
+            obj.GetComponent<CocaineBehaviour>().gameplayScript = this;
+            obj.GetComponent<CocaineBehaviour>().isBuffed = i + 1 >= maxCocaineBags ? true : false;
+            cocaineList.Add(obj);
+        }
 
-            conect.SendClientData(4);
-        
+        conect.SendClientData(4);
     }
 
     public void UpdateCocaine(Vector3 position, int posRacoon, bool isBuffed = false)
