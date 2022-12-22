@@ -96,7 +96,6 @@ public class connection : MonoBehaviour
 				GameObject.Find("ServerIP").GetComponent<InputField>().interactable = true;
 				break;
 			case Profile.server:
-				GameObject.Find("StartGame").GetComponent<Button>().interactable = true;
 				GameObject.Find("CreateGame").GetComponent<Button>().interactable = true;
 				GameObject.Find("JoinGame").GetComponent<Button>().interactable = false;
 				GameObject.Find("Disconnect").GetComponent<Button>().interactable = false;
@@ -158,6 +157,9 @@ public class connection : MonoBehaviour
 	/*---------------------HOST-------------------*/
 	public void CreateGame()
 	{
+		if (GameObject.Find("StartGame").GetComponent<Button>().interactable == false) 
+			GameObject.Find("StartGame").GetComponent<Button>().interactable = true;
+
 		if (protocol == Protocol.TCP)
 			socketHost = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		else if (protocol == Protocol.UDP)
