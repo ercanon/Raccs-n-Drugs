@@ -15,6 +15,8 @@ public class RacoonBehaviour : MonoBehaviour
     private RacoonState rState;
     public float walkSpeed = 5;
     public float buffSpeed = 8;
+    [HideInInspector]
+    public bool owned = false;
 
     private Rigidbody rBody;
     private Animator anim;
@@ -32,7 +34,7 @@ public class RacoonBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (rState != RacoonState.dead && rState != RacoonState.onPause)
+        if (owned && rState != RacoonState.dead && rState != RacoonState.onPause)
         {
             /*
             if (canRun && Input.GetKey(runningKey))
@@ -51,13 +53,16 @@ public class RacoonBehaviour : MonoBehaviour
             rBody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
 
             //Apply rotation.
-            if (rBody.velocity.magnitude > 0)
+            if (rState != RacoonState.buffed)
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rBody.velocity), Time.deltaTime * 10f);
-                if (rState != RacoonState.buffed)
-                    ChangeState((int)RacoonState.walking);
+                if (rBody.velocity.magnitude > 0)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rBody.velocity), Time.deltaTime * 10f);
+                    if (rState != RacoonState.buffed)
+                        ChangeState((int)RacoonState.walking);
+                }
             }
-            else if (rState != RacoonState.buffed)
+            else
                 ChangeState((int)RacoonState.idle);
         }
     }

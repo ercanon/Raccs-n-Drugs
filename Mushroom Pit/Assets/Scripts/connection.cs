@@ -182,8 +182,7 @@ public class connection : MonoBehaviour
 	void WaitingPlayers()
 	{
 		socketHost.Listen(1);
-		Socket newClient = socketHost.Accept();
-		customLog("client deceived " + newClient.RemoteEndPoint.ToString(), "Server");
+		socketHost.Accept();
 	}
 
 	void GatherAndBroadcast()
@@ -207,7 +206,6 @@ public class connection : MonoBehaviour
 				{
 					clients.Add(sender);
 					SendData(Serialize((int)TypeData.posList), socketHost, sender);
-					customLog("client deceived " + sender.ToString(), "Server");
 					socketHost.SendTo(data, recv, SocketFlags.None, sender);
 				}
 
@@ -430,7 +428,7 @@ public class connection : MonoBehaviour
 				}
 				break;
 			default:
-				customLog("No package has been send", "Error");
+				customLog("Package is corrupted", "Error");
 				break;
 		}
 	}

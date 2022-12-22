@@ -31,7 +31,6 @@ public class GameplayScript : MonoBehaviour
         if (racoonList != null)
             DeleteList();
         cocaineList = new List<GameObject>();
-        cocaineList.Add(null);
 
         if (racoonList != null)
             racoonList.Clear();
@@ -55,13 +54,9 @@ public class GameplayScript : MonoBehaviour
             mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, gamePos.rotation, 2 * Time.deltaTime);
 
             if (Vector3.Distance(mainCamera.transform.position, gamePos.position) < 0.15)
-            {
                 cameraTransition = false;
-                DeleteList();
-            }
         }
-
-        if (cocaineList.Count <= 0 && posRacoonList == 0)
+        else if (posRacoonList == 0 && racoonList.Count > 0 && cocaineList.Count <= 0)
             SpawnCocaine();
     }
 
@@ -87,8 +82,8 @@ public class GameplayScript : MonoBehaviour
 
             GameObject rac = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
             rac.GetComponent<RacoonBehaviour>().ChangeState(1);
-            if (posRacoonList != i)
-                rac.GetComponent<RacoonBehaviour>().enabled = false;
+            if (posRacoonList == i)
+                rac.GetComponent<RacoonBehaviour>().owned = true;
             racoonList.Add(rac);
         }
     }
@@ -101,8 +96,6 @@ public class GameplayScript : MonoBehaviour
 
     public void SpawnCocaine()
     {
-        cocaineList.Clear();
-
         for (int i = 0; i < maxCocaineBags; i++)
         {
             Vector3 randPosition = new Vector3(
