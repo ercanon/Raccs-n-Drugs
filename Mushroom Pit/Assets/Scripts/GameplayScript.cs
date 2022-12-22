@@ -7,18 +7,20 @@ public class GameplayScript : MonoBehaviour
 {
     public GameObject racoon;
     public GameObject cocaine;
-  
+
     public List<Material> MaterialList;
 
     [HideInInspector]
-    public List<GameObject> racoonList;
-    public List<GameObject> cocaineList;
+    public List<RacoonBehaviour> racoonList;
+    public List<CocaineBehaviour> cocaineList;
     public int posRacoonList;
 
     public bool cameraTransition = false;
 
-    public int maxCocaineBags;
-    public float offsetCocaineSpawn;
+    public int maxCocaineBags = 6;
+    public float offsetCocaineSpawn = 2f;
+    [HideInInspector]
+    public bool cocaineCanSpawn = false;
 
     [HideInInspector]
     public connection conect;
@@ -30,11 +32,11 @@ public class GameplayScript : MonoBehaviour
     {
         if (racoonList != null)
             DeleteList();
-        cocaineList = new List<GameObject>();
+        cocaineList = new List<CocaineBehaviour>();
 
         if (racoonList != null)
             racoonList.Clear();
-        racoonList = new List<GameObject>();
+        racoonList = new List<RacoonBehaviour>();
         posRacoonList = -1;
     }
 
@@ -54,9 +56,12 @@ public class GameplayScript : MonoBehaviour
             mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, gamePos.rotation, 2 * Time.deltaTime);
 
             if (Vector3.Distance(mainCamera.transform.position, gamePos.position) < 0.15)
+            {
                 cameraTransition = false;
+                cocaineCanSpawn = true;
+            }
         }
-        else if (posRacoonList == 0 && racoonList.Count > 0 && cocaineList.Count <= 0)
+        else if (posRacoonList == 0 && cocaineCanSpawn)
             SpawnCocaine();
     }
 
@@ -65,7 +70,6 @@ public class GameplayScript : MonoBehaviour
         //Send Position Racoon
         if(racoonList.Count > 0)
             conect.SendClientData(3);
-
     }
 
 
@@ -81,19 +85,27 @@ public class GameplayScript : MonoBehaviour
             if (i > 4)
                 break;
 
-            GameObject rac = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
-            rac.GetComponent<RacoonBehaviour>().ChangeState(1);
+            GameObject racc = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
+            RacoonBehaviour raccScript = racc.GetComponent<RacoonBehaviour>();
+            raccScript.ChangeState(1);
+            raccScript.gameplayScript = this;
+            racc.transform.GetChild(0).GetComponent<Renderer>().material = MaterialList[i];
             if (posRacoonList == i)
-                rac.GetComponent<RacoonBehaviour>().owned = true;
-            racoonList.Add(rac);
-            rac.transform.GetChild(0).GetComponent<Renderer>().material = MaterialList[i];
+                raccScript.owned = true;
+            racoonList.Add(raccScript);
         }
     }
 
-    public void UpdateRacoon(Vector3 position, int posRacoon)
+    public void UpdateRacoon(Vector3 position, Vector3 rotation, int posRacoon)
     {
         if (racoonList.Count > 0)
-            racoonList[posRacoon].transform.position = position;
+            racoonList[posRacoon].transform.SetPositionAndRotation(position, Quaternion.Euler(rotation));
+    }
+
+    public void ChargeRacoon(int posRacoon)
+    {
+        if (racoonList.Count > 0)
+            racoonList[posRacoon].ChangeState(4);
     }
 
     public void SpawnCocaine()
@@ -101,36 +113,38 @@ public class GameplayScript : MonoBehaviour
         for (int i = 0; i < maxCocaineBags; i++)
         {
             Vector3 bounds = playableArea.GetComponent<Renderer>().bounds.size;
-            Debug.Log(playableArea.localPosition.ToString());
             Vector3 randPosition = new Vector3(
                 (playableArea.position.x - bounds.x / 2) + Random.Range(offsetCocaineSpawn, bounds.x - offsetCocaineSpawn),
                 cocaine.transform.position.y,
                 (playableArea.position.z - bounds.z / 2) + Random.Range(offsetCocaineSpawn, bounds.z - offsetCocaineSpawn));
 
             GameObject obj = Instantiate(cocaine, randPosition, cocaine.transform.rotation);
-            obj.GetComponent<CocaineBehaviour>().gameplayScript = this;
-            obj.GetComponent<CocaineBehaviour>().isBuffed = i + 1 >= maxCocaineBags ? true : false;
-            cocaineList.Add(obj);
+            CocaineBehaviour cocaScript = obj.GetComponent<CocaineBehaviour>();
+            cocaScript.gameplayScript = this;
+            cocaScript.isBuffed = i == 0 ? true : false;
+            cocaineList.Add(cocaScript);
         }
 
+        cocaineCanSpawn = false;
         conect.SendClientData(4);
     }
 
     public void UpdateCocaine(Vector3 position, int posRacoon, bool isBuffed = false)
     {
         GameObject obj = Instantiate(cocaine, position, cocaine.transform.rotation);
-        obj.GetComponent<CocaineBehaviour>().gameplayScript = this;
-        obj.GetComponent<CocaineBehaviour>().isBuffed = isBuffed;
-        cocaineList.Add(obj);
+        CocaineBehaviour cocaScript = obj.GetComponent<CocaineBehaviour>();
+        cocaScript.gameplayScript = this;
+        cocaScript.isBuffed = isBuffed;
+        cocaineList.Add(cocaScript);
     }
 
-    public void UpdateList(GameObject obj)
-    { cocaineList.Remove(obj); }
+    public void UpdateList(CocaineBehaviour cocaScript)
+    { cocaineList.Remove(cocaScript); }
 
     public void DeleteList()
     {
-        foreach (GameObject coc in cocaineList)
-            Destroy(coc);
+        foreach (CocaineBehaviour cocaScript in cocaineList)
+            Destroy(cocaScript);
 
         cocaineList.Clear();
     }

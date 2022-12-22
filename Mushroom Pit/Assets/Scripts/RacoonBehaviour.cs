@@ -12,16 +12,17 @@ public class RacoonBehaviour : MonoBehaviour
         charging,
         dead
     }
-    public bool haschanged;
     private RacoonState rState;
     public float walkSpeed = 5;
     public float buffSpeed = 8;
     public float rotateSpeed = 3.5f;
-    public bool quiet = true;
-    public int charges = 4;
+    public int charges = 3;
+    private float timerCharge = 0f;
+
     [HideInInspector]
     public bool owned = false;
 
+    public GameplayScript gameplayScript;
     private Rigidbody rBody;
     private Animator anim;
 
@@ -31,22 +32,19 @@ public class RacoonBehaviour : MonoBehaviour
     void Awake()
     {
         ChangeState((int)RacoonState.onPause);
-        
+
         rBody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
     }
 
     void FixedUpdate()
     {
-        if (owned && rState != RacoonState.dead && rState != RacoonState.onPause)
+        if (rState != RacoonState.dead && rState != RacoonState.onPause)
         {
-            if (rState != RacoonState.charging)
+            if (owned && rState != RacoonState.charging)
             {
                 if (rState != RacoonState.buffed)
                 {
-                    
-                    quiet = true;
-                    charges = 4;
                     float targetMovingSpeed = walkSpeed;
 
                     if (speedOverrides.Count > 0)
@@ -70,18 +68,28 @@ public class RacoonBehaviour : MonoBehaviour
                 else
                 {
                     transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
-                    if (Input.GetKeyDown("space"))
-                    {                        
+                    if (Input.GetKeyDown("space"))                     
                         ChangeState((int)RacoonState.charging);
-                        
-                    }
-                    if (charges == 0)
-                    {
-                        rState = RacoonState.walking;
-                    }
                 }
             }
+            else if (rState == RacoonState.charging)
+            {
+                timerCharge += Time.deltaTime;
+                if (timerCharge > 1)
+                    ChargedTransitions();
+            }
         }
+    }
+
+    private void ChargedTransitions()
+    {
+        if (charges == 0)
+        {
+            ChangeState((int)RacoonState.idle);
+            gameplayScript.cocaineCanSpawn = true;
+        }
+        else
+            ChangeState((int)RacoonState.buffed);
     }
 
     public void ChangeState(int state)
@@ -116,6 +124,9 @@ public class RacoonBehaviour : MonoBehaviour
                     return;
 
                 rBody.velocity = Vector3.zero;
+                timerCharge = 0f;
+                if (charges <= 0)
+                    charges = 3;
 
                 rState = RacoonState.buffed;
                 anim.Play("Idle Buff");
@@ -128,7 +139,8 @@ public class RacoonBehaviour : MonoBehaviour
                 rBody.velocity = transform.forward * buffSpeed;
                 charges = charges - 1;
 
-                rState = RacoonState.buffed;
+                rState = RacoonState.charging;
+                //animation
                 break;
 
             case 5: //Dead
@@ -136,6 +148,7 @@ public class RacoonBehaviour : MonoBehaviour
                     return;
 
                 rState = RacoonState.dead;
+                //animation
                 break;
 
             default:
@@ -146,7 +159,13 @@ public class RacoonBehaviour : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player") && rState == RacoonState.buffed)
-            collision.gameObject.GetComponent<RacoonBehaviour>().ChangeState((int)RacoonState.dead);
+        if (rState == RacoonState.charging)
+        {
+            if (collision.gameObject.CompareTag("Player"))
+                collision.gameObject.GetComponent<RacoonBehaviour>().ChangeState((int)RacoonState.dead);
+
+            if (collision.gameObject.CompareTag("Bounds"))
+                ChargedTransitions();
+        }
     }
 }

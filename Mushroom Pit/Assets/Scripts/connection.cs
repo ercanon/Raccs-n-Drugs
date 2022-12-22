@@ -13,7 +13,7 @@ public class connection : MonoBehaviour
 	/*---------------------VARIABLES-------------------*/
 	enum Protocol { UDP, TCP }; private Protocol protocol;
 	enum Profile { server, client }; private Profile profile;
-	enum TypeData { start, posList, chat, raccsPositions, CocainePositions }; private TypeData typeData;
+	enum TypeData { start, posList, chat, cocainePositions, raccsTransform, raccsCharge }; private TypeData typeData;
 	
 	Socket socketHost;
 	Socket socket;
@@ -365,18 +365,7 @@ public class connection : MonoBehaviour
 				writer.Write(message);
 				writer.Write(sender);
 				break;
-			case 3: //RaccsPosition
-				int rListPos = gameplay.posRacoonList;
-				if (rListPos < 4)
-				{
-					Vector3 pos = gameplay.racoonList[rListPos].transform.position;
-					writer.Write(pos.x);
-					writer.Write(pos.y);
-					writer.Write(pos.z);
-					writer.Write(rListPos);
-				}
-				break;
-			case 4: //CocainePosition	
+			case 3: //CocainePosition	
 				writer.Write(gameplay.cocaineList.Count);
 				for (int i = 0; i < gameplay.cocaineList.Count; i++)
 				{
@@ -385,6 +374,26 @@ public class connection : MonoBehaviour
 					writer.Write(pos.y);
 					writer.Write(pos.z);
 				}
+				break;
+			case 4: //raccsTransform
+				int rListPos = gameplay.posRacoonList;
+				if (rListPos < 4)
+				{
+					Vector3 pos = gameplay.racoonList[rListPos].transform.position;
+					writer.Write(pos.x);
+					writer.Write(pos.y);
+					writer.Write(pos.z);
+
+					Vector3 rot = gameplay.racoonList[rListPos].transform.rotation.eulerAngles;
+					writer.Write(rot.x);
+					writer.Write(rot.y);
+					writer.Write(rot.z);
+
+					writer.Write(rListPos);
+				}
+				break;
+			case 5: //RaccsCharge
+				writer.Write(gameplay.posRacoonList);
 				break;
 			default:
 				return null;
@@ -411,14 +420,7 @@ public class connection : MonoBehaviour
 			case 2:	//Chat
 				customLog(reader.ReadString(), reader.ReadString());
 				break;
-			case 3: //RaccsPosition
-				float xR = reader.ReadSingle();
-				float yR = reader.ReadSingle();
-				float zR = reader.ReadSingle();
-
-				gameplay.UpdateRacoon(new Vector3(xR, yR, zR), reader.ReadInt32());
-				break;
-			case 4: //CocainePosition
+			case 3: //CocainePosition
 				int maxCocaine = reader.ReadInt32();
 				for (int i = 0; i < maxCocaine; i++)
 				{
@@ -426,8 +428,22 @@ public class connection : MonoBehaviour
 					float yC = reader.ReadSingle();
 					float zC = reader.ReadSingle();
 
-					gameplay.UpdateCocaine(new Vector3(xC, yC, zC), maxCocaine, i + 1 >= maxCocaine ? true : false);
+					gameplay.UpdateCocaine(new Vector3(xC, yC, zC), maxCocaine, i == 0 ? true : false);
 				}
+				break;
+			case 4: //raccsTransform
+				float xRP = reader.ReadSingle();
+				float yRP = reader.ReadSingle();
+				float zRP = reader.ReadSingle();
+
+				float xRR = reader.ReadSingle();
+				float yRR = reader.ReadSingle();
+				float zRR = reader.ReadSingle();
+
+				gameplay.UpdateRacoon(new Vector3(xRP, yRP, zRP), new Vector3(xRR, yRR, zRR), reader.ReadInt32());
+				break;
+			case 5: //RaccsCharge
+				gameplay.ChargeRacoon(reader.ReadInt32());
 				break;
 			default:
 				customLog("Package is corrupted", "Error");

@@ -542,7 +542,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-9890
+  m_Name: pb_Mesh-205262
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -982,29 +982,9 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2609620456965320251, guid: 97b733d0bc4bc644d8e9716628593e4d, type: 3}
-      propertyPath: MaterialList.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2609620456965320251, guid: 97b733d0bc4bc644d8e9716628593e4d, type: 3}
       propertyPath: playerMaterial.Array.size
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2609620456965320251, guid: 97b733d0bc4bc644d8e9716628593e4d, type: 3}
-      propertyPath: MaterialList.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: d0c5f7b4da05c8049b78d55626558081, type: 2}
-    - target: {fileID: 2609620456965320251, guid: 97b733d0bc4bc644d8e9716628593e4d, type: 3}
-      propertyPath: MaterialList.Array.data[1]
-      value: 
-      objectReference: {fileID: 2100000, guid: 07c9feaccca0fb74694168db4b7faac5, type: 2}
-    - target: {fileID: 2609620456965320251, guid: 97b733d0bc4bc644d8e9716628593e4d, type: 3}
-      propertyPath: MaterialList.Array.data[2]
-      value: 
-      objectReference: {fileID: 2100000, guid: 536241e192d3c944fa0cf31c9bb9f8be, type: 2}
-    - target: {fileID: 2609620456965320251, guid: 97b733d0bc4bc644d8e9716628593e4d, type: 3}
-      propertyPath: MaterialList.Array.data[3]
-      value: 
-      objectReference: {fileID: 2100000, guid: 6802da76c608e6744ad1e9fdbc7b886d, type: 2}
     - target: {fileID: 2609620456965320251, guid: 97b733d0bc4bc644d8e9716628593e4d, type: 3}
       propertyPath: playerMaterial.Array.data[0]
       value: 
@@ -1039,7 +1019,7 @@ PrefabInstance:
       objectReference: {fileID: 893479596}
     - target: {fileID: 3229540965999187892, guid: 97b733d0bc4bc644d8e9716628593e4d, type: 3}
       propertyPath: m_VersionIndex
-      value: 1165
+      value: 1168
       objectReference: {fileID: 0}
     - target: {fileID: 3229540965999187892, guid: 97b733d0bc4bc644d8e9716628593e4d, type: 3}
       propertyPath: m_Positions.Array.data[0].x

@@ -8,6 +8,7 @@ TagManager:
   - Client
   - Cocaine
   - Manager
+  - Bounds
   layers:
   - Default
   - TransparentFX

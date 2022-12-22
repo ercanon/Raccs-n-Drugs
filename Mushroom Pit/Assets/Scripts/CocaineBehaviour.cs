@@ -19,7 +19,7 @@ public class CocaineBehaviour : MonoBehaviour
             }
             else 
             {
-                gameplayScript.UpdateList(gameObject);
+                gameplayScript.UpdateList(this);
                 Destroy(gameObject);
             }
         }
