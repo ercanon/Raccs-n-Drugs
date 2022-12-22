@@ -71,8 +71,6 @@ public class GameplayScript : MonoBehaviour
             conect.SendClientData(3);
     }
 
-
-
     public void LaunchGame(int size = 0)
     {
         cameraTransition = true;
