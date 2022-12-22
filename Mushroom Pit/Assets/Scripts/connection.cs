@@ -157,17 +157,23 @@ public class connection : MonoBehaviour
 	/*---------------------HOST-------------------*/
 	public void CreateGame()
 	{
-		if (GameObject.Find("StartGame").GetComponent<Button>().interactable == false) 
-			GameObject.Find("StartGame").GetComponent<Button>().interactable = true;
-
 		if (protocol == Protocol.TCP)
 			socketHost = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 		else if (protocol == Protocol.UDP)
 			socketHost = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-		IPEndPoint ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
-		socketHost.Bind(ipep);
+		try
+		{
+			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
+			socketHost.Bind(ipep);
+		}
+		catch (SocketException e)
+        {
+			customLog(e.ToString(), "Error");
+        }
+
 		customLog(enterUserName.text + "'s game available at " + TellIP(), "Server");
+		GameObject.Find("StartGame").GetComponent<Button>().interactable = true;
 
 		if (protocol == Protocol.TCP)
 		{
