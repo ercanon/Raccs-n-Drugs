@@ -8,8 +8,6 @@ public class GameplayScript : MonoBehaviour
     public GameObject racoon;
     public GameObject cocaine;
   
-
-    public List<Material> playerMaterial;
     public List<Material> MaterialList;
 
     [HideInInspector]
@@ -85,7 +83,6 @@ public class GameplayScript : MonoBehaviour
 
             GameObject rac = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
             rac.GetComponent<RacoonBehaviour>().ChangeState(1);
-            //rac.SetColor("PlayerColor" + (i + 1), playersColor[i]);
             if (posRacoonList == i)
                 rac.GetComponent<RacoonBehaviour>().owned = true;
             racoonList.Add(rac);
