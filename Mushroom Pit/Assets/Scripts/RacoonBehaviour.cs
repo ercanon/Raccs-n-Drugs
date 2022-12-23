@@ -84,7 +84,17 @@ public class RacoonBehaviour : MonoBehaviour
                     if (Input.GetKeyDown("space"))                     
                         ChangeState((int)RacoonState.charging);
 
-                    ChangingColors();
+                    // Buffed Feedback
+                    render.material.color = Color.Lerp(render.material.color, colors[ColorIndex], transitionTime * Time.deltaTime * 10);
+
+                    t = Mathf.Lerp(t, 1f, transitionTime * Time.deltaTime * 10);
+
+                    if (t > 0.9f)
+                    {
+                        t = 0;
+                        ColorIndex++;
+                        ColorIndex = (ColorIndex >= len) ? 0 : ColorIndex;
+                    }
                 }
             }
             else if (rState == RacoonState.charging)
@@ -92,8 +102,6 @@ public class RacoonBehaviour : MonoBehaviour
                 timerCharge += Time.deltaTime;
                 if (timerCharge > 1)
                     ChargedTransitions();
-
-                ChangingColors();
             }
         }
     }
@@ -172,21 +180,6 @@ public class RacoonBehaviour : MonoBehaviour
                 break;
         }
         anim.SetInteger("rRacoonAnim", (int)rState);
-    }
-
-    private void ChangingColors()
-    {
-        // Buffed Feedback
-        render.material.color = Color.Lerp(render.material.color, colors[ColorIndex], transitionTime * Time.deltaTime * 10);
-
-        t = Mathf.Lerp(t, 1f, transitionTime * Time.deltaTime * 10);
-
-        if (t > 0.9f)
-        {
-            t = 0;
-            ColorIndex++;
-            ColorIndex = (ColorIndex >= len) ? 0 : ColorIndex;
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
