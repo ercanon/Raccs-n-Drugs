@@ -30,19 +30,21 @@ public class connection : MonoBehaviour
 	public Text enterServerIP;
 	public Text enterServerPort;
 	public Text ChatBox;
-	public InputField enterMessage;
 	string log;
 	private GameplayScript gameplay;
 
 	//info
-	public GameObject tutorialW;
-	public InputField messagesB;
-	public InputField serverIPB;
 
-	public Button startGameB;
-	public Button createGameB;
-	public Button joinGameB;
-	public Button disconnectB;
+	[Space]
+	[Header("Buttons Dynamics")]
+	public GameObject tutorialWindow;
+	public InputField enterMessage;
+	public InputField serverIPInput;
+	[Space]
+	public Button startGameButton;
+	public Button createGameButton;
+	public Button joinGameButton;
+	public Button disconnectButton;
 
 	/*---------------------CONFIG-------------------*/
 	void Reset(int prot, int prof)
@@ -96,16 +98,16 @@ public class connection : MonoBehaviour
 		switch (profile)
 		{
 			case Profile.client:
-				createGameB.interactable = false;
-				joinGameB.interactable = true;
-				disconnectB.interactable = true;
-				serverIPB.interactable = true;
+				createGameButton.interactable = false;
+				joinGameButton.interactable = true;
+				disconnectButton.interactable = true;
+				serverIPInput.interactable = true;
 				break;
 			case Profile.server:
-				createGameB.interactable = true;
-				joinGameB.interactable = false;
-				disconnectB.interactable = false;
-				serverIPB.interactable = false;
+				createGameButton.interactable = true;
+				joinGameButton.interactable = false;
+				disconnectButton.interactable = false;
+				serverIPInput.interactable = false;
 				break;
 			default:
 				break;
@@ -179,7 +181,7 @@ public class connection : MonoBehaviour
         }
 
 		customLog(enterUserName.text + "'s game available at " + TellIP(), "Server");
-		startGameB.interactable = true;
+		startGameButton.interactable = true;
 
 		if (protocol == Protocol.TCP)
 		{
@@ -492,8 +494,8 @@ public class connection : MonoBehaviour
 
 	public void OpenInfo()
 	{
-		bool set = tutorialW.activeSelf;
-		messagesB.interactable = set;
-		tutorialW.SetActive(set != true);
+		bool set = tutorialWindow.activeSelf;
+		enterMessage.interactable = set;
+		tutorialWindow.SetActive(set != true);
 	}
 }
