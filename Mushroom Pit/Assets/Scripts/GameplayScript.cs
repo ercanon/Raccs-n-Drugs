@@ -87,6 +87,7 @@ public class GameplayScript : MonoBehaviour
             raccScript.ChangeState(1);
             raccScript.gameplayScript = this;
             racc.transform.GetChild(0).GetComponent<Renderer>().material.color = ColorList[i];
+            raccScript.colors[0] = ColorList[i];
             if (posRacoonList == i)
                 raccScript.owned = true;
             racoonList.Add(raccScript);
