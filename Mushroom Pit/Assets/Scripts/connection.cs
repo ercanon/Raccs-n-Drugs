@@ -35,7 +35,19 @@ public class connection : MonoBehaviour
 	string log;
 	private GameplayScript gameplay;
 
-
+	//info
+	public bool open = false;
+	public GameObject Panel;
+	public GameObject ChatPanel;
+	public GameObject ProtocolC;
+	public GameObject ServerOrClient;
+	public GameObject userName;
+	public GameObject ServerIP;
+	public GameObject Port;
+	public GameObject StartGame;
+	public GameObject CreateGameC;
+	public GameObject JoinGameC;
+	public GameObject DisconnectC;
 
 	/*---------------------CONFIG-------------------*/
 	void Reset(int prot, int prof)
@@ -73,7 +85,7 @@ public class connection : MonoBehaviour
 		enterUserName.text = "Player" + (int)Random.Range(1, 100);
 		gameplay = GameObject.Find("Level").GetComponent<GameplayScript>();
 		gameplay.conect = this;
-
+		GameObject.Find("Info").GetComponent<Button>().interactable = true;
 		Reset((int)protocol, (int)profile);
 	}
 	
@@ -482,5 +494,41 @@ public class connection : MonoBehaviour
     {
 		gameplay.LaunchGame(clients.Count);
 		SendClientData((int)TypeData.start);
+	}
+
+	public void openPanel()
+    {
+		if (open == false)
+		{
+			Panel.SetActive(true);
+			ChatPanel.SetActive(false);
+			ProtocolC.SetActive(false);
+			ServerOrClient.SetActive(false);
+			userName.SetActive(false);
+			ServerIP.SetActive(false);
+			Port.SetActive(false);
+			StartGame.SetActive(false);
+			CreateGameC.SetActive(false);
+			JoinGameC.SetActive(false);
+			DisconnectC.SetActive(false);
+
+			open = true;
+		}
+        else if (open == true)
+        {
+			Panel.SetActive(false);
+			ChatPanel.SetActive(true);
+			ProtocolC.SetActive(true);
+			ServerOrClient.SetActive(true);
+			userName.SetActive(true);
+			ServerIP.SetActive(true);
+			Port.SetActive(true);
+			StartGame.SetActive(true);
+			CreateGameC.SetActive(true);
+			JoinGameC.SetActive(true);
+			DisconnectC.SetActive(true);
+			
+			open = false;
+		}
 	}
 }
