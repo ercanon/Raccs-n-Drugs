@@ -171,14 +171,13 @@ MonoBehaviour:
   enterServerIP: {fileID: 663193974}
   enterServerPort: {fileID: 663193973}
   ChatBox: {fileID: 663193977}
+  tutorialWindow: {fileID: 314712520}
   enterMessage: {fileID: 663193976}
-  tutorialW: {fileID: 314712520}
-  messagesB: {fileID: 663193976}
-  serverIPB: {fileID: 585526910}
-  startGameB: {fileID: 1126631871}
-  createGameB: {fileID: 1728184050}
-  joinGameB: {fileID: 304498038}
-  disconnectB: {fileID: 1014808154}
+  serverIPInput: {fileID: 585526910}
+  startGameButton: {fileID: 1126631871}
+  createGameButton: {fileID: 1728184050}
+  joinGameButton: {fileID: 304498038}
+  disconnectButton: {fileID: 1014808154}
 --- !u!1 &86099808
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,10 +274,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1275440081249916245, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
-      propertyPath: m_CullTransparentMesh
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1296640802296586085, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.005
@@ -287,14 +282,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 14.935
       objectReference: {fileID: 0}
-    - target: {fileID: 4287056319738436465, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
-      propertyPath: m_Type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4287056319738436465, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 4975760639420534521, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_Colors.m_ColorMultiplier
       value: 2.68
@@ -341,7 +328,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762012698826149527, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000030517578
+      value: -0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 6762012698854398018, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_AnchoredPosition.y
