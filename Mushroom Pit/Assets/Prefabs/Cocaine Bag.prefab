@@ -99,16 +99,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f1e04761b4fc942b1bf3096a28553f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameplayScript: {fileID: 0}
-  isBuffed: 0
-  transitionTime: 0.5
-  colors:
-  - {r: 1, g: 0, b: 0, a: 0}
-  - {r: 1, g: 1, b: 0, a: 0}
-  - {r: 0, g: 1, b: 0, a: 0}
-  - {r: 0, g: 1, b: 1, a: 0}
-  - {r: 0, g: 0, b: 1, a: 0}
-  - {r: 1, g: 0, b: 1, a: 0}
 --- !u!65 &3220198306468673794
 BoxCollider:
   m_ObjectHideFlags: 0
