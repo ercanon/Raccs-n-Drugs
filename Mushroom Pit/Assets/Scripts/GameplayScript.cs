@@ -8,7 +8,7 @@ public class GameplayScript : MonoBehaviour
     public GameObject racoon;
     public GameObject cocaine;
 
-    public List<Color> ColorList;
+    public List<Material> MaterialList;
 
     [HideInInspector]
     public List<RacoonBehaviour> racoonList;
@@ -86,8 +86,7 @@ public class GameplayScript : MonoBehaviour
             RacoonBehaviour raccScript = racc.GetComponent<RacoonBehaviour>();
             raccScript.ChangeState(1);
             raccScript.gameplayScript = this;
-            racc.transform.GetChild(0).GetComponent<Renderer>().material.color = ColorList[i];
-            raccScript.originalColor = racc.transform.GetChild(0).GetComponent<Renderer>().material.color;
+            racc.transform.GetChild(0).GetComponent<Renderer>().material = MaterialList[i];
             if (posRacoonList == i)
                 raccScript.owned = true;
             racoonList.Add(raccScript);

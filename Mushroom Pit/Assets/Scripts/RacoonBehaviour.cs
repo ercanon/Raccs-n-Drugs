@@ -19,19 +19,6 @@ public class RacoonBehaviour : MonoBehaviour
     public int charges = 3;
     private float timerCharge = 0f;
 
-    // Buffed effect / Buffed feedback
-    // Rainbow
-    SkinnedMeshRenderer render;
-    [Range(0f, 1f)] public float transitionTime;
-    public Color originalColor;
-    public Color[] colors;
-
-    int ColorIndex, len;
-    float t;
-
-    // Charges count
-    public GameObject[] chargesBox;
-
     [HideInInspector]
     public bool owned = false;
 
@@ -48,9 +35,6 @@ public class RacoonBehaviour : MonoBehaviour
 
         rBody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-
-        render = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
-        len = colors.Length;
     }
 
     void FixedUpdate()
@@ -80,39 +64,12 @@ public class RacoonBehaviour : MonoBehaviour
                     }
                     else
                         ChangeState((int)RacoonState.idle);
-
-                    render.material.color = originalColor;
-                    chargesBox[0].SetActive(false);
-                    chargesBox[1].SetActive(false);
-                    chargesBox[2].SetActive(false);
                 }
                 else
                 {
                     transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
                     if (Input.GetKeyDown("space"))                     
                         ChangeState((int)RacoonState.charging);
-                    
-                    RainbowBuffed();
-
-                    switch (charges)
-                    {
-                        case 3:
-                            chargesBox[0].SetActive(true);
-                            chargesBox[1].SetActive(true);
-                            chargesBox[2].SetActive(true);
-                            break;
-                        case 2:
-                            chargesBox[0].SetActive(false);
-                            break;
-                        case 1:
-                            chargesBox[1].SetActive(false);
-                            break;
-                        case 0:
-                            chargesBox[2].SetActive(false);
-                            break;
-                        default:
-                            break;
-                    }
                 }
             }
             else if (rState == RacoonState.charging)
@@ -132,9 +89,7 @@ public class RacoonBehaviour : MonoBehaviour
             gameplayScript.cocaineCanSpawn = true;
         }
         else
-        {
             ChangeState((int)RacoonState.buffed);
-        }
     }
 
     public void ChangeState(int state)
@@ -200,20 +155,6 @@ public class RacoonBehaviour : MonoBehaviour
                 break;
         }
         anim.SetInteger("rRacoonAnim", (int)rState);
-    }
-
-    void RainbowBuffed()
-    {
-        render.material.color = Color.Lerp(render.material.color, colors[ColorIndex], transitionTime * Time.deltaTime * 10);
-
-        t = Mathf.Lerp(t, 1f, transitionTime * Time.deltaTime * 10);
-
-        if (t > 0.9f)
-        {
-            t = 0;
-            ColorIndex++;
-            ColorIndex = (ColorIndex >= len) ? 0 : ColorIndex;
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
