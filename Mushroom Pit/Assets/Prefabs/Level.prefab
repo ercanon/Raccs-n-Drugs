@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7993130618952964668}
   - component: {fileID: 3205659432522658882}
   m_Layer: 0
-  m_Name: Laterals
+  m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2405,11 +2405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   racoon: {fileID: 177229643556919891, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
   cocaine: {fileID: 7131665908812577768, guid: f75b6e83c33cd52419c9bc33f0b12ace, type: 3}
-  MaterialList:
-  - {fileID: 2100000, guid: d0c5f7b4da05c8049b78d55626558081, type: 2}
-  - {fileID: 2100000, guid: 07c9feaccca0fb74694168db4b7faac5, type: 2}
-  - {fileID: 2100000, guid: 536241e192d3c944fa0cf31c9bb9f8be, type: 2}
-  - {fileID: 2100000, guid: 6802da76c608e6744ad1e9fdbc7b886d, type: 2}
+  ColorList: []
   racoonList: []
   cocaineList: []
   posRacoonList: 0
