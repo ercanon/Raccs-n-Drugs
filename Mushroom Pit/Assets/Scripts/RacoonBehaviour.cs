@@ -19,6 +19,14 @@ public class RacoonBehaviour : MonoBehaviour
     public int charges = 3;
     private float timerCharge = 0f;
 
+    // Buffed effect / Buffed feedback
+    SkinnedMeshRenderer render;
+    [Range(0f, 1f)] public float transitionTime;
+    public Color[] colors;
+
+    int ColorIndex, len;
+    float t;
+
     [HideInInspector]
     public bool owned = false;
 
@@ -35,6 +43,9 @@ public class RacoonBehaviour : MonoBehaviour
 
         rBody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+
+        render = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+        len = colors.Length;
     }
 
     void FixedUpdate()
@@ -64,12 +75,26 @@ public class RacoonBehaviour : MonoBehaviour
                     }
                     else
                         ChangeState((int)RacoonState.idle);
+
+                    render.material.color = colors[0];
                 }
                 else
                 {
                     transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
                     if (Input.GetKeyDown("space"))                     
                         ChangeState((int)RacoonState.charging);
+
+                    // Buffed Feedback
+                    render.material.color = Color.Lerp(render.material.color, colors[ColorIndex], transitionTime * Time.deltaTime * 10);
+
+                    t = Mathf.Lerp(t, 1f, transitionTime * Time.deltaTime * 10);
+
+                    if (t > 0.9f)
+                    {
+                        t = 0;
+                        ColorIndex++;
+                        ColorIndex = (ColorIndex >= len) ? 0 : ColorIndex;
+                    }
                 }
             }
             else if (rState == RacoonState.charging)
