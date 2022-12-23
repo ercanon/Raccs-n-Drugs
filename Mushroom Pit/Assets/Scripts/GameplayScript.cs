@@ -68,7 +68,7 @@ public class GameplayScript : MonoBehaviour
     {
         //Send Position Racoon
         if(racoonList.Count > 0)
-            conect.SendClientData(3);
+            conect.SendClientData(4);
     }
 
     public void LaunchGame(int size = 0)
