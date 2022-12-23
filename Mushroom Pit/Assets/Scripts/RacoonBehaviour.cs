@@ -170,7 +170,6 @@ public class RacoonBehaviour : MonoBehaviour
                 charges = charges - 1;
 
                 rState = RacoonState.charging;
-                arrow.SetActive(false);
                 //animation
                 break;
 
