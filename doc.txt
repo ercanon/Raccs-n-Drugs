@@ -1,0 +1,18 @@
+Link to drive:
+
+
+Contributions:
+ - Raul Cano: main programmer, fixed connection backend and core mechanics.
+ - Marc Ruiz: design and setup of map and environment, UI and minor fixes.
+ - Alewx Gesti: programmer, fixed and readied 3D assets, worked on every issue at some point.
+ - Isaac Digón: programmer, core connection setting, fixes with Raul.
+
+Instructions:
+Gameplay starts at a menu, with various UI elements that permit switch froms erver to client and back, text input fields for input player name, server IP (in case of connectiong to host), selected port (even if you are the host), and buttons for creating a lobby as a server, joining a lobby as a client, and starting game as a server (notifies clients).
+Game is about kicking other players with your super doped strength, aquired by stepping on certain cocayne bags (only one of which contains the power). Movement follows WSAD pattern, and SPACE bar is for charging a dash while buffed up, then discharging it onto others in a direction pointed by an arrow.
+
+Known issues:
+ - As of now, there isn't yet the possibility to disconnect, keep track of connected clients and so.
+ - Minor bug makes racoons (players) tremble sometimes when in idle animation state.
+ - In editor mode, space bar not always works properly (internet search provided reasons to think it has to do with unity on debug mode itself).
+ - As stated, since there is no disconnect, the game cycle isn't full. Though game can be restarted. More than a bug, we state that there is yet to be implemented a poitns system to account for rounds and respawn.
