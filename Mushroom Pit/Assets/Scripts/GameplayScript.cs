@@ -98,14 +98,12 @@ public class GameplayScript : MonoBehaviour
 
     public void UpdateRacoon(Vector3 position, Vector3 rotation, int posRacoon)
     {
-        if (racoonList.Count > 0)
-            racoonList[posRacoon].transform.SetPositionAndRotation(position, Quaternion.Euler(rotation));
+        racoonList[posRacoon].transform.SetPositionAndRotation(position, Quaternion.Euler(rotation));
     }
 
     public void ChargeRacoon(int posRacoon)
     {
-        if (racoonList.Count > 0)
-            racoonList[posRacoon].ChangeState(4);
+        racoonList[posRacoon].ChangeState(4);
     }
 
     public void SpawnCocaine()

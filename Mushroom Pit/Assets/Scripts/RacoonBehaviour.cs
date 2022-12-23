@@ -82,8 +82,11 @@ public class RacoonBehaviour : MonoBehaviour
                 else
                 {
                     transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
-                    if (Input.GetKeyDown("space"))                     
+                    if (Input.GetKeyDown("space"))
+                    {
                         ChangeState((int)RacoonState.charging);
+                        gameplayScript.conect.SendClientData(5);
+                    }
 
                     ChangingColors();
                 }
@@ -172,7 +175,6 @@ public class RacoonBehaviour : MonoBehaviour
                 if (rState == RacoonState.charging)
                     return;
 
-                gameplayScript.conect.SendClientData(5);
                 rBody.velocity = transform.forward * buffSpeed;
                 charges = charges - 1;
 
