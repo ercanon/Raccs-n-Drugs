@@ -117,7 +117,7 @@ public class GameplayScript : MonoBehaviour
                 (playableArea.position.z - bounds.z / 2) + Random.Range(offsetCocaineSpawn, bounds.z - offsetCocaineSpawn));
 
             GameObject obj = Instantiate(cocaine, randPosition, cocaine.transform.rotation);
-            CocaineBehaviour cocaScript = obj.GetComponent<CocaineBehaviour>();
+            CocaineBehaviour cocaScript = obj.transform.GetChild(0).GetComponent<CocaineBehaviour>();
             cocaScript.gameplayScript = this;
             cocaScript.isBuffed = i == 0 ? true : false;
             cocaineList.Add(cocaScript);
@@ -130,7 +130,7 @@ public class GameplayScript : MonoBehaviour
     public void UpdateCocaine(Vector3 position, int posRacoon, bool isBuffed = false)
     {
         GameObject obj = Instantiate(cocaine, position, cocaine.transform.rotation);
-        CocaineBehaviour cocaScript = obj.GetComponent<CocaineBehaviour>();
+        CocaineBehaviour cocaScript = obj.transform.GetChild(0).GetComponent<CocaineBehaviour>();
         cocaScript.gameplayScript = this;
         cocaScript.isBuffed = isBuffed;
         cocaineList.Add(cocaScript);
@@ -142,7 +142,10 @@ public class GameplayScript : MonoBehaviour
     public void DeleteList()
     {
         foreach (CocaineBehaviour cocaScript in cocaineList)
+        {
             Destroy(cocaScript.gameObject);
+            Destroy(cocaScript.transform.parent.gameObject);
+        }
 
         cocaineList.Clear();
     }
