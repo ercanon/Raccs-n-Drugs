@@ -286,10 +286,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 14.935
       objectReference: {fileID: 0}
-    - target: {fileID: 2632344778410401883, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4975760639420534521, guid: bd3d20572ac441748a09cb29a08f09ce, type: 3}
       propertyPath: m_Colors.m_ColorMultiplier
       value: 2.68

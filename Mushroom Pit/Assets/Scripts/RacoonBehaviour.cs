@@ -27,9 +27,6 @@ public class RacoonBehaviour : MonoBehaviour
     int ColorIndex, len;
     float t;
 
-    // Particle system
-    GameObject particleSystem;
-
     [HideInInspector]
     public bool owned = false;
 
@@ -49,8 +46,6 @@ public class RacoonBehaviour : MonoBehaviour
 
         render = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
         len = colors.Length;
-
-        particleSystem = transform.GetChild(2).gameObject;
     }
 
     void FixedUpdate()
@@ -131,7 +126,6 @@ public class RacoonBehaviour : MonoBehaviour
 
                 rState = RacoonState.idle;
                 anim.Play("Idle");
-                particleSystem.SetActive(false);
                 break;
             
             case 2: // Walking
@@ -153,7 +147,6 @@ public class RacoonBehaviour : MonoBehaviour
 
                 rState = RacoonState.buffed;
                 anim.Play("Idle Buff");
-                particleSystem.SetActive(true);
                 break;
 
             case 4: //Charging
