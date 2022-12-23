@@ -123,7 +123,7 @@ public class GameplayScript : MonoBehaviour
         }
 
         cocaineCanSpawn = false;
-        conect.SendClientData(4);
+        conect.SendClientData(3);
     }
 
     public void UpdateCocaine(Vector3 position, int posRacoon, bool isBuffed = false)
