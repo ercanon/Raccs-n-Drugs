@@ -1,12 +1,11 @@
-using UnityEngine;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
-using System.Collections.Generic;
-using System.Text;
+using UnityEngine;
 using UnityEngine.UI;
-using System.Net.NetworkInformation;
-using System.IO;
 
 public class connection : MonoBehaviour
 {
@@ -36,18 +35,14 @@ public class connection : MonoBehaviour
 	private GameplayScript gameplay;
 
 	//info
-	public bool open = false;
-	public GameObject Panel;
-	public GameObject ChatPanel;
-	public GameObject ProtocolC;
-	public GameObject ServerOrClient;
-	public GameObject userName;
-	public GameObject ServerIP;
-	public GameObject Port;
-	public GameObject StartGame;
-	public GameObject CreateGameC;
-	public GameObject JoinGameC;
-	public GameObject DisconnectC;
+	public GameObject tutorialW;
+	public InputField messagesB;
+	public InputField serverIPB;
+
+	public Button startGameB;
+	public Button createGameB;
+	public Button joinGameB;
+	public Button disconnectB;
 
 	/*---------------------CONFIG-------------------*/
 	void Reset(int prot, int prof)
@@ -101,17 +96,16 @@ public class connection : MonoBehaviour
 		switch (profile)
 		{
 			case Profile.client:
-				GameObject.Find("StartGame").GetComponent<Button>().interactable = false;
-				GameObject.Find("CreateGame").GetComponent<Button>().interactable = false;
-				GameObject.Find("JoinGame").GetComponent<Button>().interactable = true;
-				GameObject.Find("Disconnect").GetComponent<Button>().interactable = true;
-				GameObject.Find("ServerIP").GetComponent<InputField>().interactable = true;
+				createGameB.interactable = false;
+				joinGameB.interactable = true;
+				disconnectB.interactable = true;
+				serverIPB.interactable = true;
 				break;
 			case Profile.server:
-				GameObject.Find("CreateGame").GetComponent<Button>().interactable = true;
-				GameObject.Find("JoinGame").GetComponent<Button>().interactable = false;
-				GameObject.Find("Disconnect").GetComponent<Button>().interactable = false;
-				GameObject.Find("ServerIP").GetComponent<InputField>().interactable = false;
+				createGameB.interactable = true;
+				joinGameB.interactable = false;
+				disconnectB.interactable = false;
+				serverIPB.interactable = false;
 				break;
 			default:
 				break;
@@ -185,7 +179,7 @@ public class connection : MonoBehaviour
         }
 
 		customLog(enterUserName.text + "'s game available at " + TellIP(), "Server");
-		GameObject.Find("StartGame").GetComponent<Button>().interactable = true;
+		startGameB.interactable = true;
 
 		if (protocol == Protocol.TCP)
 		{
@@ -496,39 +490,10 @@ public class connection : MonoBehaviour
 		SendClientData((int)TypeData.start);
 	}
 
-	public void openPanel()
-    {
-		if (open == false)
-		{
-			Panel.SetActive(true);
-			ChatPanel.SetActive(false);
-			ProtocolC.SetActive(false);
-			ServerOrClient.SetActive(false);
-			userName.SetActive(false);
-			ServerIP.SetActive(false);
-			Port.SetActive(false);
-			StartGame.SetActive(false);
-			CreateGameC.SetActive(false);
-			JoinGameC.SetActive(false);
-			DisconnectC.SetActive(false);
-
-			open = true;
-		}
-        else if (open == true)
-        {
-			Panel.SetActive(false);
-			ChatPanel.SetActive(true);
-			ProtocolC.SetActive(true);
-			ServerOrClient.SetActive(true);
-			userName.SetActive(true);
-			ServerIP.SetActive(true);
-			Port.SetActive(true);
-			StartGame.SetActive(true);
-			CreateGameC.SetActive(true);
-			JoinGameC.SetActive(true);
-			DisconnectC.SetActive(true);
-			
-			open = false;
-		}
+	public void OpenInfo()
+	{
+		bool set = tutorialW.activeSelf;
+		messagesB.interactable = set;
+		tutorialW.SetActive(set != true);
 	}
 }
