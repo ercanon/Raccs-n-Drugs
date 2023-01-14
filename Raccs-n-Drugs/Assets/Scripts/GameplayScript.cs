@@ -5,8 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class GameplayScript : MonoBehaviour
 {
-    public GameObject racoon;
-    public GameObject cocaine;
+    [SerializeField] private GameObject racoon;
+    [SerializeField] private GameObject cocaine;
+    [SerializeField] private Transform mainCamera;
+    [SerializeField] private Transform gamePos;
 
     public List<Color> ColorList;
 
@@ -23,9 +25,8 @@ public class GameplayScript : MonoBehaviour
     [HideInInspector]
     public bool cocaineCanSpawn = false;
     public Connection conect;
+
     private Transform playableArea;
-    private Transform mainCamera;
-    private Transform gamePos;
 
     public void Reset()
     {
@@ -41,9 +42,7 @@ public class GameplayScript : MonoBehaviour
 
     void Awake()
     {
-        playableArea = transform.GetChild(0);
-        mainCamera = GameObject.Find("Main Camera").transform;
-        gamePos = GameObject.Find("CameraGamePosition").transform;                                         
+        playableArea = transform.GetChild(0);                                     
     }
 
     // Update is called once per frame
