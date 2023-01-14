@@ -12,7 +12,7 @@ public class Connection : MonoBehaviour
 	/*---------------------VARIABLES-------------------*/
 	enum Protocol { UDP, TCP }; private Protocol protocol;
 	enum Profile { server, client }; private Profile profile;
-	enum TypeData { start, posList, chat, cocainePositions, raccsTransform, raccsCharge }; private TypeData typeData;
+	enum TypeData { start, posList, chat, cocainePositions, raccsTransform, raccsCharge };
 	
 	private Socket socketHost;
 	private Socket socket;
@@ -216,7 +216,7 @@ public class Connection : MonoBehaviour
 			{
 				EndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 				recv = socketHost.ReceiveFrom(data, ref sender);
-				if (clients.ContainsKey(sender) == false)
+				if (!clients.ContainsKey(sender))
 				{
 					clients.Add(sender, null);
 					SendData(Serialize((int)TypeData.posList), socketHost, sender);
