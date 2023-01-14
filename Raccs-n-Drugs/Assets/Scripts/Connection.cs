@@ -166,10 +166,10 @@ public class Connection : MonoBehaviour
 		else if (protocol == Protocol.UDP)
 			socketHost = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
+		if (enterServerPort.text == "")
+			enterServerPort.text = 22.ToString();
 		try
 		{
-			if (enterServerPort.text == "")
-				enterServerPort.text = 22.ToString();
 			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
 			socketHost.Bind(ipep);
 		}
@@ -292,7 +292,7 @@ public class Connection : MonoBehaviour
 	{
 		if (remote.ToString() != new IPEndPoint(IPAddress.Any, 0).ToString())
 		{
-			customLog("cannot join again", "Local");
+			customLog("Cannot join again", "Local");
 			return;
 		}
 
@@ -314,8 +314,8 @@ public class Connection : MonoBehaviour
 		{
 			if (protocol == Protocol.TCP)
 				socket.Connect(remote);
-			else if (protocol == Protocol.UDP)
-				SendData(Serialize((int)TypeData.chat, enterUserName.text + " joined the server!", "Server"), socket, remote);
+
+			SendData(Serialize((int)TypeData.chat, enterUserName.text + " joined the server!", "Server"), socket, remote);
 		}
 		catch (SocketException e)
 		{
@@ -348,9 +348,6 @@ public class Connection : MonoBehaviour
 		Reset((int)protocol, (int)profile);
 	}
 
-
-
-	/*---------------------CHAT-------------------*/
 	public void SendMessage()
 	{
 		SendData(Serialize((int)TypeData.chat, enterMessage.text, enterUserName.text), socket, remote);
