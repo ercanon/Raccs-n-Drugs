@@ -168,6 +168,8 @@ public class Connection : MonoBehaviour
 
 		try
 		{
+			if (enterServerPort.text == "")
+				enterServerPort.text = 22.ToString();
 			IPEndPoint ipep = new IPEndPoint(IPAddress.Any, int.Parse(enterServerPort.text));
 			socketHost.Bind(ipep);
 		}
@@ -302,6 +304,10 @@ public class Connection : MonoBehaviour
 				socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 		}
 
+		if (enterServerPort.text == "")
+			enterServerPort.text = 22.ToString();
+
+		//TODO: Socket Exception fix
 		remote = new IPEndPoint(IPAddress.Parse(isHost ? "127.0.0.1" : serverIPInput.text), int.Parse(enterServerPort.text));
 
 		try
@@ -470,12 +476,7 @@ public class Connection : MonoBehaviour
 	public int SendClientData(int type)
 	{
 		byte[] data = Serialize(type);
-
-		if (protocol == Protocol.TCP)
-			return socket.Send(data);
-		else if (protocol == Protocol.UDP)
-			return socket.SendTo(data, data.Length, SocketFlags.None, remote);
-		return 0;
+		return SendData(data, socket, remote);
 	}
 
 	/*---------------------GAME-------------------*/
