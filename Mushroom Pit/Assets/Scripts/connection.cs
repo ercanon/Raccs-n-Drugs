@@ -7,7 +7,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class connection : MonoBehaviour
+public class Connection : MonoBehaviour
 {
 	/*---------------------VARIABLES-------------------*/
 	enum Protocol { UDP, TCP }; private Protocol protocol;

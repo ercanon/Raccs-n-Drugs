@@ -22,7 +22,7 @@ public class GameplayScript : MonoBehaviour
 
     [HideInInspector]
     public bool cocaineCanSpawn = false;
-    public connection conect;
+    public Connection conect;
     private Transform playableArea;
     private Transform mainCamera;
     private Transform gamePos;
