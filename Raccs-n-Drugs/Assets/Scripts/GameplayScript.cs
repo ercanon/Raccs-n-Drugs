@@ -82,13 +82,10 @@ public class GameplayScript : MonoBehaviour
 
             GameObject racc = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
 
-            Material mat = racc.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material;
-            mat.SetColor("_EmissionColor", racoonColors[i]);
-            mat.EnableKeyword("_EMISSION");
-            //
-            //DynamicGI.SetEmissive(racc.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>(), racoonColors[i]);
-            //racc.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().UpdateGIMaterials();
-            //
+            SkinnedMeshRenderer render = racc.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>();
+            render.material.SetColor("_EmissionColor", racoonColors[i]);
+            render.UpdateGIMaterials();
+
             //foreach (var anim in racc.GetComponent<Animator>().runtimeAnimatorController.animationClips)
             //{
             //}
