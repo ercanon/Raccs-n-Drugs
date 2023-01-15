@@ -54,10 +54,6 @@ MonoBehaviour:
   buffSpeed: 8
   rotateSpeed: 3.5
   charges: 3
-  transitionTime: 1
-  colors:
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 1, g: 1, b: 1, a: 1}
   owned: 0
   gameplayScript: {fileID: 0}
 --- !u!95 &657704177452197801
