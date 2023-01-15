@@ -19,20 +19,13 @@ public class RacoonBehaviour : MonoBehaviour
     public int charges = 3;
     private float timerCharge = 0f;
 
-    // Buffed effect / Buffed feedback
-    SkinnedMeshRenderer render;
-    [Range(0f, 1f)] public float transitionTime;
-    public Color[] colors;
-    private GameObject buffed;
-    int colorIndex, len;
-    float t;
-
     [HideInInspector]
     public bool owned = false;
 
     public GameplayScript gameplayScript;
     private Rigidbody rBody;
     private Animator anim;
+    private GameObject buffed;
 
     /// <summary> Functions to override movement speed. Will use the last added override. </summary>
     public List<System.Func<float>> speedOverrides = new List<System.Func<float>>();
@@ -44,9 +37,7 @@ public class RacoonBehaviour : MonoBehaviour
         rBody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
 
-        render = transform.GetChild(1).GetComponent<SkinnedMeshRenderer>();
         buffed = transform.GetChild(0).gameObject;
-        len = colors.Length;
     }
 
     void FixedUpdate()
@@ -78,8 +69,6 @@ public class RacoonBehaviour : MonoBehaviour
                         }
                         else
                             ChangeState((int)RacoonState.idle);
-
-                        render.material.color = colors[0];
                     }
                 }
                 else
@@ -92,8 +81,6 @@ public class RacoonBehaviour : MonoBehaviour
                             ChangeState((int)RacoonState.charging);
                             gameplayScript.conect.SendClientData(5);
                         }
-
-                        ChangingColors();
                     }
                 }
             }
@@ -102,8 +89,6 @@ public class RacoonBehaviour : MonoBehaviour
                 timerCharge += Time.deltaTime;
                 if (timerCharge > 1)
                     ChargedTransitions();
-
-                ChangingColors();
             }
         }
     }
@@ -120,21 +105,6 @@ public class RacoonBehaviour : MonoBehaviour
             ChangeState((int)RacoonState.buffed);
     }
 
-    private void ChangingColors()
-    {
-        // Buffed Feedback
-        render.material.color = Color.Lerp(render.material.color, colors[colorIndex], transitionTime * Time.deltaTime * 10);
-
-        t = Mathf.Lerp(t, 1f, transitionTime * Time.deltaTime * 10);
-
-        if (t > 0.9f)
-        {
-            t = 0;
-            colorIndex++;
-            colorIndex = (colorIndex >= len) ? 0 : colorIndex;
-        }
-    }
-
     public void ChangeState(int state)
     {
         switch (state)
@@ -144,14 +114,12 @@ public class RacoonBehaviour : MonoBehaviour
                     return;
 
                 rState = RacoonState.onPause;
-                anim.Play("Idle");
                 break;
             case 1: //Idle
                 if (rState == RacoonState.idle)
                     return;
 
                 rState = RacoonState.idle;
-                anim.Play("Idle");
                 break;
             
             case 2: // Walking
@@ -159,7 +127,6 @@ public class RacoonBehaviour : MonoBehaviour
                     return;
 
                 rState = RacoonState.walking;
-                anim.Play("Walking");
                 break;
             
             case 3: //Buffed
@@ -173,7 +140,6 @@ public class RacoonBehaviour : MonoBehaviour
                     charges = 3;
 
                 rState = RacoonState.buffed;
-                anim.Play("Idle Buff");
                 break;
 
             case 4: //Charging
@@ -184,7 +150,6 @@ public class RacoonBehaviour : MonoBehaviour
                 charges = charges - 1;
 
                 rState = RacoonState.charging;
-                //animation
                 break;
 
             case 5: //Dead

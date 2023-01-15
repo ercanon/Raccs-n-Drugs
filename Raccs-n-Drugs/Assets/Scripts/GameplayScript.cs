@@ -82,12 +82,11 @@ public class GameplayScript : MonoBehaviour
                 break;
 
             GameObject racc = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
+            racc.transform.GetChild(1).GetComponent<Renderer>().material.SetColor("_EmissionColor", ColorList[i]);
+
             RacoonBehaviour raccScript = racc.GetComponent<RacoonBehaviour>();
             raccScript.ChangeState(1);
             raccScript.gameplayScript = this;
-
-            racc.transform.GetChild(1).GetComponent<Renderer>().material.color = ColorList[i];
-            raccScript.colors[0] = ColorList[i];
 
             if (posRacoonList == i)
                 raccScript.owned = true;
