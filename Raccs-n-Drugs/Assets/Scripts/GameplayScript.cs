@@ -10,22 +10,21 @@ public class GameplayScript : MonoBehaviour
     [SerializeField] private Transform mainCamera;
     [SerializeField] private Transform gamePos;
 
-    public List<Color> ColorList;
+    public List<Color> racoonColors;
 
-    [HideInInspector]
-    public List<RacoonBehaviour> racoonList;
-    public List<CocaineBehaviour> cocaineList;
-    public int posRacoonList;
+    [HideInInspector] public List<RacoonBehaviour> racoonList;
+    [HideInInspector] public List<CocaineBehaviour> cocaineList;
+    [HideInInspector] public int posRacoonList;
+    [HideInInspector] public bool cocaineCanSpawn = false;
 
-    public bool cameraTransition = false;
+    [HideInInspector] public bool cameraTransition = false;
 
+    [Space]
+    [Header("Game Config")]
     public int maxCocaineBags = 6;
     public float offsetCocaineSpawn = 2f;
 
-    [HideInInspector]
-    public bool cocaineCanSpawn = false;
-    public Connection conect;
-
+    [HideInInspector] public Connection conect;
     private Transform playableArea;
 
     public void Reset()
@@ -82,7 +81,6 @@ public class GameplayScript : MonoBehaviour
                 break;
 
             GameObject racc = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
-            racc.transform.GetChild(1).GetComponent<Renderer>().material.SetColor("_EmissionColor", ColorList[i]);
 
             RacoonBehaviour raccScript = racc.GetComponent<RacoonBehaviour>();
             raccScript.ChangeState(1);

@@ -19,8 +19,7 @@ public class RacoonBehaviour : MonoBehaviour
     public int charges = 3;
     private float timerCharge = 0f;
 
-    [HideInInspector]
-    public bool owned = false;
+    [HideInInspector] public bool owned = false;
 
     public GameplayScript gameplayScript;
     private Rigidbody rBody;

@@ -20,12 +20,12 @@ public class Connection : MonoBehaviour
 	private Thread ServerGather;
 	private Thread ClientListen;
 
-	[HideInInspector]
+
 	private EndPoint remote;
-	Dictionary<EndPoint, Socket> clients;
-	//List<EndPoint> clients;
-	List<byte[]> pendingData;
-	string log;
+	private Dictionary<EndPoint, Socket> clients;
+	//private List<EndPoint> clients;
+	private List<byte[]> pendingData;
+	private string log;
 
 	[SerializeField] private GameplayScript gameplay;
 
