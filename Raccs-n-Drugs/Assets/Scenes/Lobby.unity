@@ -3342,7 +3342,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh95512
+  m_Name: pb_Mesh23998
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3587,10 +3587,10 @@ MonoBehaviour:
   mainCamera: {fileID: 1390412328}
   gamePos: {fileID: 2028768800}
   racoonColors:
-  - {r: 0.20392157, g: 0.7372549, b: 0.9150943, a: 1}
-  - {r: 0.8867924, g: 0.22745098, b: 0.20496619, a: 1}
-  - {r: 0.33333334, g: 0.8862745, b: 0.12941177, a: 1}
-  - {r: 0.9811321, g: 0.87058824, b: 0.09803922, a: 1}
+  - {r: 0.05882353, g: 0.19607843, b: 0.24313726, a: 1}
+  - {r: 0.27058825, g: 0.007843138, b: 0, a: 1}
+  - {r: 0.11764706, g: 0.3137255, b: 0.047058824, a: 1}
+  - {r: 0.39215687, g: 0.3529412, b: 0.039215688, a: 1}
   racoonList: []
   cocaineList: []
   posRacoonList: 0
@@ -4349,6 +4349,10 @@ PrefabInstance:
     - target: {fileID: 265120966918197916, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 657704177452197801, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_RootOrder
