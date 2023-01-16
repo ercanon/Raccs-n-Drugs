@@ -20,11 +20,14 @@ public class RacoonBehaviour : MonoBehaviour
     private float timerCharge = 0f;
 
     [HideInInspector] public bool owned = false;
+    [HideInInspector] public Color[] colors;
+    private int colorIndex = 0;
 
     public GameplayScript gameplayScript;
     private Rigidbody rBody;
     private Animator anim;
     private GameObject buffed;
+    private Material mat;
 
     /// <summary> Functions to override movement speed. Will use the last added override. </summary>
     public List<System.Func<float>> speedOverrides = new List<System.Func<float>>();
@@ -37,6 +40,7 @@ public class RacoonBehaviour : MonoBehaviour
         anim = GetComponent<Animator>();
 
         buffed = transform.GetChild(0).gameObject;
+        mat = transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material;
     }
 
     void FixedUpdate()
@@ -81,6 +85,8 @@ public class RacoonBehaviour : MonoBehaviour
                             gameplayScript.conect.SendClientData(5);
                         }
                     }
+
+                    ChangingColors();
                 }
             }
             else
@@ -90,18 +96,6 @@ public class RacoonBehaviour : MonoBehaviour
                     ChargedTransitions();
             }
         }
-    }
-
-    private void ChargedTransitions()
-    {
-        if (charges == 0)
-        {
-            ChangeState((int)RacoonState.idle);
-            buffed.SetActive(false);
-            gameplayScript.cocaineCanSpawn = true;
-        }
-        else
-            ChangeState((int)RacoonState.buffed);
     }
 
     public void ChangeState(int state)
@@ -148,6 +142,8 @@ public class RacoonBehaviour : MonoBehaviour
                 rBody.velocity = transform.forward * buffSpeed;
                 charges = charges - 1;
 
+                mat.SetColor("_EmissionColor", colors[0]);
+
                 rState = RacoonState.charging;
                 break;
 
@@ -163,6 +159,40 @@ public class RacoonBehaviour : MonoBehaviour
                 break;
         }
         anim.SetInteger("rRacoonAnim", (int)rState);
+    }
+
+    private void ChargedTransitions()
+    {
+        if (charges == 0)
+        {
+            ChangeState((int)RacoonState.idle);
+            buffed.SetActive(false);
+            gameplayScript.cocaineCanSpawn = true;
+        }
+        else
+            ChangeState((int)RacoonState.buffed);
+    }
+
+    private void ChangingColors()
+    {
+        Color colEmission = mat.GetColor("_EmissionColor");
+        if (CompareColors(colEmission, colors[colorIndex]))
+        {
+            if (colorIndex == 0) colorIndex = 1;
+            else colorIndex = 0;
+        }
+        mat.SetColor("_EmissionColor", Color.Lerp(colEmission, colors[colorIndex], 2f * Time.deltaTime));
+    }
+
+    private bool CompareColors(Color colorOne, Color colorTwo)
+    {
+
+        if (Mathf.Abs(colorOne.r - colorTwo.r) < 0.02f &&
+            Mathf.Abs(colorOne.g - colorTwo.g) < 0.02f &&
+            Mathf.Abs(colorOne.b - colorTwo.b) < 0.02f) 
+            return true;
+
+        return false;
     }
 
     private void OnCollisionEnter(Collision collision)

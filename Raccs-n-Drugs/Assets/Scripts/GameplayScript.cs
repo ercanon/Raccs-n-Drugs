@@ -75,20 +75,23 @@ public class GameplayScript : MonoBehaviour
         GameObject.Find("UI").SetActive(false);
 
         Transform[] pos = GameObject.Find("RacoonSpawn").GetComponentsInChildren<Transform>();
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < size; i++)
         {
             if (i > 4)
                 break;
 
             GameObject racc = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
 
-            SkinnedMeshRenderer render = racc.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>();
-            render.material.SetColor("_EmissionColor", racoonColors[i]);
-            render.material.EnableKeyword("_EMISSION");
-
             RacoonBehaviour raccScript = racc.GetComponent<RacoonBehaviour>();
             raccScript.ChangeState(1);
             raccScript.gameplayScript = this;
+
+            SkinnedMeshRenderer render = racc.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>();
+            Color[] list = { racoonColors[i], render.material.GetColor("_EmissionColor") };
+            raccScript.colors = list;
+
+            render.material.SetColor("_EmissionColor",list[0]);
+            render.material.EnableKeyword("_EMISSION");
 
             if (posRacoonList == i)
                 raccScript.owned = true;
