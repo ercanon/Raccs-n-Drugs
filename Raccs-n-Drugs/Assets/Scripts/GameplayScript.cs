@@ -101,7 +101,14 @@ public class GameplayScript : MonoBehaviour
 
     public void UpdateRacoon(Vector3 position, Vector3 rotation, int posRacoon)
     {
-        racoonList[posRacoon].transform.SetPositionAndRotation(position, Quaternion.Euler(rotation));
+        Transform raccTrans = racoonList[posRacoon].transform;
+
+        if (raccTrans.position != position)
+            racoonList[posRacoon].ChangeState(2);
+        else
+            racoonList[posRacoon].ChangeState(1);
+
+        raccTrans.SetPositionAndRotation(position, Quaternion.Euler(rotation));
     }
 
     public void ChargeRacoon(int posRacoon)
@@ -140,7 +147,9 @@ public class GameplayScript : MonoBehaviour
     }
 
     public void UpdateList(CocaineBehaviour cocaScript)
-    { cocaineList.Remove(cocaScript); }
+    {
+        cocaineList.Remove(cocaScript);
+    }
 
     public void DeleteList()
     {

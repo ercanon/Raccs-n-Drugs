@@ -220,7 +220,8 @@ public class Connection : MonoBehaviour
 		ServerGather = new Thread(GatherAndBroadcast);
 		ServerGather.Start();
 
-		JoinGame(true);
+		serverIPInput.text = "127.0.0.1";
+		JoinGame();
 	}
 
 	void WaitingClients()
@@ -275,26 +276,19 @@ public class Connection : MonoBehaviour
 	void Broadcast(TypeData tData)
 	{
 		byte[] data = new byte[1024];
+		data = Serialize((int)tData, enterMessage.text, enterUserName.text);
 
 		if (protocol == Protocol.TCP)
-		{
-			data = Serialize((int)tData, enterMessage.text, enterUserName.text);
-
 			socketHost.Send(data);
-		}
 		else if (protocol == Protocol.UDP)
-		{
-			data = Serialize((int)tData, enterMessage.text, enterUserName.text);
-
 			foreach (EndPoint reciber in clients)
 				socketHost.SendTo(data, data.Length, SocketFlags.None, reciber);
-		}
 	}
 
 
 
 	/*---------------------CLIENT-------------------*/
-	public void JoinGame(bool isHost = false)
+	public void JoinGame()
 	{
 		if (remote != null)
 		{
@@ -319,7 +313,7 @@ public class Connection : MonoBehaviour
 		if (enterServerPort.text == "")
 			enterServerPort.text = 666.ToString();
 			
-		remote = new IPEndPoint(IPAddress.Parse(isHost ? "127.0.0.1" : serverIPInput.text), int.Parse(enterServerPort.text));
+		remote = new IPEndPoint(IPAddress.Parse(serverIPInput.text), int.Parse(enterServerPort.text));
 
 		try
 		{
@@ -376,7 +370,7 @@ public class Connection : MonoBehaviour
 		writer.Write(type);
 		switch (type)
 		{
-			case 0:	//Start
+			case 0:	//LaunchGame
 				writer.Write(clients.Count);
 				break;
 			case 1: //Position List Racoon
@@ -432,7 +426,7 @@ public class Connection : MonoBehaviour
 		int type = reader.ReadInt32();
 		switch (type)
 		{
-			case 0: //Start
+			case 0: //LaunchGame
 				gameplay.LaunchGame(reader.ReadInt32());
 				break;
 			case 1:	//Position List Racoon
@@ -472,7 +466,7 @@ public class Connection : MonoBehaviour
 		}
 	}
 
-	public int SendData(byte[] data, Socket sender, EndPoint receiver)
+	private int SendData(byte[] data, Socket sender, EndPoint receiver)
 	{
 		if (protocol == Protocol.TCP)
 			 return sender.Send(data);

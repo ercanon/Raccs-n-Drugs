@@ -23,14 +23,11 @@ public class RacoonBehaviour : MonoBehaviour
     [HideInInspector] public Color[] colors;
     private int colorIndex = 0;
 
-    public GameplayScript gameplayScript;
+    [HideInInspector] public GameplayScript gameplayScript;
     private Rigidbody rBody;
     private Animator anim;
     private GameObject buffed;
     private Material mat;
-
-    /// <summary> Functions to override movement speed. Will use the last added override. </summary>
-    public List<System.Func<float>> speedOverrides = new List<System.Func<float>>();
 
     void Awake()
     {
@@ -43,58 +40,54 @@ public class RacoonBehaviour : MonoBehaviour
         mat = transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material;
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        if (rState != RacoonState.dead && rState != RacoonState.onPause)
+        switch (rState)
         {
-            if (rState != RacoonState.charging)
-            {
-                if (rState != RacoonState.buffed)
+            case RacoonState.idle:
+            case RacoonState.walking:
+                if (owned)
                 {
-                    if (owned)
+                    // Get targetVelocity from input.
+                    Vector2 targetVelocity = new Vector2(Input.GetAxis("Horizontal") * walkSpeed, Input.GetAxis("Vertical") * walkSpeed);
+
+                    // Apply movement.
+                    rBody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
+
+                    //Apply rotation.
+                    if (rBody.velocity.magnitude > 0)
                     {
-                        float targetMovingSpeed = walkSpeed;
+                        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rBody.velocity), Time.deltaTime * 10f);
+                        ChangeState((int)RacoonState.walking);
+                    }
+                    else
+                        ChangeState((int)RacoonState.idle);
+                }
+                break;
 
-                        if (speedOverrides.Count > 0)
-                            targetMovingSpeed = speedOverrides[speedOverrides.Count - 1]();
-
-                        // Get targetVelocity from input.
-                        Vector2 targetVelocity = new Vector2(Input.GetAxis("Horizontal") * targetMovingSpeed, Input.GetAxis("Vertical") * targetMovingSpeed);
-
-                        // Apply movement.
-                        rBody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
-
-                        //Apply rotation.
-                        if (rBody.velocity.magnitude > 0)
-                        {
-                            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rBody.velocity), Time.deltaTime * 10f);
-                            ChangeState((int)RacoonState.walking);
-                        }
-                        else
-                            ChangeState((int)RacoonState.idle);
+            case RacoonState.buffed:
+                if (owned)
+                {
+                    transform.Rotate(0f, Input.GetAxis("Horizontal") * rotateSpeed, 0f);
+                    if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        ChangeState((int)RacoonState.charging);
+                        gameplayScript.conect.SendClientData(5);
                     }
                 }
-                else
-                {
-                    if (owned)
-                    {
-                        transform.Rotate(0, Input.GetAxis("Horizontal") * rotateSpeed, 0);
-                        if (Input.GetKeyDown("space"))
-                        {
-                            ChangeState((int)RacoonState.charging);
-                            gameplayScript.conect.SendClientData(5);
-                        }
-                    }
 
-                    ChangingColors();
-                }
-            }
-            else
-            {
+                ChangingColors();
+                break;
+
+            case RacoonState.charging:
                 timerCharge += Time.deltaTime;
-                if (timerCharge > 1)
+                if (timerCharge > 1f)
                     ChargedTransitions();
-            }
+                break;
+
+            case RacoonState.dead:
+            case RacoonState.onPause:
+                break;
         }
     }
 
@@ -111,7 +104,7 @@ public class RacoonBehaviour : MonoBehaviour
             case 1: //Idle
                 if (rState == RacoonState.idle)
                     return;
-
+                
                 rState = RacoonState.idle;
                 break;
             
@@ -140,7 +133,7 @@ public class RacoonBehaviour : MonoBehaviour
                     return;
 
                 rBody.velocity = transform.forward * buffSpeed;
-                charges = charges - 1;
+                charges--;
 
                 mat.SetColor("_EmissionColor", colors[0]);
 
@@ -152,12 +145,12 @@ public class RacoonBehaviour : MonoBehaviour
                     return;
 
                 rState = RacoonState.dead;
-                //animation
                 break;
 
             default:
                 break;
         }
+
         anim.SetInteger("rRacoonAnim", (int)rState);
     }
 
@@ -165,6 +158,7 @@ public class RacoonBehaviour : MonoBehaviour
     {
         if (charges == 0)
         {
+            rBody.velocity = Vector3.zero;
             ChangeState((int)RacoonState.idle);
             buffed.SetActive(false);
             gameplayScript.cocaineCanSpawn = true;
