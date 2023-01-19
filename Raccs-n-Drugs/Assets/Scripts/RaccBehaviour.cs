@@ -9,7 +9,7 @@ public class RaccBehaviour : MonoBehaviour
     public float buffSpeed = 8;
     public float rotateSpeed = 1.5f;
     public int charges = 3;
-    private float timerCharge = 0f;
+    private float timerCharge = 1f;
 
     [HideInInspector] public bool owned = false;
     [HideInInspector] public Color[] colors;
@@ -90,6 +90,7 @@ public class RaccBehaviour : MonoBehaviour
                     return;
 
                 raccState = RacoonState.onPause;
+                anim.Play("Idle");
                 break;
             case 1: //Idle
                 if (raccState == RacoonState.idle)
@@ -111,7 +112,7 @@ public class RaccBehaviour : MonoBehaviour
 
                 rBody.velocity = Vector3.zero;
                 buffed.SetActive(true);
-                timerCharge = 0f;
+                timerCharge = 1f;
                 if (charges <= 0)
                     charges = 3;
 
