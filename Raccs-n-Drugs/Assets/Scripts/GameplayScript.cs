@@ -12,9 +12,9 @@ public class GameplayScript : MonoBehaviour
 
     public List<Color> racoonColors;
 
-    [HideInInspector] public List<RacoonBehaviour> racoonList;
+    [HideInInspector] public List<RacoonBehaviour> raccsList;
     [HideInInspector] public List<CocaineBehaviour> cocaineList;
-    [HideInInspector] public int posRacoonList;
+    [HideInInspector] public int posRaccList;
     [HideInInspector] public bool cocaineCanSpawn = false;
 
     [HideInInspector] public bool cameraTransition = false;
@@ -29,14 +29,14 @@ public class GameplayScript : MonoBehaviour
 
     public void Reset()
     {
-        if (racoonList != null)
+        if (raccsList != null)
             DeleteList();
         cocaineList = new List<CocaineBehaviour>();
 
-        if (racoonList != null)
-            racoonList.Clear();
-        racoonList = new List<RacoonBehaviour>();
-        posRacoonList = -1;
+        if (raccsList != null)
+            raccsList.Clear();
+        raccsList = new List<RacoonBehaviour>();
+        posRaccList = -1;
     }
 
     void Awake()
@@ -58,14 +58,13 @@ public class GameplayScript : MonoBehaviour
                 cocaineCanSpawn = true;
             }
         }
-        else if (posRacoonList == 0 && cocaineCanSpawn)
+        else if (posRaccList == 0 && cocaineCanSpawn)
             SpawnCocaine();
     }
 
     private void FixedUpdate()
     {
-        //Send Position Racoon
-        if(racoonList.Count > 0)
+        if(raccsList.Count > 0)
             conect.SendClientData(4);
     }
 
@@ -93,27 +92,42 @@ public class GameplayScript : MonoBehaviour
             render.material.SetColor("_EmissionColor",list[0]);
             render.material.EnableKeyword("_EMISSION");
 
-            if (posRacoonList == i)
+            if (posRaccList == i)
                 raccScript.owned = true;
-            racoonList.Add(raccScript);
+            raccsList.Add(raccScript);
         }
+    }
+
+    public void CheckEndGame()
+    {
+        foreach (RacoonBehaviour raccScript in raccsList)
+            if (raccScript.GetState() != 5) 
+                return;
+
+        foreach (RacoonBehaviour raccScript in raccsList)
+            Destroy(raccScript.gameObject);
+
+        cocaineList.Clear();
     }
 
     public void UpdateRacoon(Vector3 position, Vector3 rotation, int posRacoon)
     {
-        Transform raccTrans = racoonList[posRacoon].transform;
+        RacoonBehaviour racc = raccsList[posRacoon];
 
-        if (raccTrans.position != position)
-            racoonList[posRacoon].ChangeState(2);
-        else
-            racoonList[posRacoon].ChangeState(1);
+        if (racc.GetState() == 1 || racc.GetState() == 2)
+        {
+            if (racc.transform.position != position)
+                racc.ChangeState(2);
+            else
+                racc.ChangeState(1);
+        }
 
-        raccTrans.SetPositionAndRotation(position, Quaternion.Euler(rotation));
+        racc.transform.SetPositionAndRotation(position, Quaternion.Euler(rotation));
     }
 
     public void ChargeRacoon(int posRacoon)
     {
-        racoonList[posRacoon].ChangeState(4);
+        raccsList[posRacoon].ChangeState(4);
     }
 
     public void SpawnCocaine()

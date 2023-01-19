@@ -12,7 +12,7 @@ public class RacoonBehaviour : MonoBehaviour
         charging,
         dead
     }
-    private RacoonState rState;
+    private RacoonState raccState;
     public float walkSpeed = 5;
     public float buffSpeed = 8;
     public float rotateSpeed = 3.5f;
@@ -42,7 +42,7 @@ public class RacoonBehaviour : MonoBehaviour
 
     void Update()
     {
-        switch (rState)
+        switch (raccState)
         {
             case RacoonState.idle:
             case RacoonState.walking:
@@ -96,27 +96,27 @@ public class RacoonBehaviour : MonoBehaviour
         switch (state)
         {
             case 0: //On Pause
-                if (rState == RacoonState.onPause)
+                if (raccState == RacoonState.onPause)
                     return;
 
-                rState = RacoonState.onPause;
+                raccState = RacoonState.onPause;
                 break;
             case 1: //Idle
-                if (rState == RacoonState.idle)
+                if (raccState == RacoonState.idle)
                     return;
                 
-                rState = RacoonState.idle;
+                raccState = RacoonState.idle;
                 break;
             
             case 2: // Walking
-                if (rState == RacoonState.walking)
+                if (raccState == RacoonState.walking)
                     return;
 
-                rState = RacoonState.walking;
+                raccState = RacoonState.walking;
                 break;
             
             case 3: //Buffed
-                if (rState == RacoonState.buffed)
+                if (raccState == RacoonState.buffed)
                     return;
 
                 rBody.velocity = Vector3.zero;
@@ -125,11 +125,11 @@ public class RacoonBehaviour : MonoBehaviour
                 if (charges <= 0)
                     charges = 3;
 
-                rState = RacoonState.buffed;
+                raccState = RacoonState.buffed;
                 break;
 
             case 4: //Charging
-                if (rState == RacoonState.charging)
+                if (raccState == RacoonState.charging)
                     return;
 
                 rBody.velocity = transform.forward * buffSpeed;
@@ -137,21 +137,28 @@ public class RacoonBehaviour : MonoBehaviour
 
                 mat.SetColor("_EmissionColor", colors[0]);
 
-                rState = RacoonState.charging;
+                raccState = RacoonState.charging;
                 break;
 
             case 5: //Dead
-                if (rState == RacoonState.dead)
+                if (raccState == RacoonState.dead)
                     return;
 
-                rState = RacoonState.dead;
+                gameplayScript.CheckEndGame();
+
+                raccState = RacoonState.dead;
                 break;
 
             default:
                 break;
         }
 
-        anim.SetInteger("rRacoonAnim", (int)rState);
+        anim.SetInteger("rRacoonAnim", (int)raccState);
+    }
+
+    public int GetState()
+    {
+        return (int)raccState;
     }
 
     private void ChargedTransitions()
@@ -191,7 +198,7 @@ public class RacoonBehaviour : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (rState == RacoonState.charging)
+        if (raccState == RacoonState.charging)
         {
             if (collision.gameObject.CompareTag("Player"))
                 collision.gameObject.GetComponent<RacoonBehaviour>().ChangeState((int)RacoonState.dead);

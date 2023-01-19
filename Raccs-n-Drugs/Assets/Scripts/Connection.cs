@@ -391,15 +391,15 @@ public class Connection : MonoBehaviour
 				}
 				break;
 			case 4: //raccsTransform
-				int rListPos = gameplay.posRacoonList;
+				int rListPos = gameplay.posRaccList;
 				if (rListPos < 4)
 				{
-					Vector3 pos = gameplay.racoonList[rListPos].transform.position;
+					Vector3 pos = gameplay.raccsList[rListPos].transform.position;
 					writer.Write(pos.x);
 					writer.Write(pos.y);
 					writer.Write(pos.z);
 
-					Vector3 rot = gameplay.racoonList[rListPos].transform.rotation.eulerAngles;
+					Vector3 rot = gameplay.raccsList[rListPos].transform.rotation.eulerAngles;
 					writer.Write(rot.x);
 					writer.Write(rot.y);
 					writer.Write(rot.z);
@@ -408,7 +408,7 @@ public class Connection : MonoBehaviour
 				}
 				break;
 			case 5: //RaccsCharge
-				writer.Write(gameplay.posRacoonList);
+				writer.Write(gameplay.posRaccList);
 				break;
 			default:
 				return null;
@@ -430,7 +430,7 @@ public class Connection : MonoBehaviour
 				gameplay.LaunchGame(reader.ReadInt32());
 				break;
 			case 1:	//Position List Racoon
-				gameplay.posRacoonList = reader.ReadInt32();
+				gameplay.posRaccList = reader.ReadInt32();
 				break;
 			case 2:	//Chat
 				customLog(reader.ReadString(), reader.ReadString());
