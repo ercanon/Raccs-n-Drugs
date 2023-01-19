@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class RacoonBehaviour : MonoBehaviour
+public class RaccBehaviour : MonoBehaviour
 {
     enum RacoonState
     {
@@ -70,10 +70,7 @@ public class RacoonBehaviour : MonoBehaviour
                 {
                     transform.Rotate(0f, Input.GetAxis("Horizontal") * rotateSpeed, 0f);
                     if (Input.GetKeyDown(KeyCode.Space))
-                    {
                         ChangeState((int)RacoonState.charging);
-                        gameplayScript.conect.SendClientData(5);
-                    }
                 }
 
                 ChangingColors();
@@ -132,6 +129,7 @@ public class RacoonBehaviour : MonoBehaviour
                 if (raccState == RacoonState.charging)
                     return;
 
+                gameplayScript.connect.SendClientData(5);
                 rBody.velocity = transform.forward * buffSpeed;
                 charges--;
 
@@ -201,7 +199,7 @@ public class RacoonBehaviour : MonoBehaviour
         if (raccState == RacoonState.charging)
         {
             if (collision.gameObject.CompareTag("Player"))
-                collision.gameObject.GetComponent<RacoonBehaviour>().ChangeState((int)RacoonState.dead);
+                collision.gameObject.GetComponent<RaccBehaviour>().ChangeState((int)RacoonState.dead);
 
             if (collision.gameObject.CompareTag("Bounds"))
                 ChargedTransitions();

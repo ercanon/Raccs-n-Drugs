@@ -96,6 +96,9 @@ public class Connection : MonoBehaviour
 		log = null;
 		ChatBox.text = null;
 		remote = null;
+		enterServerPort.text = "";
+		serverIPInput.text = "";
+
 
 		gameplay.Reset();
 
@@ -106,7 +109,7 @@ public class Connection : MonoBehaviour
 	void Awake()
 	{
 		enterUserName.text = "Player" + (int)Random.Range(1, 100);
-		gameplay.conect = this;
+		gameplay.connect = this;
 		Reset((int)protocol, (int)profile);
 	}
 	
@@ -153,6 +156,17 @@ public class Connection : MonoBehaviour
 				}
 			}
 		}
+		return null;
+	}
+
+	//Under Development
+	private string SearchServers()
+	{
+		foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+			foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
+				{
+				}
+
 		return null;
 	}
 

@@ -52,7 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 5
   buffSpeed: 8
-  rotateSpeed: 1.7
+  rotateSpeed: 1.5
   charges: 3
   owned: 0
   colors: []

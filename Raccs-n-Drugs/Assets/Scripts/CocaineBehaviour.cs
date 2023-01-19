@@ -14,12 +14,12 @@ public class CocaineBehaviour : MonoBehaviour
         {
             if (isBuffed)
             {
-                other.gameObject.GetComponent<RacoonBehaviour>().ChangeState(3);
-                gameplayScript.DeleteList();
+                other.gameObject.GetComponent<RaccBehaviour>().ChangeState(3);
+                gameplayScript.DeleteCocaineList();
             }
             else 
             {
-                gameplayScript.UpdateList(this);
+                gameplayScript.UpdateCocaineList(this);
                 Destroy(gameObject);
             }
         }

@@ -12,7 +12,7 @@ public class GameplayScript : MonoBehaviour
 
     public List<Color> racoonColors;
 
-    [HideInInspector] public List<RacoonBehaviour> raccsList;
+    [HideInInspector] public List<RaccBehaviour> raccsList;
     [HideInInspector] public List<CocaineBehaviour> cocaineList;
     [HideInInspector] public int posRaccList;
     [HideInInspector] public bool cocaineCanSpawn = false;
@@ -24,18 +24,18 @@ public class GameplayScript : MonoBehaviour
     public int maxCocaineBags = 6;
     public float offsetCocaineSpawn = 2f;
 
-    [HideInInspector] public Connection conect;
+    [HideInInspector] public Connection connect;
     private Transform playableArea;
 
     public void Reset()
     {
-        if (raccsList != null)
-            DeleteList();
+        if (cocaineList != null)
+            DeleteCocaineList();
         cocaineList = new List<CocaineBehaviour>();
 
         if (raccsList != null)
-            raccsList.Clear();
-        raccsList = new List<RacoonBehaviour>();
+            DeleteRaccsList();
+        raccsList = new List<RaccBehaviour>();
         posRaccList = -1;
     }
 
@@ -65,7 +65,7 @@ public class GameplayScript : MonoBehaviour
     private void FixedUpdate()
     {
         if(raccsList.Count > 0)
-            conect.SendClientData(4);
+            connect.SendClientData(4);
     }
 
     public void LaunchGame(int size = 0)
@@ -81,7 +81,7 @@ public class GameplayScript : MonoBehaviour
 
             GameObject racc = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
 
-            RacoonBehaviour raccScript = racc.GetComponent<RacoonBehaviour>();
+            RaccBehaviour raccScript = racc.GetComponent<RaccBehaviour>();
             raccScript.ChangeState(1);
             raccScript.gameplayScript = this;
 
@@ -100,19 +100,16 @@ public class GameplayScript : MonoBehaviour
 
     public void CheckEndGame()
     {
-        foreach (RacoonBehaviour raccScript in raccsList)
+        foreach (RaccBehaviour raccScript in raccsList)
             if (raccScript.GetState() != 5) 
                 return;
 
-        foreach (RacoonBehaviour raccScript in raccsList)
-            Destroy(raccScript.gameObject);
-
-        cocaineList.Clear();
+        DeleteRaccsList();
     }
 
     public void UpdateRacoon(Vector3 position, Vector3 rotation, int posRacoon)
     {
-        RacoonBehaviour racc = raccsList[posRacoon];
+        RaccBehaviour racc = raccsList[posRacoon];
 
         if (racc.GetState() == 1 || racc.GetState() == 2)
         {
@@ -148,7 +145,7 @@ public class GameplayScript : MonoBehaviour
         }
 
         cocaineCanSpawn = false;
-        conect.SendClientData(3);
+        connect.SendClientData(3);
     }
 
     public void UpdateCocaine(Vector3 position, int posRacoon, bool isBuffed = false)
@@ -160,16 +157,24 @@ public class GameplayScript : MonoBehaviour
         cocaineList.Add(cocaScript);
     }
 
-    public void UpdateList(CocaineBehaviour cocaScript)
+    public void UpdateCocaineList(CocaineBehaviour cocaScript)
     {
         cocaineList.Remove(cocaScript);
     }
 
-    public void DeleteList()
+    public void DeleteCocaineList()
     {
         foreach (CocaineBehaviour cocaScript in cocaineList)
             Destroy(cocaScript.gameObject);
 
         cocaineList.Clear();
+    }
+
+    public void DeleteRaccsList()
+    {
+        foreach (RaccBehaviour raccScript in raccsList)
+            Destroy(raccScript.gameObject);
+
+        raccsList.Clear();
     }
 }
