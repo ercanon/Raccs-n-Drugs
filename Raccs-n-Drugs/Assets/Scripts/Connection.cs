@@ -42,6 +42,8 @@ public class Connection : MonoBehaviour
 	[SerializeField] private Button joinGameButton;
 	[SerializeField] private Button disconnectButton;
 
+
+
 	/*---------------------CONFIG-------------------*/
 	void Reset(int prot, int prof)
 	{
@@ -494,6 +496,8 @@ public class Connection : MonoBehaviour
 		byte[] data = Serialize(type);
 		return SendData(data, socket, remote);
 	}
+
+
 
 	/*---------------------GAME-------------------*/
 	public void LaunchGame()

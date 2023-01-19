@@ -5,10 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class GameplayScript : MonoBehaviour
 {
+    /*---------------------VARIABLES-------------------*/
+    struct GameConfig { }
+
     [SerializeField] private GameObject racoon;
     [SerializeField] private GameObject cocaine;
     [SerializeField] private Transform mainCamera;
-    [SerializeField] private Transform gamePos;
 
     public List<Color> racoonColors;
 
@@ -16,17 +18,17 @@ public class GameplayScript : MonoBehaviour
     [HideInInspector] public List<CocaineBehaviour> cocaineList;
     [HideInInspector] public int posRaccList;
     [HideInInspector] public bool cocaineCanSpawn = false;
-
-    [HideInInspector] public bool cameraTransition = false;
+    [HideInInspector] public Connection connect;
 
     [Space]
     [Header("Game Config")]
     public int maxCocaineBags = 6;
     public float offsetCocaineSpawn = 2f;
+    public float timerCocaineSpawn = 2f;
 
-    [HideInInspector] public Connection connect;
-    private Transform playableArea;
 
+
+    /*---------------------MAIN-------------------*/
     public void Reset()
     {
         if (cocaineList != null)
@@ -39,38 +41,23 @@ public class GameplayScript : MonoBehaviour
         posRaccList = -1;
     }
 
-    void Awake()
-    {
-        playableArea = transform.GetChild(0);                                     
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (cameraTransition)
-        {
-            mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, gamePos.position, 2 * Time.deltaTime);
-            mainCamera.transform.rotation = Quaternion.Lerp(mainCamera.transform.rotation, gamePos.rotation, 2 * Time.deltaTime);
-
-            if (Vector3.Distance(mainCamera.transform.position, gamePos.position) < 0.15)
-            {
-                cameraTransition = false;
-                cocaineCanSpawn = true;
-            }
-        }
-        else if (posRaccList == 0 && cocaineCanSpawn)
-            SpawnCocaine();
-    }
-
     private void FixedUpdate()
     {
-        if(raccsList.Count > 0)
+        if (posRaccList == 0 && cocaineCanSpawn)
+        {
+            if (timerCocaineSpawn < 0f)
+                SpawnCocaine();
+            else
+                timerCocaineSpawn -= Time.deltaTime;
+        }
+
+        if (raccsList.Count > 0)
             connect.SendClientData(4);
     }
 
     public void LaunchGame(int size = 0)
     {
-        cameraTransition = true;
+        mainCamera.GetComponent<Animation>().Play();
         GameObject.Find("UI").SetActive(false);
 
         Transform[] pos = GameObject.Find("RacoonSpawn").GetComponentsInChildren<Transform>();
@@ -107,6 +94,9 @@ public class GameplayScript : MonoBehaviour
         DeleteRaccsList();
     }
 
+
+
+    /*---------------------RACCS-------------------*/
     public void UpdateRacoon(Vector3 position, Vector3 rotation, int posRacoon)
     {
         RaccBehaviour racc = raccsList[posRacoon];
@@ -127,15 +117,26 @@ public class GameplayScript : MonoBehaviour
         raccsList[posRacoon].ChangeState(4);
     }
 
+    public void DeleteRaccsList()
+    {
+        foreach (RaccBehaviour raccScript in raccsList)
+            Destroy(raccScript.gameObject);
+
+        raccsList.Clear();
+    }
+
+
+
+    /*---------------------COCAINE-------------------*/
     public void SpawnCocaine()
     {
         for (int i = 0; i < maxCocaineBags; i++)
         {
-            Vector3 bounds = playableArea.GetComponent<Renderer>().bounds.size;
+            Vector3 bounds = GetComponent<Renderer>().bounds.size;
             Vector3 randPosition = new Vector3(
-                (playableArea.position.x - bounds.x / 2) + Random.Range(offsetCocaineSpawn, bounds.x - offsetCocaineSpawn),
+                (transform.position.x - bounds.x / 2) + Random.Range(offsetCocaineSpawn, bounds.x - offsetCocaineSpawn),
                 cocaine.transform.position.y,
-                (playableArea.position.z - bounds.z / 2) + Random.Range(offsetCocaineSpawn, bounds.z - offsetCocaineSpawn));
+                (transform.position.z - bounds.z / 2) + Random.Range(offsetCocaineSpawn, bounds.z - offsetCocaineSpawn));
 
             GameObject obj = Instantiate(cocaine, randPosition, cocaine.transform.rotation);
             CocaineBehaviour cocaScript = obj.GetComponent<CocaineBehaviour>();
@@ -145,6 +146,7 @@ public class GameplayScript : MonoBehaviour
         }
 
         cocaineCanSpawn = false;
+        timerCocaineSpawn = 2f;
         connect.SendClientData(3);
     }
 
@@ -168,13 +170,5 @@ public class GameplayScript : MonoBehaviour
             Destroy(cocaScript.gameObject);
 
         cocaineList.Clear();
-    }
-
-    public void DeleteRaccsList()
-    {
-        foreach (RaccBehaviour raccScript in raccsList)
-            Destroy(raccScript.gameObject);
-
-        raccsList.Clear();
     }
 }

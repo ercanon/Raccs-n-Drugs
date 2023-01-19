@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class CocaineBehaviour : MonoBehaviour
 {
-    [HideInInspector]
-    public GameplayScript gameplayScript;
+    [HideInInspector] public GameplayScript gameplayScript;
     public bool isBuffed = false;
 
     private void OnTriggerEnter(Collider other)

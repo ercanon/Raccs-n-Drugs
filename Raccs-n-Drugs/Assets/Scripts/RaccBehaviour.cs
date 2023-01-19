@@ -3,19 +3,11 @@ using UnityEngine;
 
 public class RaccBehaviour : MonoBehaviour
 {
-    enum RacoonState
-    {
-        onPause,
-        idle,
-        walking,
-        buffed,
-        charging,
-        dead
-    }
-    private RacoonState raccState;
+    enum RacoonState { onPause, idle, walking, buffed, charging, dead }; private RacoonState raccState;
+    
     public float walkSpeed = 5;
     public float buffSpeed = 8;
-    public float rotateSpeed = 3.5f;
+    public float rotateSpeed = 1.5f;
     public int charges = 3;
     private float timerCharge = 0f;
 
@@ -77,9 +69,10 @@ public class RaccBehaviour : MonoBehaviour
                 break;
 
             case RacoonState.charging:
-                timerCharge += Time.deltaTime;
-                if (timerCharge > 1f)
+                if (timerCharge < 0f)
                     ChargedTransitions();
+                else
+                    timerCharge -= Time.deltaTime;
                 break;
 
             case RacoonState.dead:
