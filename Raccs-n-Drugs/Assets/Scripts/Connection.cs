@@ -498,8 +498,8 @@ public class Connection : MonoBehaviour
 	/*---------------------GAME-------------------*/
 	public void LaunchGame()
     {
-		gameplay.LaunchGame(clients.Count);
 		SendClientData((int)TypeData.start);
+		gameplay.LaunchGame(clients.Count);
 	}
 
 	public void OpenInfo()
