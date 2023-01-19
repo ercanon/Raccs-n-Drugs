@@ -19,13 +19,13 @@ public class GameplayScript : MonoBehaviour
     [HideInInspector] public int posRaccList;
     [HideInInspector] public bool cocaineCanSpawn = false;
     [HideInInspector] public Connection connect;
+    private float timerSpawn = 0f;
 
     [Space]
     [Header("Game Config")]
     public int maxCocaineBags = 6;
     public float offsetCocaineSpawn = 2f;
-    public float timerCocaineSpawn = 2f;
-
+    public float timerCocaineSpawn = 0f;
 
 
     /*---------------------MAIN-------------------*/
@@ -45,10 +45,10 @@ public class GameplayScript : MonoBehaviour
     {
         if (posRaccList == 0 && cocaineCanSpawn)
         {
-            if (timerCocaineSpawn < 0f)
+            if (timerSpawn < 0f)
                 SpawnCocaine();
             else
-                timerCocaineSpawn -= Time.deltaTime;
+                timerSpawn -= Time.deltaTime;
         }
 
         if (raccsList.Count > 0)
@@ -146,7 +146,7 @@ public class GameplayScript : MonoBehaviour
         }
 
         cocaineCanSpawn = false;
-        timerCocaineSpawn = 2f;
+        timerSpawn = timerCocaineSpawn;
         connect.SendClientData(3);
     }
 
