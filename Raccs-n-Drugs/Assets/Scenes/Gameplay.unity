@@ -168,15 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameplay: {fileID: 1834612039}
-  enterUserName: {fileID: 6762012699642540896}
-  serverIPInput: {fileID: 6762012699549820867}
-  enterServerPort: {fileID: 6762012699511812657}
-  enterMessage: {fileID: 6762012700230804567}
-  ChatBox: {fileID: 6762012699488487394}
-  startGameButton: {fileID: 6762012699612017686}
-  createGameButton: {fileID: 0}
-  joinGameButton: {fileID: 6762012699947710355}
-  disconnectButton: {fileID: 6762012700447738050}
+  uiScript: {fileID: 6762012698756837334}
 --- !u!1 &156671358
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,7 +365,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &400582965
 GameObject:
@@ -861,9 +853,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 15063645}
-        m_TargetAssemblyTypeName: connection, Assembly-CSharp
-        m_MethodName: LaunchGame
+      - m_Target: {fileID: 6762012698756837334}
+        m_TargetAssemblyTypeName: LobbyScript, Assembly-CSharp
+        m_MethodName: GameSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -916,6 +908,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 177229643556919891, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
   m_PrefabInstance: {fileID: 1783674181796009720}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &466705975 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
+  m_PrefabInstance: {fileID: 1783674181796009720}
+  m_PrefabAsset: {fileID: 0}
 --- !u!111 &466705976
 Animation:
   m_ObjectHideFlags: 0
@@ -925,7 +922,7 @@ Animation:
   m_GameObject: {fileID: 466705970}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: b306f358222656642b41f23279143905, type: 2}
+  m_Animation: {fileID: 7400000, guid: e344792f59cbb2a4cba2619678574b75, type: 2}
   m_Animations: []
   m_WrapMode: 0
   m_PlayAutomatically: 1
@@ -1572,7 +1569,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &720849695
 GameObject:
@@ -1718,7 +1715,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &830677085
 GameObject:
@@ -2730,7 +2727,7 @@ Transform:
   m_Children:
   - {fileID: 1425126597}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1289457711
 GameObject:
@@ -2838,6 +2835,7 @@ GameObject:
   - component: {fileID: 1390412327}
   - component: {fileID: 1390412326}
   - component: {fileID: 1390412330}
+  - component: {fileID: 1390412331}
   m_Layer: 5
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2924,6 +2922,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameplayScript: {fileID: 1834612039}
+--- !u!95 &1390412331
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1390412325}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5b72fdb16d5c8e141a0c0ba086c117ab, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1425126596
 GameObject:
   m_ObjectHideFlags: 0
@@ -2987,7 +3005,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
-  m_Range: 23
+  m_Range: 25
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -4275,7 +4293,7 @@ Transform:
   m_Children:
   - {fileID: 4772953138758990029}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1834612039
 MonoBehaviour:
@@ -4580,6 +4598,41 @@ Transform:
   - {fileID: 570795644}
   m_Father: {fileID: 1786658192}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1971946634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1971946635}
+  m_Layer: 0
+  m_Name: UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1971946635
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1971946634}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.000061035156, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6762012698756837333}
+  - {fileID: 2108031358}
+  - {fileID: 466705975}
+  - {fileID: 6762012699074041114}
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1978933822
 PrefabInstance:
@@ -4925,7 +4978,7 @@ Animation:
   m_GameObject: {fileID: 1978933823}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: b306f358222656642b41f23279143905, type: 2}
+  m_Animation: {fileID: 7400000, guid: e344792f59cbb2a4cba2619678574b75, type: 2}
   m_Animations: []
   m_WrapMode: 0
   m_PlayAutomatically: 1
@@ -5072,23 +5125,26 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 49847143907044606, guid: d11a0b85b6c857a4c950c852b4f228b7, type: 3}
   m_PrefabInstance: {fileID: 1427173132787538218}
   m_PrefabAsset: {fileID: 0}
---- !u!111 &2108031359
-Animation:
+--- !u!95 &2108031359
+Animator:
+  serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2108031355}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: b62f27f599b243340bb08d619d6d87ca, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 4c97a9a5a6be55a41861c701be2ab21b, type: 2}
-  - {fileID: 7400000, guid: b62f27f599b243340bb08d619d6d87ca, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ca432146c438cdd4390ddf723fc0adbd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2116593898
 GameObject:
   m_ObjectHideFlags: 0
@@ -6216,15 +6272,15 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1971946635}
     m_Modifications:
     - target: {fileID: 49847143907044606, guid: d11a0b85b6c857a4c950c852b4f228b7, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 49847143907044606, guid: d11a0b85b6c857a4c950c852b4f228b7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.623
+      value: -4.622939
       objectReference: {fileID: 0}
     - target: {fileID: 49847143907044606, guid: d11a0b85b6c857a4c950c852b4f228b7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6303,7 +6359,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1971946635}
     m_Modifications:
     - target: {fileID: 177229643556919891, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_Name
@@ -6319,11 +6375,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.4050002
+      value: 0.40506124
       objectReference: {fileID: 0}
     - target: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6797,8 +6853,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 15063645}
-        m_TargetAssemblyTypeName: connection, Assembly-CSharp
+      - m_Target: {fileID: 6762012698756837334}
+        m_TargetAssemblyTypeName: LobbyScript, Assembly-CSharp
         m_MethodName: OpenInfo
         m_Mode: 1
         m_Arguments:
@@ -7015,8 +7071,8 @@ RectTransform:
   - {fileID: 1553547172}
   - {fileID: 1015121281}
   - {fileID: 1685037242}
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 1971946635}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -7035,13 +7091,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 103ace671a0be2f439e236bf9e6d7210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 1390412327}
-  dumpsterAnim: {fileID: 2108031359}
+  connect: {fileID: 0}
+  mainCamera: {fileID: 1390412331}
+  dumpsterAnim: {fileID: 0}
   tutorialWindow: {fileID: 4874091997827140952}
-  ip: {fileID: 6762012699549820867}
+  IPInput: {fileID: 6762012699549820867}
+  portInput: {fileID: 6762012699511812657}
   actionButton: {fileID: 1729811183}
   gameSettings: {fileID: 454868973}
   startButton: {fileID: 6762012699086447779}
+  userName: {fileID: 6762012699642540896}
+  ChatBox: {fileID: 6762012699488487394}
+  enterMessage: {fileID: 6762012700230804567}
   UIList:
   - {fileID: 1553547171}
   - {fileID: 1015121280}
@@ -7308,12 +7369,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6762012699074041115}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.000061035156, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_Father: {fileID: 1971946635}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6762012699074041115
 GameObject:
@@ -7447,7 +7508,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Start Game
+  m_Text: Easter Egg
 --- !u!1 &6762012699270081882
 GameObject:
   m_ObjectHideFlags: 0
@@ -8310,7 +8371,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 15063645}
-        m_TargetAssemblyTypeName: connection, Assembly-CSharp
+        m_TargetAssemblyTypeName: ConnectionScript, Assembly-CSharp
         m_MethodName: LaunchGame
         m_Mode: 1
         m_Arguments:
@@ -9095,7 +9156,19 @@ MonoBehaviour:
   m_CharacterLimit: 0
   m_OnSubmit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6762012698756837334}
+        m_TargetAssemblyTypeName: LobbyScript, Assembly-CSharp
+        m_MethodName: CreateMessage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnDidEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -9429,6 +9502,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: LobbyBehabiour, Assembly-CSharp
         m_MethodName: UIIteration
         m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 15063645}
+        m_TargetAssemblyTypeName: ConnectionScript, Assembly-CSharp
+        m_MethodName: Disconnect
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
