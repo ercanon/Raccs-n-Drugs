@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RaccBehaviour : MonoBehaviour
 {
-    enum RacoonState { onPause, idle, walking, buffed, charging, dead }; private RacoonState raccState;
+    public enum RacoonState { onPause, idle, walking, buffed, charging, dead }; public RacoonState raccState;
     
     public float walkSpeed = 5;
     public float buffSpeed = 8;
@@ -23,8 +23,6 @@ public class RaccBehaviour : MonoBehaviour
 
     void Awake()
     {
-        ChangeState((int)RacoonState.onPause);
-
         rBody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
 

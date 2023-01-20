@@ -6,19 +6,18 @@ using UnityEngine.SceneManagement;
 public class GameplayScript : MonoBehaviour
 {
     /*---------------------VARIABLES-------------------*/
-    struct GameConfig { }
-
     [SerializeField] private GameObject racoon;
     [SerializeField] private GameObject cocaine;
-    [SerializeField] private Transform mainCamera;
 
     public List<Color> racoonColors;
+    public List<Vector3> raccsPositions;
+    public List<Quaternion> raccsYRototation;
 
     [HideInInspector] public List<RaccBehaviour> raccsList;
     [HideInInspector] public List<CocaineBehaviour> cocaineList;
     [HideInInspector] public int posRaccList;
     [HideInInspector] public bool cocaineCanSpawn = false;
-    [HideInInspector] public Connection connect;
+    [HideInInspector] public ConnectionScript connect;
     private float timerSpawn = 0f;
 
     [Space]
@@ -57,19 +56,16 @@ public class GameplayScript : MonoBehaviour
 
     public void LaunchGame(int size = 0)
     {
-        mainCamera.GetComponent<Animation>().Play();
         GameObject.Find("UI").SetActive(false);
 
-        Transform[] pos = GameObject.Find("RacoonSpawn").GetComponentsInChildren<Transform>();
         for (int i = 0; i < size; i++)
         {
             if (i > 4)
                 break;
 
-            GameObject racc = Instantiate(racoon, pos[i + 1].position, pos[i + 1].rotation);
+            GameObject racc = Instantiate(racoon, raccsPositions[i], raccsYRototation[i]);
 
             RaccBehaviour raccScript = racc.GetComponent<RaccBehaviour>();
-            raccScript.ChangeState(1);
             raccScript.gameplayScript = this;
 
             SkinnedMeshRenderer render = racc.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>();
