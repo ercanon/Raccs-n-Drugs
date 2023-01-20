@@ -276,7 +276,7 @@ public class ConnectionScript : MonoBehaviour
 
 
 	/*---------------------HOST-------------------*/
-	public void CreateGame(InputField IPInput, InputField portInput, string userName)
+	public void CreateGame(string portInput, string userName)
 	{
 		if (socketHost != null)
         {
@@ -289,10 +289,10 @@ public class ConnectionScript : MonoBehaviour
 		else if (protocol == Protocol.UDP)
 			socketHost = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-		if (portInput.text == "")
-			portInput.text = 666.ToString();
+		if (portInput == "")
+			portInput = 666.ToString();
 					  
-		IPEndPoint ipep = new IPEndPoint(IPAddress.Any, int.Parse(portInput.text));
+		IPEndPoint ipep = new IPEndPoint(IPAddress.Any, int.Parse(portInput));
 		socketHost.Bind(ipep);
 
 		if (protocol == Protocol.TCP)
@@ -303,13 +303,12 @@ public class ConnectionScript : MonoBehaviour
 			socketHost.Listen(4);
 		}
 
-		uiScript.customLog(userName + "'s game available at " + TellIP(), "Server");
+		uiScript.customLog(userName + "'s game available at " + TellIP() + ":" + portInput, "Server");
 
 		ServerGather = new Thread(GatherAndBroadcast);
 		ServerGather.Start();
 
-		IPInput.text = "127.0.0.1";
-		JoinGame(IPInput, portInput, userName);
+		JoinGame("127.0.0.1", portInput, userName);
 	}
 
 	private void WaitingClients()
@@ -376,7 +375,7 @@ public class ConnectionScript : MonoBehaviour
 
 
 	/*---------------------CLIENT-------------------*/
-	public void JoinGame(InputField IPInput, InputField portInput, string userName)
+	public void JoinGame(string IPInput, string portInput, string userName)
 	{
 		if (remote != null)
 		{
@@ -391,11 +390,8 @@ public class ConnectionScript : MonoBehaviour
 			else if (protocol == Protocol.UDP)
 				socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 		}
-
-		if (portInput.text == "")
-			portInput.text = 666.ToString();
 			
-		remote = new IPEndPoint(IPAddress.Parse(IPInput.text), int.Parse(portInput.text));
+		remote = new IPEndPoint(IPAddress.Parse(IPInput), int.Parse(portInput == "" ? 666.ToString() : portInput));
 
 		try
 		{
@@ -439,10 +435,15 @@ public class ConnectionScript : MonoBehaviour
 	/*---------------------GAME-------------------*/
 	public void LaunchGame()
     {
-		if (profile == Profile.host && clients.Count == clientsReady-1)
+		if (profile == Profile.host)
 		{
-			SendClientData((int)TypeData.start);
-			gameplay.LaunchGame(clients.Count);
+			if (clients.Count == clientsReady + 1)
+			{
+				SendClientData((int)TypeData.start);
+				gameplay.LaunchGame(clients.Count);
+			}
+			else
+				uiScript.customLog("Players are not ready!", "Server");
 		}
 		else
 			SendClientData((int)TypeData.userReady);

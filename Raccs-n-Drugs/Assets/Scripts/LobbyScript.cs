@@ -126,7 +126,7 @@ public class LobbyScript : MonoBehaviour
             gameSettings.SetActive(true);
             startButton.text = "Start Game";
 
-            connect.CreateGame(IPInput, portInput, userName.text);
+            connect.CreateGame(portInput.text, userName.text);
         }
         else
         {
@@ -139,7 +139,7 @@ public class LobbyScript : MonoBehaviour
             gameSettings.SetActive(false);
             startButton.text = "Ready";
 
-            connect.JoinGame(IPInput, portInput, userName.text);
+            connect.JoinGame(IPInput.text, portInput.text, userName.text);
         }
 
         UIIteration((int)UIStates.Lobby);
