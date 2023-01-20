@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 286622131060231992}
   - component: {fileID: 6505069693381549221}
   m_Layer: 6
-  m_Name: Racoon
+  m_Name: Racc
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97fca36bd81de7c4cafce7bbf02ca611, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  raccState: 0
   walkSpeed: 5
   buffSpeed: 8
   rotateSpeed: 1.5
