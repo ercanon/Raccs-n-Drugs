@@ -9,11 +9,11 @@ public class GameplayScript : MonoBehaviour
     [SerializeField] private GameObject racoon;
     [SerializeField] private GameObject cocaine;
 
-    public List<Color> racoonColors;
-    public List<Vector3> raccsPositions;
-    public List<Quaternion> raccsYRototation;
+    [SerializeField] private List<Color> racoonColors;
+    [SerializeField] private List<Vector3> raccsPositions;
+    [SerializeField] private List<Quaternion> raccsYRototation;
 
-    [HideInInspector] public List<RaccBehaviour> raccsList;
+    private List<RaccBehaviour> raccsList;
     [HideInInspector] public List<CocaineBehaviour> cocaineList;
     [HideInInspector] public int posRaccList;
     [HideInInspector] public bool cocaineCanSpawn = false;
@@ -122,7 +122,13 @@ public class GameplayScript : MonoBehaviour
         raccsList.Clear();
     }
 
+    public Transform GetRaccTransform(int pos)
+    {
+        if (raccsList.Count <= pos)
+            return raccsList[pos].transform;
 
+        return null;
+    }
 
     /*---------------------COCAINE-------------------*/
     public void SpawnCocaine()

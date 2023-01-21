@@ -93,6 +93,8 @@ public class ConnectionScript : MonoBehaviour
 	{
 		uiScript.connect = this;
 		gameplay.connect = this;
+		uiScript.gameplay = gameplay;
+
 		Reset((int)Protocol.UDP, (int)Profile.client);
 	}
 
@@ -177,14 +179,15 @@ public class ConnectionScript : MonoBehaviour
 				break;
 			case 4: //raccsTransform
 				int rListPos = gameplay.posRaccList;
-				if (rListPos < 4)
+				Transform racc = gameplay.GetRaccTransform(rListPos);
+				if (racc != null)
 				{
-					Vector3 pos = gameplay.raccsList[rListPos].transform.position;
+					Vector3 pos = racc.position;
 					writer.Write(pos.x);
 					writer.Write(pos.y);
 					writer.Write(pos.z);
 
-					Vector3 rot = gameplay.raccsList[rListPos].transform.rotation.eulerAngles;
+					Vector3 rot = racc.eulerAngles;
 					writer.Write(rot.x);
 					writer.Write(rot.y);
 					writer.Write(rot.z);

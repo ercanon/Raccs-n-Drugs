@@ -11,10 +11,11 @@ public class UIScript : MonoBehaviour
     private UIStates prevUIState;
     private bool isHost = false;
     [HideInInspector] public ConnectionScript connect;
+    [HideInInspector] public GameplayScript gameplay;
 
     [Header("Animations")]
     [SerializeField] private Animator uiTransition;
-    [SerializeField] private Animator cameraTransition;
+    private Animator cameraTransition;
 
     [Header("Information UI")]
     [SerializeField] private GameObject tutorialWindow;
@@ -48,6 +49,8 @@ public class UIScript : MonoBehaviour
 
         portInput.text = "";
         IPInput.text = "";
+
+        cameraTransition = GetComponent<Animator>();
     }
 
     void Awake()
@@ -55,6 +58,11 @@ public class UIScript : MonoBehaviour
         uiStates = UIStates.Profile;
 
         userName.text = "Player" + (int)Random.Range(1, 100);
+    }
+
+    public void StartGame()
+    {
+        gameplay.cocaineCanSpawn = true;
     }
 
 
