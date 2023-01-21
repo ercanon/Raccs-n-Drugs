@@ -12,7 +12,7 @@ public class ConnectionScript : MonoBehaviour
 	/*---------------------VARIABLES-------------------*/
 	enum Protocol { UDP, TCP }; private Protocol protocol;
 	enum Profile { host, client }; private Profile profile;
-	enum TypeData { start, posList, chat, cocainePositions, raccsTransform, raccsCharge, userReady, disconnection };
+	enum TypeData { start, posList, chat, cocainePositions, raccsTransform, raccsCharge, userReady, disconnection, gameConfig };
 	
 	private Socket socketHost;
 	private Socket socket;
@@ -117,7 +117,7 @@ public class ConnectionScript : MonoBehaviour
 	}
 
 	//Under Development
-	private string SearchServers()
+	private string SearchHosts()
 	{
 		foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
 			foreach (UnicastIPAddressInformation ip in ni.GetIPProperties().UnicastAddresses)
@@ -205,6 +205,8 @@ public class ConnectionScript : MonoBehaviour
 				writer.Write(gameplay.posRaccList);
 				writer.Write(uiScript.userName);
 				break;
+			case 8: //Game Configuration
+				break;
 			default:
 				return null;
 		}
@@ -275,6 +277,8 @@ public class ConnectionScript : MonoBehaviour
 					else if (gameplay.posRaccList > posRacc)
 						gameplay.posRaccList--;
 				}
+				break;
+			case 8: //Game Configuration
 				break;
 			default:
 				uiScript.customLog("Package is corrupted", "Error");

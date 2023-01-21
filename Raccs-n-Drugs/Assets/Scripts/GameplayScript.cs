@@ -89,16 +89,21 @@ public class GameplayScript : MonoBehaviour
     public void CheckEndGame()
     {
         int aliveRaccs = 0;
+        int pos = -1;
         foreach (RaccBehaviour raccScript in raccsList)
+        {
             if (raccScript.GetState() != 5)
-            {
                 aliveRaccs++;
-                if (aliveRaccs > 1)
-                    return;
-            }
+
+            if (aliveRaccs > 1)
+                return;
+
+            pos++;
+        }
 
         win.SetActive(true);
         ui.SetActive(true);
+        raccsList[pos].transform.SetPositionAndRotation(new Vector3(-0.11f, 0.021f, -0.24f), Quaternion.Euler(new Vector3(0, 180, 0)));
         mainCamera.SetInteger("UIState", 6);
     }
 
