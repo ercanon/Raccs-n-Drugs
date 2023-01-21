@@ -8,7 +8,11 @@ public class GameplayScript : MonoBehaviour
     /*---------------------VARIABLES-------------------*/
     [SerializeField] private GameObject racoon;
     [SerializeField] private GameObject cocaine;
+    [SerializeField] private Animator mainCamera;
+    [SerializeField] private GameObject ui;
+    [SerializeField] private GameObject win;
 
+    [Space]
     [SerializeField] private List<Color> racoonColors;
     [SerializeField] private List<Vector3> raccsPositions;
     [SerializeField] private List<Quaternion> raccsYRototation;
@@ -56,8 +60,8 @@ public class GameplayScript : MonoBehaviour
 
     public void LaunchGame(int size = 0)
     {
-        GameObject.Find("Main Camera").GetComponent<Animator>().SetInteger("UIState", 5);
-        GameObject.Find("UI").SetActive(false);
+        mainCamera.SetInteger("UIState", 5);
+        ui.SetActive(false);
 
         for (int i = 0; i < size; i++)
         {
@@ -84,11 +88,18 @@ public class GameplayScript : MonoBehaviour
 
     public void CheckEndGame()
     {
+        int aliveRaccs = 0;
         foreach (RaccBehaviour raccScript in raccsList)
-            if (raccScript.GetState() != 5) 
-                return;
+            if (raccScript.GetState() != 5)
+            {
+                aliveRaccs++;
+                if (aliveRaccs > 1)
+                    return;
+            }
 
-        DeleteRaccsList();
+        win.SetActive(true);
+        ui.SetActive(true);
+        mainCamera.SetInteger("UIState", 6);
     }
 
 
@@ -114,10 +125,11 @@ public class GameplayScript : MonoBehaviour
         raccsList[posRacoon].ChangeState(3);
     }
 
-    public void DeleteRaccsList()
+    public void DeleteRaccsList(RaccBehaviour exception = null)
     {
         foreach (RaccBehaviour raccScript in raccsList)
-            Destroy(raccScript.gameObject);
+            if (exception != raccScript)
+                Destroy(raccScript.gameObject);
 
         raccsList.Clear();
     }

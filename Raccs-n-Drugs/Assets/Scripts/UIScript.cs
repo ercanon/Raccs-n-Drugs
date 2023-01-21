@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UIScript : MonoBehaviour
 {
     /*---------------------VARIABLES-------------------*/
-    enum UIStates { Profile, ServerConfig, Lobby, Settings, GameSettings, GamePlay }; private UIStates uiStates;
+    enum UIStates { Profile, ServerConfig, Lobby, Settings, GameSettings, GamePlay, Win }; private UIStates uiStates;
 
     private UIStates prevUIState;
     private bool isHost = false;
@@ -163,4 +163,6 @@ public class UIScript : MonoBehaviour
     {
         Application.Quit();
     }
+
+    /*---------------------WIN-------------------*/
 }
