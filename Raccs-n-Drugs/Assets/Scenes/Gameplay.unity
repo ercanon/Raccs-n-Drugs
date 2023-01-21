@@ -516,7 +516,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh24182
+  m_Name: pb_Mesh53494
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1241,32 +1241,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 454868973}
   m_CullTransparentMesh: 1
---- !u!1 &466705970 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 177229643556919891, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
-  m_PrefabInstance: {fileID: 1783674181796009720}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &466705975 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
   m_PrefabInstance: {fileID: 1783674181796009720}
   m_PrefabAsset: {fileID: 0}
---- !u!111 &466705976
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 466705970}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: e344792f59cbb2a4cba2619678574b75, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: e344792f59cbb2a4cba2619678574b75, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &476703921
 GameObject:
   m_ObjectHideFlags: 0
@@ -5712,30 +5691,8 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 657704177452197801, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
---- !u!1 &1978933823 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 177229643556919891, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
-  m_PrefabInstance: {fileID: 1978933822}
-  m_PrefabAsset: {fileID: 0}
---- !u!111 &1978933824
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1978933823}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: e344792f59cbb2a4cba2619678574b75, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: e344792f59cbb2a4cba2619678574b75, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &2007113411
 GameObject:
   m_ObjectHideFlags: 0
@@ -6967,7 +6924,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.45
+      value: 0.42
       objectReference: {fileID: 0}
     - target: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7257,8 +7214,7 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 657704177452197801, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
 --- !u!224 &2639633228520093872
 RectTransform:

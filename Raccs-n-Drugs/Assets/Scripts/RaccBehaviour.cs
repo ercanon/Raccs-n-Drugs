@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RaccBehaviour : MonoBehaviour
 {
-    public enum RacoonState { onPause, idle, walking, buffed, charging, dead }; public RacoonState raccState;
+    enum RacoonState { idle, walking, buffed, charging, dead }; private RacoonState raccState;
     
     public float walkSpeed = 5;
     public float buffSpeed = 8;
@@ -74,7 +74,6 @@ public class RaccBehaviour : MonoBehaviour
                 break;
 
             case RacoonState.dead:
-            case RacoonState.onPause:
                 break;
         }
     }
@@ -83,28 +82,21 @@ public class RaccBehaviour : MonoBehaviour
     {
         switch (state)
         {
-            case 0: //On Pause
-                if (raccState == RacoonState.onPause)
-                    return;
-
-                raccState = RacoonState.onPause;
-                anim.Play("Idle");
-                break;
-            case 1: //Idle
+            case 0: //Idle
                 if (raccState == RacoonState.idle)
                     return;
                 
                 raccState = RacoonState.idle;
                 break;
             
-            case 2: // Walking
+            case 1: // Walking
                 if (raccState == RacoonState.walking)
                     return;
 
                 raccState = RacoonState.walking;
                 break;
             
-            case 3: //Buffed
+            case 2: //Buffed
                 if (raccState == RacoonState.buffed)
                     return;
 
@@ -117,7 +109,7 @@ public class RaccBehaviour : MonoBehaviour
                 raccState = RacoonState.buffed;
                 break;
 
-            case 4: //Charging
+            case 3: //Charging
                 if (raccState == RacoonState.charging)
                     return;
 
@@ -130,7 +122,7 @@ public class RaccBehaviour : MonoBehaviour
                 raccState = RacoonState.charging;
                 break;
 
-            case 5: //Dead
+            case 4: //Dead
                 if (raccState == RacoonState.dead)
                     return;
 

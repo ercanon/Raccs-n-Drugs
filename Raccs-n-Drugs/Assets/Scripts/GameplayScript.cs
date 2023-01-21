@@ -98,12 +98,12 @@ public class GameplayScript : MonoBehaviour
     {
         RaccBehaviour racc = raccsList[posRacoon];
 
-        if (racc.GetState() == 1 || racc.GetState() == 2)
+        if (racc.GetState() == 0 || racc.GetState() == 1)
         {
             if (racc.transform.position != position)
-                racc.ChangeState(2);
-            else
                 racc.ChangeState(1);
+            else
+                racc.ChangeState(0);
         }
 
         racc.transform.SetPositionAndRotation(position, Quaternion.Euler(rotation));
@@ -111,7 +111,7 @@ public class GameplayScript : MonoBehaviour
 
     public void ChargeRacoon(int posRacoon)
     {
-        raccsList[posRacoon].ChangeState(4);
+        raccsList[posRacoon].ChangeState(3);
     }
 
     public void DeleteRaccsList()
