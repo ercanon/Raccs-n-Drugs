@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyScript : MonoBehaviour
+public class UIScript : MonoBehaviour
 {
     /*---------------------VARIABLES-------------------*/
-    enum UIStates { Profile, ServerConfig, Lobby }; private UIStates uiStates = UIStates.Profile;
+    enum UIStates { Profile, ServerConfig, Lobby, Settings, GameSettings, NullState }; private UIStates uiStates = UIStates.Profile;
 
     private bool isHost = false;
     [HideInInspector] public ConnectionScript connect;
 
     [Header("Animations")]
-    [SerializeField] private Animator mainCamera;
-    [SerializeField] private Animator dumpsterAnim;
+    [SerializeField] private Animator uiTransition;
 
     [Header("Information UI")]
     [SerializeField] private GameObject tutorialWindow;
@@ -34,7 +33,7 @@ public class LobbyScript : MonoBehaviour
     private string log;
 
     [Space]
-    [SerializeField] private List<GameObject> UIList;
+    [SerializeField] private List<GameObject> uiList;
 
 
 
@@ -87,12 +86,12 @@ public class LobbyScript : MonoBehaviour
 
     public void UIIteration(int uiMenu)
     {
-        if (uiMenu < (int)uiStates);
-
-        UIList[(int)uiStates].SetActive(false);
+        uiList[(int)uiStates].SetActive(false);
 
         uiStates = (UIStates)uiMenu;
-        UIList[uiMenu].SetActive(true);
+        uiList[uiMenu].SetActive(true);
+
+        uiTransition.SetInteger("UIState", uiMenu);
     }
 
     public void Settings()

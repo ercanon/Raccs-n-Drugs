@@ -26,7 +26,7 @@ public class ConnectionScript : MonoBehaviour
 	private List<byte[]> pendingData;
 
 	[SerializeField] private GameplayScript gameplay;
-	[SerializeField] private LobbyScript uiScript;
+	[SerializeField] private UIScript uiScript;
 
 
 
@@ -250,7 +250,7 @@ public class ConnectionScript : MonoBehaviour
 				break;
 			case 6: //UserReady
 				clientsReady = reader.ReadInt32();
-				uiScript.customLog(clientsReady.ToString() + "/" + clients.Count.ToString() + "users are ready!", "Server");
+				uiScript.customLog(clientsReady.ToString() + "/" + clients.Count.ToString() + " users are ready!", "Server");
 				break;
 			default:
 				uiScript.customLog("Package is corrupted", "Error");
@@ -303,7 +303,7 @@ public class ConnectionScript : MonoBehaviour
 			socketHost.Listen(4);
 		}
 
-		uiScript.customLog(userName + "'s game available at " + TellIP() + ":" + portInput, "Server");
+		uiScript.customLog(userName + "'s game available at:\nIP " + TellIP() + "\nPort " + portInput + "\n", "Server");
 
 		ServerGather = new Thread(GatherAndBroadcast);
 		ServerGather.Start();
