@@ -6,13 +6,15 @@ using UnityEngine.UI;
 public class UIScript : MonoBehaviour
 {
     /*---------------------VARIABLES-------------------*/
-    enum UIStates { Profile, ServerConfig, Lobby, Settings, GameSettings, NullState }; private UIStates uiStates = UIStates.Profile;
+    enum UIStates { Profile, ServerConfig, Lobby, Settings, GameSettings }; private UIStates uiStates;
 
+    private UIStates prevUIState;
     private bool isHost = false;
     [HideInInspector] public ConnectionScript connect;
 
     [Header("Animations")]
     [SerializeField] private Animator uiTransition;
+    [SerializeField] private Animator cameraTransition;
 
     [Header("Information UI")]
     [SerializeField] private GameObject tutorialWindow;
@@ -49,6 +51,8 @@ public class UIScript : MonoBehaviour
 
     void Awake()
     {
+        uiStates = UIStates.Profile;
+
         userName.text = "Player" + (int)Random.Range(1, 100);
     }
 
@@ -86,17 +90,19 @@ public class UIScript : MonoBehaviour
 
     public void UIIteration(int uiMenu)
     {
+        prevUIState = uiStates;
         uiList[(int)uiStates].SetActive(false);
 
         uiStates = (UIStates)uiMenu;
         uiList[uiMenu].SetActive(true);
 
         uiTransition.SetInteger("UIState", uiMenu);
+        cameraTransition.SetInteger("UIState", uiMenu);
     }
 
-    public void Settings()
+    public void GoToPrevious()
     {
-
+        UIIteration((int)prevUIState);
     }
 
     public void GoToConfig(bool option)
@@ -143,11 +149,6 @@ public class UIScript : MonoBehaviour
 
         UIIteration((int)UIStates.Lobby);
     }
-
-    public void GameSettings()
-    {
-
-    }  
 
     public void Exit()
     {
