@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UIScript : MonoBehaviour
 {
     /*---------------------VARIABLES-------------------*/
-    enum UIStates { Profile, ServerConfig, Lobby, Settings, GameSettings }; private UIStates uiStates;
+    enum UIStates { Profile, ServerConfig, Lobby, Settings, GameSettings, GamePlay }; private UIStates uiStates;
 
     private UIStates prevUIState;
     private bool isHost = false;
@@ -149,7 +149,7 @@ public class UIScript : MonoBehaviour
 
         UIIteration((int)UIStates.Lobby);
     }
-
+    
     public void Exit()
     {
         Application.Quit();

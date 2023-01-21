@@ -3451,8 +3451,8 @@ GameObject:
   - component: {fileID: 1390412328}
   - component: {fileID: 1390412327}
   - component: {fileID: 1390412326}
-  - component: {fileID: 1390412330}
   - component: {fileID: 1390412331}
+  - component: {fileID: 1390412332}
   m_Layer: 5
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3526,19 +3526,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 15, y: -90, z: 0}
---- !u!114 &1390412330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1390412325}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fb12a4045573c44ca3db792c6a656eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameplayScript: {fileID: 1834612039}
 --- !u!95 &1390412331
 Animator:
   serializedVersion: 4
@@ -3559,6 +3546,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1390412332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1390412325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fb12a4045573c44ca3db792c6a656eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameplayScript: {fileID: 1834612039}
 --- !u!1 &1425126596
 GameObject:
   m_ObjectHideFlags: 0
@@ -6967,7 +6967,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.40506124
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6975,7 +6975,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.7430005
+      value: 7.7
       objectReference: {fileID: 0}
     - target: {fileID: 666099294089068777, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_LocalRotation.w

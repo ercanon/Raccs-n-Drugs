@@ -56,6 +56,7 @@ public class GameplayScript : MonoBehaviour
 
     public void LaunchGame(int size = 0)
     {
+        GameObject.Find("Main Camera").GetComponent<Animator>().SetInteger("UIState", 5);
         GameObject.Find("UI").SetActive(false);
 
         for (int i = 0; i < size; i++)
