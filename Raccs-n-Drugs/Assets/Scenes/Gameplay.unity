@@ -6871,6 +6871,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dumpsters
       objectReference: {fileID: 0}
+    - target: {fileID: 863221193129719364, guid: d11a0b85b6c857a4c950c852b4f228b7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5294156692968556281, guid: d11a0b85b6c857a4c950c852b4f228b7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
@@ -7645,7 +7649,8 @@ MonoBehaviour:
   portInput: {fileID: 6762012699511812657}
   actionButton: {fileID: 1729811183}
   gameSettings: {fileID: 454868973}
-  startButton: {fileID: 6762012699086447779}
+  startButton: {fileID: 6762012699612017686}
+  startButtonText: {fileID: 6762012699086447779}
   userName: {fileID: 6762012699642540896}
   ChatBox: {fileID: 6762012699488487394}
   enterMessage: {fileID: 6762012700230804567}

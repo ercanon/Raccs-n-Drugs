@@ -12,7 +12,7 @@ public class ConnectionScript : MonoBehaviour
 	/*---------------------VARIABLES-------------------*/
 	enum Protocol { UDP, TCP }; private Protocol protocol;
 	enum Profile { host, client }; private Profile profile;
-	enum TypeData { start, posList, chat, cocainePositions, raccsTransform, raccsCharge, userReady };
+	enum TypeData { start, posList, chat, cocainePositions, raccsTransform, raccsCharge, userReady, disconnection };
 	
 	private Socket socketHost;
 	private Socket socket;
@@ -198,6 +198,10 @@ public class ConnectionScript : MonoBehaviour
 			case 6: //UserReady
 				writer.Write(clientsReady++);
 				break;
+			case 7: //Disconnection
+				writer.Write(gameplay.posRaccList);
+				writer.Write(uiScript.userName);
+				break;
 			default:
 				return null;
 		}
@@ -251,6 +255,23 @@ public class ConnectionScript : MonoBehaviour
 			case 6: //UserReady
 				clientsReady = reader.ReadInt32();
 				uiScript.customLog(clientsReady.ToString() + "/" + clients.Count.ToString() + " users are ready!", "Server");
+				break;
+			case 7: //Disconnection
+				int posRacc = reader.ReadInt32();
+				if (posRacc == 0)
+				{
+					uiScript.customLog("Host has disconnected!", "Server");
+					uiScript.startButton.interactable = false;
+				}
+				else
+				{
+					uiScript.customLog(reader.ReadString() + "has disconnected!", "Server");
+
+					if (profile == Profile.host)
+						clients.RemoveAt(posRacc);
+					else if (gameplay.posRaccList > posRacc)
+						gameplay.posRaccList--;
+				}
 				break;
 			default:
 				uiScript.customLog("Package is corrupted", "Error");
@@ -428,6 +449,7 @@ public class ConnectionScript : MonoBehaviour
 
 	public void Disconnect()
 	{
+		SendData(Serialize((int)TypeData.disconnection), socket, remote);
 		Reset((int)protocol, (int)profile);
 	}
 

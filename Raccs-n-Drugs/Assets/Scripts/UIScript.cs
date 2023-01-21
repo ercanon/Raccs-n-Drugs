@@ -26,10 +26,11 @@ public class UIScript : MonoBehaviour
 
     [Header("Lobby UI")]
     [SerializeField] private GameObject gameSettings;
-    [SerializeField] private Text startButton;
+    public Button startButton;
+    [SerializeField] private Text startButtonText;
 
     [Header("Chat")]
-    [SerializeField] private InputField userName;
+    public InputField userName;
     [SerializeField] private Text ChatBox;
     [SerializeField] private InputField enterMessage;
     private string log;
@@ -129,7 +130,7 @@ public class UIScript : MonoBehaviour
         if (isHost)
         {
             gameSettings.SetActive(true);
-            startButton.text = "Start Game";
+            startButtonText.text = "Start Game";
 
             connect.CreateGame(portInput.text, userName.text);
         }
@@ -142,7 +143,7 @@ public class UIScript : MonoBehaviour
             }
 
             gameSettings.SetActive(false);
-            startButton.text = "Ready";
+            startButtonText.text = "Ready";
 
             connect.JoinGame(IPInput.text, portInput.text, userName.text);
         }
