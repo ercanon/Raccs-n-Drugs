@@ -96,7 +96,7 @@ public class GameplayScript : MonoBehaviour
         }
 
         win.SetActive(true);
-        raccsList[pos].IdleEndGame();
+        raccsList[pos].Invoke("IdleEndGame", 5);
         mainCamera.SetInteger("UIState", 6);
     }
 

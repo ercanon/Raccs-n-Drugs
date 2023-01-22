@@ -57,7 +57,6 @@ MonoBehaviour:
   maxCharges: 3
   owned: 0
   colors: []
-  crown: {fileID: 2722146178761781255, guid: a0995e4bec4738f4aae1363c502eece2, type: 3}
   gameplay: {fileID: 0}
 --- !u!95 &657704177452197801
 Animator:
@@ -6320,7 +6319,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6875914575851788287
 Transform:
   m_ObjectHideFlags: 0

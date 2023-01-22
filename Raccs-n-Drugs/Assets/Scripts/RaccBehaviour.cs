@@ -17,7 +17,6 @@ public class RaccBehaviour : MonoBehaviour
     [HideInInspector] public Color[] colors;
     private int colorIndex = 0;
 
-    [SerializeField] private GameObject crown;
     [HideInInspector] public GameplayScript gameplay;
     private Rigidbody rBody;
     private Animator anim;
