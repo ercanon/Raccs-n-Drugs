@@ -4,11 +4,6 @@ using UnityEngine;
 public class RaccBehaviour : MonoBehaviour
 {
     enum RacoonState { idle, walking, buffed, charging, dead }; private RacoonState raccState;
-    
-    public float walkSpeed = 5f;
-    public float buffSpeed = 8f;
-    public float rotateSpeed = 1.5f;
-    public int maxCharges = 3;
 
     private int charges;
     private float timerCharge = 1f;
@@ -23,14 +18,14 @@ public class RaccBehaviour : MonoBehaviour
     private GameObject buffed;
     private Material mat;
 
-    void Awake()
+    private void Start()
     {
         rBody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
 
-        charges = maxCharges;
+        charges = gameplay.settings.maxCharges;
         buffed = transform.GetChild(0).gameObject;
-        mat = transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material;
+        mat = transform.GetChild(2).GetComponent<SkinnedMeshRenderer>().material;
     }
 
     void Update()
@@ -42,7 +37,7 @@ public class RaccBehaviour : MonoBehaviour
                 if (owned)
                 {
                     // Get targetVelocity from input.
-                    Vector2 targetVelocity = new Vector2(Input.GetAxis("Horizontal") * walkSpeed, Input.GetAxis("Vertical") * walkSpeed);
+                    Vector2 targetVelocity = new Vector2(Input.GetAxis("Horizontal") * gameplay.settings.walkSpeed, Input.GetAxis("Vertical") * gameplay.settings.walkSpeed);
 
                     // Apply movement.
                     rBody.velocity = new Vector3(targetVelocity.x, 0, targetVelocity.y);
@@ -61,7 +56,7 @@ public class RaccBehaviour : MonoBehaviour
             case RacoonState.buffed:
                 if (owned)
                 {
-                    transform.Rotate(0f, Input.GetAxis("Horizontal") * rotateSpeed, 0f);
+                    transform.Rotate(0f, Input.GetAxis("Horizontal") * gameplay.settings.rotateSpeed, 0f);
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
                         gameplay.SendData(5);
@@ -110,7 +105,7 @@ public class RaccBehaviour : MonoBehaviour
                 buffed.SetActive(true);
                 timerCharge = 1f;
                 if (charges <= 0)
-                    charges = maxCharges;
+                    charges = gameplay.settings.maxCharges;
 
                 raccState = RacoonState.buffed;
                 break;
@@ -119,7 +114,7 @@ public class RaccBehaviour : MonoBehaviour
                 if (raccState == RacoonState.charging)
                     return;
 
-                rBody.velocity = transform.forward * buffSpeed;
+                rBody.velocity = transform.forward * gameplay.settings.buffSpeed;
                 charges--;
 
                 mat.SetColor("_EmissionColor", colors[0]);
@@ -165,7 +160,7 @@ public class RaccBehaviour : MonoBehaviour
             rBody.velocity = Vector3.zero;
             ChangeState((int)RacoonState.idle);
             buffed.SetActive(false);
-            gameplay.Invoke("SpawnCocaine", gameplay.timerCocaineSpawn);
+            gameplay.Invoke("SpawnCocaine", gameplay.settings.timerCocaineSpawn);
         }
         else
             ChangeState((int)RacoonState.buffed);

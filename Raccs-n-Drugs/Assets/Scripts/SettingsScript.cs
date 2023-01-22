@@ -46,7 +46,7 @@ public class SettingsScript : MonoBehaviour
         public float   rotateSpeed;
         public int     maxCharges;
     }
-    public GameSettings gameSettings = new GameSettings(4, 6, 2f, 2f, 5f, 8f, 1.5f, 3);
+    public GameSettings gameSettings;
 
     /*---------------------SETTINGS-------------------*/
     public struct Settings
@@ -62,11 +62,11 @@ public class SettingsScript : MonoBehaviour
         fields = adjust.GetComponentsInChildren<InputField>();
         connection = GetComponent<ConnectionScript>();
         connection.settings = this;
-        gameplay.settings = this;
 
         lvlMapText.text = mapName[(int)map];
         gameTypeText.text = gameTypeName[(int)gameType];
 
+        gameSettings = new GameSettings(4, 6, 2f, 2f, 5f, 8f, 1.5f, 3);
         interactableOnce = false;
         foreach (InputField input in fields)
             input.interactable = false;
@@ -78,6 +78,8 @@ public class SettingsScript : MonoBehaviour
         fields[5].text = 8f.ToString();
         fields[6].text = 1.5f.ToString();
         fields[7].text = 3.ToString();
+
+        gameplay.settings = gameSettings;
     }
 
     /*---------------------GAME SETTINGS-------------------*/
@@ -107,6 +109,7 @@ public class SettingsScript : MonoBehaviour
                 break;
         }
 
+        gameplay.settings = gameSettings;
         connection.SendClientData(8);
     }
 
@@ -171,20 +174,29 @@ public class SettingsScript : MonoBehaviour
             case TypeGame.casual:
                 fields[0].text = 4.ToString();
                 fields[1].text = 6.ToString();
+                fields[2].text = 2f.ToString();
                 fields[3].text = 2f.ToString();
                 fields[5].text = 8f.ToString();
+                fields[6].text = 1.5f.ToString();
+                fields[7].text = 3.ToString();
                 break;
             case TypeGame.flash:
                 fields[0].text = 4.ToString();
                 fields[1].text = 6.ToString();
+                fields[2].text = 2f.ToString();
                 fields[3].text = 0f.ToString();
                 fields[5].text = 10f.ToString();
+                fields[6].text = 1.5f.ToString();
+                fields[7].text = 3.ToString();
                 break;
             case TypeGame.chaos:
                 fields[0].text = "-" + 1.ToString();
                 fields[1].text = "-" + 1.ToString();
+                fields[2].text = 2f.ToString();
                 fields[3].text = 2f.ToString();
                 fields[5].text = 8f.ToString();
+                fields[6].text = 1.5f.ToString();
+                fields[7].text = 3.ToString();
                 break;
         }
     }

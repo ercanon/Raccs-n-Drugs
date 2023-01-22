@@ -171,6 +171,7 @@ MonoBehaviour:
   clientsReady: 0
   gameplay: {fileID: 1834612039}
   uiScript: {fileID: 1390412332}
+  settings: {fileID: 0}
 --- !u!114 &15063646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11069,10 +11070,6 @@ MonoBehaviour:
   posRaccList: 0
   cocaineList: []
   connect: {fileID: 0}
-  settings: {fileID: 0}
-  maxCocaineBags: 6
-  offsetCocaineSpawn: 2
-  timerCocaineSpawn: 2
 --- !u!1 &1866124108
 GameObject:
   m_ObjectHideFlags: 0
@@ -11621,6 +11618,30 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1390412332}
+        m_TargetAssemblyTypeName: UIScript, Assembly-CSharp
+        m_MethodName: UIIteration
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1079189834}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Idle
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1899154630

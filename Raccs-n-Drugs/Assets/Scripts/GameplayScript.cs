@@ -22,13 +22,7 @@ public class GameplayScript : MonoBehaviour
     [HideInInspector] public List<CocaineBehaviour> cocaineList;
 
     [HideInInspector] public ConnectionScript connect;
-    [HideInInspector] public SettingsScript settings;
-
-    [Space]
-    [Header("Game Config")]
-    public int maxCocaineBags = 6;
-    public float offsetCocaineSpawn = 2f;
-    public float timerCocaineSpawn = 2f;
+    [HideInInspector] public SettingsScript.GameSettings settings;
 
 
     /*---------------------MAIN-------------------*/
@@ -56,9 +50,12 @@ public class GameplayScript : MonoBehaviour
         mainCamera.SetInteger("UIState", 5);
         ui.SetActive(false);
 
+        if (settings.maxCocaineBags < 0)
+            settings.maxCocaineBags = size;
+
         for (int i = 0; i < size; i++)
         {
-            if (i > 4)
+            if (settings.maxPlayers > 0 && i > settings.maxPlayers)
                 break;
 
             GameObject racc = Instantiate(racoon, raccsPositions[i], raccsYRototation[i]);
@@ -96,7 +93,7 @@ public class GameplayScript : MonoBehaviour
         }
 
         win.SetActive(true);
-        raccsList[pos].Invoke("IdleEndGame", 5);
+        raccsList[pos].Invoke("IdleEndGame", 2);
         mainCamera.SetInteger("UIState", 6);
     }
 
@@ -152,13 +149,13 @@ public class GameplayScript : MonoBehaviour
     {
         if (posRaccList == 0)
         {
-            for (int i = 0; i < maxCocaineBags; i++)
+            for (int i = 0; i < settings.maxCocaineBags; i++)
             {
                 Vector3 bounds = GetComponent<Renderer>().bounds.size;
                 Vector3 randPosition = new Vector3(
-                    (transform.position.x - bounds.x / 2) + Random.Range(offsetCocaineSpawn, bounds.x - offsetCocaineSpawn),
+                    (transform.position.x - bounds.x / 2) + Random.Range(settings.offsetCocaineSpawn, bounds.x - settings.offsetCocaineSpawn),
                     cocaine.transform.position.y,
-                    (transform.position.z - bounds.z / 2) + Random.Range(offsetCocaineSpawn, bounds.z - offsetCocaineSpawn));
+                    (transform.position.z - bounds.z / 2) + Random.Range(settings.offsetCocaineSpawn, bounds.z - settings.offsetCocaineSpawn));
 
                 GameObject obj = Instantiate(cocaine, randPosition, cocaine.transform.rotation);
                 CocaineBehaviour cocaScript = obj.GetComponent<CocaineBehaviour>();
