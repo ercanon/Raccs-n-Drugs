@@ -63,7 +63,10 @@ public class RaccBehaviour : MonoBehaviour
                 {
                     transform.Rotate(0f, Input.GetAxis("Horizontal") * rotateSpeed, 0f);
                     if (Input.GetKeyDown(KeyCode.Space))
+                    {
+                        gameplay.SendData(5);
                         ChangeState((int)RacoonState.charging);
+                    }
                 }
 
                 ChangingColors();
@@ -116,7 +119,6 @@ public class RaccBehaviour : MonoBehaviour
                 if (raccState == RacoonState.charging)
                     return;
 
-                gameplay.SendData(5);
                 rBody.velocity = transform.forward * buffSpeed;
                 charges--;
 
@@ -129,9 +131,9 @@ public class RaccBehaviour : MonoBehaviour
                 if (raccState == RacoonState.dead)
                     return;
 
-                gameplay.CheckEndGame();
-
                 raccState = RacoonState.dead;
+
+                gameplay.CheckEndGame();
                 break;
 
             default:
@@ -144,6 +146,15 @@ public class RaccBehaviour : MonoBehaviour
     public int GetState()
     {
         return (int)raccState;
+    }
+
+    public void IdleEndGame()
+    {
+        mat.SetColor("_EmissionColor", colors[0]);
+        rBody.velocity = Vector3.zero;
+        buffed.SetActive(false);
+        ChangeState((int)RacoonState.idle);
+        transform.SetPositionAndRotation(new Vector3(-0.11f, 0.021f, -0.24f), Quaternion.Euler(new Vector3(0, 180, 0)));
     }
 
     private void ChargedTransitions()

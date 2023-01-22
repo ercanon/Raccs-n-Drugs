@@ -22,7 +22,7 @@ public class ConnectionScript : MonoBehaviour
 
 	private EndPoint remote;
 	private List<EndPoint> clients;
-	private int clientsReady;
+	[HideInInspector] public int clientsReady;
 	private List<byte[]> pendingData;
 
 	[SerializeField] private GameplayScript gameplay;
@@ -224,6 +224,7 @@ public class ConnectionScript : MonoBehaviour
 		switch (type)
 		{
 			case 0: //LaunchGame
+				uiScript.startButton.isOn = false;
 				gameplay.LaunchGame(reader.ReadInt32());
 				break;
 			case 1: //Position List Racoon
@@ -264,10 +265,7 @@ public class ConnectionScript : MonoBehaviour
 			case 7: //Disconnection
 				int posRacc = reader.ReadInt32();
 				if (posRacc == 0)
-				{
 					uiScript.customLog("Host has disconnected!", "Server");
-					uiScript.startButton.interactable = false;
-				}
 				else
 				{
 					uiScript.customLog(reader.ReadString() + "has disconnected!", "Server");
@@ -444,10 +442,18 @@ public class ConnectionScript : MonoBehaviour
 		while (true)
 		{
 			byte[] data = new byte[1024];
-			if (protocol == Protocol.TCP)
-				socket.Receive(data);
-			else if (protocol == Protocol.UDP)
-				socket.ReceiveFrom(data, ref remote);
+			try
+			{
+				if (protocol == Protocol.TCP)
+					socket.Receive(data);
+				else if (protocol == Protocol.UDP)
+					socket.ReceiveFrom(data, ref remote);
+			}
+			catch (SocketException e)
+			{
+				uiScript.customLog(e.Message, "Error");
+				return;
+			}
 
 			if (data != null)
 				pendingData.Add(data);
@@ -466,7 +472,6 @@ public class ConnectionScript : MonoBehaviour
     {
 		if (profile == Profile.host)
 		{
-			check = false;
 			if (clients.Count == clientsReady + 1)
 			{
 				SendClientData((int)TypeData.start);
@@ -481,6 +486,7 @@ public class ConnectionScript : MonoBehaviour
 				clientsReady++;
 			else
 				clientsReady--;
+
 			SendClientData((int)TypeData.userReady);
 		}
 	}

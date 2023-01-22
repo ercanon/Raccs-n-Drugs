@@ -41,12 +41,13 @@ public class GameplayScript : MonoBehaviour
         if (raccsList != null)
             DeleteRaccsList();
         raccsList = new List<RaccBehaviour>();
-        posRaccList = -1;
+
+        connect.clientsReady = 0;
     }
 
     private void FixedUpdate()
     {
-        if (raccsList.Count > 0)
+        if (!ui.activeInHierarchy && !win.activeInHierarchy)
             connect.SendClientData(4);
     }
 
@@ -81,21 +82,21 @@ public class GameplayScript : MonoBehaviour
     public void CheckEndGame()
     {
         int aliveRaccs = 0;
-        int pos = -1;
-        foreach (RaccBehaviour raccScript in raccsList)
+        int pos = 0;
+        for (int i = 0; i < raccsList.Count; i++)
         {
-            if (raccScript.GetState() != 5)
+            if (raccsList[i].GetState() != 4)
+            {
                 aliveRaccs++;
+                pos = i;
+            }
 
             if (aliveRaccs > 1)
                 return;
-
-            pos++;
         }
 
         win.SetActive(true);
-        ui.SetActive(true);
-        raccsList[pos].transform.SetPositionAndRotation(new Vector3(-0.11f, 0.021f, -0.24f), Quaternion.Euler(new Vector3(0, 180, 0)));
+        raccsList[pos].IdleEndGame();
         mainCamera.SetInteger("UIState", 6);
     }
 
