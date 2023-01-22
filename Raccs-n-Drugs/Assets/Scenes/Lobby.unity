@@ -3401,7 +3401,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh45494
+  m_Name: pb_Mesh68538
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4540,6 +4540,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 4734576572947937330, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4783321336451978275, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -4682,6 +4686,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
+--- !u!114 &1783674181796009721 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8078405772182938504, guid: 745cfeec0d637c24a92237f6274f298b, type: 3}
+  m_PrefabInstance: {fileID: 1783674181796009720}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7edb67216f157a640b02f9d4cc96f86d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2639633228520093872
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6489,6 +6504,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1783674181796009721}
+        m_TargetAssemblyTypeName: CambiarTexto, Assembly-CSharp
+        m_MethodName: TextChange
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &6762012699466535227
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8151,6 +8178,18 @@ MonoBehaviour:
       - m_Target: {fileID: 15063645}
         m_TargetAssemblyTypeName: Connection, Assembly-CSharp
         m_MethodName: JoinGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1783674181796009721}
+        m_TargetAssemblyTypeName: CambiarTexto, Assembly-CSharp
+        m_MethodName: TextChange
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
