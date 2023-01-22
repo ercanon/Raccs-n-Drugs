@@ -25,6 +25,9 @@ public class Connection : MonoBehaviour
 	private List<byte[]> pendingData;
 	private string log;
 
+	public GameObject menuSong;
+	public GameObject gameplaySong;
+
 	[SerializeField] private GameplayScript gameplay;
 
 	[Space]
@@ -504,6 +507,8 @@ public class Connection : MonoBehaviour
     {
 		SendClientData((int)TypeData.start);
 		gameplay.LaunchGame(clients.Count);
+		menuSong.SetActive(false);
+		gameplaySong.SetActive(true);
 	}
 
 	public void OpenInfo()
