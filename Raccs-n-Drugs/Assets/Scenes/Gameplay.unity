@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ec63eff66941b439c9f9c1b527a7f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clientsReady: 0
   gameplay: {fileID: 1834612039}
   uiScript: {fileID: 1390412332}
 --- !u!1 &102885009
@@ -811,7 +812,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh25398
+  m_Name: pb_Mesh24268
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1308,7 +1309,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1834612039}
         m_TargetAssemblyTypeName: GameplayScript, Assembly-CSharp
-        m_MethodName: CleanLists
+        m_MethodName: Reset
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5177,7 +5178,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1421931563
 Transform:
   m_ObjectHideFlags: 0
@@ -5186,7 +5187,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1421931562}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.942961, y: 0.14696091, z: 8.04095}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -28,6 +28,8 @@ public class UIScript : MonoBehaviour
     [Header("Lobby UI")]
     [SerializeField] private GameObject gameSettings;
     public Toggle startButton;
+    private Text startButtonText;
+    private GameObject startButtonObject;
 
     [Header("Chat")]
     public InputField userName;
@@ -50,8 +52,9 @@ public class UIScript : MonoBehaviour
     void Awake()
     {
         uiStates = UIStates.Profile;
-
         cameraTransition = GetComponent<Animator>();
+        startButtonText = startButton.transform.GetChild(1).GetComponent<Text>();
+        startButtonObject = startButton.transform.GetChild(0).gameObject;
         userName.text = "Player" + (int)Random.Range(1, 100);
     }
 
@@ -133,8 +136,8 @@ public class UIScript : MonoBehaviour
         if (isHost)
         {
             gameSettings.SetActive(true);
-            startButton.transform.GetChild(1).GetComponent<Text>().text = "Start Game";
-            startButton.transform.GetChild(0).gameObject.SetActive(false);
+            startButtonText.text = "Start Game";
+            startButtonObject.SetActive(false);
 
             connect.CreateGame(portInput.text, userName.text);
         }
@@ -149,7 +152,7 @@ public class UIScript : MonoBehaviour
                     return;
 
             gameSettings.SetActive(false);
-            startButton.transform.GetChild(1).GetComponent<Text>().text = "Ready";
+            startButtonText.text = "Ready";
 
             connect.JoinGame(IPInput.text, portInput.text, userName.text);
         }

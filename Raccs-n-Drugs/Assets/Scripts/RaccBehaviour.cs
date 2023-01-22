@@ -17,6 +17,7 @@ public class RaccBehaviour : MonoBehaviour
     [HideInInspector] public Color[] colors;
     private int colorIndex = 0;
 
+    [SerializeField] private GameObject crown;
     [HideInInspector] public GameplayScript gameplay;
     private Rigidbody rBody;
     private Animator anim;
@@ -152,6 +153,7 @@ public class RaccBehaviour : MonoBehaviour
     {
         mat.SetColor("_EmissionColor", colors[0]);
         rBody.velocity = Vector3.zero;
+        transform.GetChild(1).gameObject.SetActive(true);
         buffed.SetActive(false);
         ChangeState((int)RacoonState.idle);
         transform.SetPositionAndRotation(new Vector3(-0.11f, 0.021f, -0.24f), Quaternion.Euler(new Vector3(0, 180, 0)));
