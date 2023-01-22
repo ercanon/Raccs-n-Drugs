@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 public class GameplayScript : MonoBehaviour
 {
     /*---------------------VARIABLES-------------------*/
-    enum GameMode { normal, fast, chaos, personalized }; private GameMode gameMode;
-
     [SerializeField] private GameObject racoon;
     [SerializeField] private GameObject cocaine;
     [SerializeField] private Animator mainCamera;
@@ -22,7 +20,9 @@ public class GameplayScript : MonoBehaviour
     private List<RaccBehaviour> raccsList;
     [HideInInspector] public int posRaccList;
     [HideInInspector] public List<CocaineBehaviour> cocaineList;
+
     [HideInInspector] public ConnectionScript connect;
+    [HideInInspector] public SettingsScript settings;
 
     [Space]
     [Header("Game Config")]
@@ -66,7 +66,7 @@ public class GameplayScript : MonoBehaviour
             RaccBehaviour raccScript = racc.GetComponent<RaccBehaviour>();
             raccScript.gameplay = this;
 
-            SkinnedMeshRenderer render = racc.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>();
+            SkinnedMeshRenderer render = racc.transform.GetChild(2).GetComponent<SkinnedMeshRenderer>();
             Color[] list = { racoonColors[i], render.material.GetColor("_EmissionColor") };
             raccScript.colors = list;
 

@@ -27,6 +27,7 @@ public class ConnectionScript : MonoBehaviour
 
 	[SerializeField] private GameplayScript gameplay;
 	[SerializeField] private UIScript uiScript;
+	[HideInInspector] public SettingsScript settings;
 
 
 
@@ -206,6 +207,20 @@ public class ConnectionScript : MonoBehaviour
 				writer.Write(uiScript.userName);
 				break;
 			case 8: //Game Configuration
+				int gType = settings.GameType();
+				writer.Write(gType);
+				if (gType == 3)
+				{
+					SettingsScript.GameSettings copy = settings.gameSettings;
+					writer.Write(copy.maxPlayers);
+					writer.Write(copy.maxCocaineBags);
+					writer.Write(copy.offsetCocaineSpawn);
+					writer.Write(copy.timerCocaineSpawn);
+					writer.Write(copy.walkSpeed);
+					writer.Write(copy.buffSpeed);
+					writer.Write(copy.rotateSpeed);
+					writer.Write(copy.maxCharges);
+				}
 				break;
 			default:
 				return null;
@@ -277,6 +292,32 @@ public class ConnectionScript : MonoBehaviour
 				}
 				break;
 			case 8: //Game Configuration
+				int gType = reader.ReadInt32();
+				settings.GameType(gType);
+
+				switch (gType)
+				{
+					case 0: //casual
+						settings.gameSettings = new SettingsScript.GameSettings(4, 6, 2f, 2f, 5f, 8f, 1.5f, 3);
+						break;
+					case 1: //flash
+						settings.gameSettings = new SettingsScript.GameSettings(4, 6, 2f, 0f, 5f, 10f, 1.5f, 3);
+						break;
+					case 2: //chaos
+						settings.gameSettings = new SettingsScript.GameSettings(-1, -1, 2f, 2f, 5f, 8f, 1.5f, 3);
+						break;
+					case 3: //personalized
+						settings.gameSettings = new SettingsScript.GameSettings(
+							reader.ReadInt32(),
+							reader.ReadInt32(),
+							reader.ReadSingle(),
+							reader.ReadSingle(),
+							reader.ReadSingle(),
+							reader.ReadSingle(),
+							reader.ReadSingle(),
+							reader.ReadInt32());
+						break;
+				}
 				break;
 			default:
 				uiScript.customLog("Package is corrupted", "Error");

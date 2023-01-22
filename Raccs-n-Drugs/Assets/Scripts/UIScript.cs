@@ -164,6 +164,4 @@ public class UIScript : MonoBehaviour
     {
         Application.Quit();
     }
-
-    /*---------------------WIN-------------------*/
 }
