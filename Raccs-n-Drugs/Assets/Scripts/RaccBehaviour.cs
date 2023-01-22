@@ -5,17 +5,19 @@ public class RaccBehaviour : MonoBehaviour
 {
     enum RacoonState { idle, walking, buffed, charging, dead }; private RacoonState raccState;
     
-    public float walkSpeed = 5;
-    public float buffSpeed = 8;
+    public float walkSpeed = 5f;
+    public float buffSpeed = 8f;
     public float rotateSpeed = 1.5f;
-    public int charges = 3;
+    public int maxCharges = 3;
+
+    private int charges;
     private float timerCharge = 1f;
 
     [HideInInspector] public bool owned = false;
     [HideInInspector] public Color[] colors;
     private int colorIndex = 0;
 
-    [HideInInspector] public GameplayScript gameplayScript;
+    [HideInInspector] public GameplayScript gameplay;
     private Rigidbody rBody;
     private Animator anim;
     private GameObject buffed;
@@ -26,6 +28,7 @@ public class RaccBehaviour : MonoBehaviour
         rBody = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
 
+        charges = maxCharges;
         buffed = transform.GetChild(0).gameObject;
         mat = transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material;
     }
@@ -104,7 +107,7 @@ public class RaccBehaviour : MonoBehaviour
                 buffed.SetActive(true);
                 timerCharge = 1f;
                 if (charges <= 0)
-                    charges = 3;
+                    charges = maxCharges;
 
                 raccState = RacoonState.buffed;
                 break;
@@ -113,7 +116,7 @@ public class RaccBehaviour : MonoBehaviour
                 if (raccState == RacoonState.charging)
                     return;
 
-                gameplayScript.connect.SendClientData(5);
+                gameplay.SendData(5);
                 rBody.velocity = transform.forward * buffSpeed;
                 charges--;
 
@@ -126,7 +129,7 @@ public class RaccBehaviour : MonoBehaviour
                 if (raccState == RacoonState.dead)
                     return;
 
-                gameplayScript.CheckEndGame();
+                gameplay.CheckEndGame();
 
                 raccState = RacoonState.dead;
                 break;
@@ -150,7 +153,7 @@ public class RaccBehaviour : MonoBehaviour
             rBody.velocity = Vector3.zero;
             ChangeState((int)RacoonState.idle);
             buffed.SetActive(false);
-            gameplayScript.cocaineCanSpawn = true;
+            gameplay.Invoke("SpawnCocaine", gameplay.timerCocaineSpawn);
         }
         else
             ChangeState((int)RacoonState.buffed);

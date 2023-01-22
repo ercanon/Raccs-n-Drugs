@@ -27,7 +27,7 @@ public class UIScript : MonoBehaviour
 
     [Header("Lobby UI")]
     [SerializeField] private GameObject gameSettings;
-    public Button startButton;
+    public Toggle startButton;
     [SerializeField] private Text startButtonText;
 
     [Header("Chat")]
@@ -47,9 +47,6 @@ public class UIScript : MonoBehaviour
         log = null;
         ChatBox.text = null;
 
-        portInput.text = "";
-        IPInput.text = "";
-
         cameraTransition = GetComponent<Animator>();
     }
 
@@ -62,7 +59,7 @@ public class UIScript : MonoBehaviour
 
     public void StartGame()
     {
-        gameplay.cocaineCanSpawn = true;
+        gameplay.Invoke("SpawnCocaine", 0);
     }
 
 
@@ -146,7 +143,7 @@ public class UIScript : MonoBehaviour
         {
             if (IPInput.text == "")
             {
-                IPInput.text = "Use IP to join!";
+                IPInput.transform.GetChild(0).GetComponent<Text>().text = "Use IP to join!";
                 return;
             }
 

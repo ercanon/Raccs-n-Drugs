@@ -199,7 +199,7 @@ public class ConnectionScript : MonoBehaviour
 				writer.Write(gameplay.posRaccList);
 				break;
 			case 6: //UserReady
-				writer.Write(clientsReady++);
+				writer.Write(clientsReady);
 				break;
 			case 7: //Disconnection
 				writer.Write(gameplay.posRaccList);
@@ -259,7 +259,7 @@ public class ConnectionScript : MonoBehaviour
 				break;
 			case 6: //UserReady
 				clientsReady = reader.ReadInt32();
-				uiScript.customLog(clientsReady.ToString() + "/" + clients.Count.ToString() + " users are ready!", "Server");
+				uiScript.customLog(clientsReady.ToString() + "/" + clients.Count.ToString() + " users ready!", "Server");
 				break;
 			case 7: //Disconnection
 				int posRacc = reader.ReadInt32();
@@ -462,10 +462,11 @@ public class ConnectionScript : MonoBehaviour
 
 
 	/*---------------------GAME-------------------*/
-	public void LaunchGame()
+	public void LaunchGame(bool check)
     {
 		if (profile == Profile.host)
 		{
+			check = false;
 			if (clients.Count == clientsReady + 1)
 			{
 				SendClientData((int)TypeData.start);
@@ -475,6 +476,12 @@ public class ConnectionScript : MonoBehaviour
 				uiScript.customLog("Players are not ready!", "Server");
 		}
 		else
+		{
+			if (check)
+				clientsReady++;
+			else
+				clientsReady--;
 			SendClientData((int)TypeData.userReady);
+		}
 	}
 }

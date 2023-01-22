@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class GameplayScript : MonoBehaviour
 {
     /*---------------------VARIABLES-------------------*/
+    enum GameMode { normal, fast, chaos, personalized }; private GameMode gameMode;
+
     [SerializeField] private GameObject racoon;
     [SerializeField] private GameObject cocaine;
     [SerializeField] private Animator mainCamera;
@@ -18,17 +20,15 @@ public class GameplayScript : MonoBehaviour
     [SerializeField] private List<Quaternion> raccsYRototation;
 
     private List<RaccBehaviour> raccsList;
-    [HideInInspector] public List<CocaineBehaviour> cocaineList;
     [HideInInspector] public int posRaccList;
-    [HideInInspector] public bool cocaineCanSpawn = false;
+    [HideInInspector] public List<CocaineBehaviour> cocaineList;
     [HideInInspector] public ConnectionScript connect;
-    private float timerSpawn = 0f;
 
     [Space]
     [Header("Game Config")]
     public int maxCocaineBags = 6;
     public float offsetCocaineSpawn = 2f;
-    public float timerCocaineSpawn = 0f;
+    public float timerCocaineSpawn = 2f;
 
 
     /*---------------------MAIN-------------------*/
@@ -46,14 +46,6 @@ public class GameplayScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (posRaccList == 0 && cocaineCanSpawn)
-        {
-            if (timerSpawn < 0f)
-                SpawnCocaine();
-            else
-                timerSpawn -= Time.deltaTime;
-        }
-
         if (raccsList.Count > 0)
             connect.SendClientData(4);
     }
@@ -71,7 +63,7 @@ public class GameplayScript : MonoBehaviour
             GameObject racc = Instantiate(racoon, raccsPositions[i], raccsYRototation[i]);
 
             RaccBehaviour raccScript = racc.GetComponent<RaccBehaviour>();
-            raccScript.gameplayScript = this;
+            raccScript.gameplay = this;
 
             SkinnedMeshRenderer render = racc.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>();
             Color[] list = { racoonColors[i], render.material.GetColor("_EmissionColor") };
@@ -105,6 +97,11 @@ public class GameplayScript : MonoBehaviour
         ui.SetActive(true);
         raccsList[pos].transform.SetPositionAndRotation(new Vector3(-0.11f, 0.021f, -0.24f), Quaternion.Euler(new Vector3(0, 180, 0)));
         mainCamera.SetInteger("UIState", 6);
+    }
+
+    public void SendData(int typeData)
+    {
+        connect.SendClientData(typeData);
     }
 
 
@@ -141,33 +138,36 @@ public class GameplayScript : MonoBehaviour
 
     public Transform GetRaccTransform(int pos)
     {
-        if (raccsList.Count <= pos)
+        if (raccsList.Count > pos)
             return raccsList[pos].transform;
 
         return null;
     }
 
+
+
     /*---------------------COCAINE-------------------*/
     public void SpawnCocaine()
     {
-        for (int i = 0; i < maxCocaineBags; i++)
+        if (posRaccList == 0)
         {
-            Vector3 bounds = GetComponent<Renderer>().bounds.size;
-            Vector3 randPosition = new Vector3(
-                (transform.position.x - bounds.x / 2) + Random.Range(offsetCocaineSpawn, bounds.x - offsetCocaineSpawn),
-                cocaine.transform.position.y,
-                (transform.position.z - bounds.z / 2) + Random.Range(offsetCocaineSpawn, bounds.z - offsetCocaineSpawn));
+            for (int i = 0; i < maxCocaineBags; i++)
+            {
+                Vector3 bounds = GetComponent<Renderer>().bounds.size;
+                Vector3 randPosition = new Vector3(
+                    (transform.position.x - bounds.x / 2) + Random.Range(offsetCocaineSpawn, bounds.x - offsetCocaineSpawn),
+                    cocaine.transform.position.y,
+                    (transform.position.z - bounds.z / 2) + Random.Range(offsetCocaineSpawn, bounds.z - offsetCocaineSpawn));
 
-            GameObject obj = Instantiate(cocaine, randPosition, cocaine.transform.rotation);
-            CocaineBehaviour cocaScript = obj.GetComponent<CocaineBehaviour>();
-            cocaScript.gameplayScript = this;
-            cocaScript.isBuffed = i == 0 ? true : false;
-            cocaineList.Add(cocaScript);
+                GameObject obj = Instantiate(cocaine, randPosition, cocaine.transform.rotation);
+                CocaineBehaviour cocaScript = obj.GetComponent<CocaineBehaviour>();
+                cocaScript.gameplayScript = this;
+                cocaScript.isBuffed = i == 0 ? true : false;
+                cocaineList.Add(cocaScript);
+            }
+
+            connect.SendClientData(3);
         }
-
-        cocaineCanSpawn = false;
-        timerSpawn = timerCocaineSpawn;
-        connect.SendClientData(3);
     }
 
     public void UpdateCocaine(Vector3 position, int posRacoon, bool isBuffed = false)
