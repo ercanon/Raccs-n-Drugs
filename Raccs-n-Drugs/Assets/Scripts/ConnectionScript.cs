@@ -25,6 +25,9 @@ public class ConnectionScript : MonoBehaviour
 	[HideInInspector] public int clientsReady;
 	private List<byte[]> pendingData;
 
+	public GameObject menuSong;
+	public GameObject gameplaySong;
+
 	[SerializeField] private GameplayScript gameplay;
 	[SerializeField] private UIScript uiScript;
 	[HideInInspector] public SettingsScript settings;
@@ -530,5 +533,8 @@ public class ConnectionScript : MonoBehaviour
 
 			SendClientData((int)TypeData.userReady);
 		}
+
+		menuSong.SetActive(false);
+		gameplaySong.SetActive(true);
 	}
 }
