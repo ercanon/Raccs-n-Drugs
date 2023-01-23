@@ -81,26 +81,20 @@ public class RaccBehaviour : MonoBehaviour
 
     public void ChangeState(int state)
     {
+        if ((int)raccState == state)
+            return;
+
         switch (state)
         {
-            case 0: //Idle
-                if (raccState == RacoonState.idle)
-                    return;
-                
+            case 0: //Idle               
                 raccState = RacoonState.idle;
                 break;
             
             case 1: // Walking
-                if (raccState == RacoonState.walking)
-                    return;
-
                 raccState = RacoonState.walking;
                 break;
             
             case 2: //Buffed
-                if (raccState == RacoonState.buffed)
-                    return;
-
                 rBody.velocity = Vector3.zero;
                 buffed.SetActive(true);
                 timerCharge = 1f;
@@ -111,9 +105,6 @@ public class RaccBehaviour : MonoBehaviour
                 break;
 
             case 3: //Charging
-                if (raccState == RacoonState.charging)
-                    return;
-
                 rBody.velocity = transform.forward * gameplay.settings.buffSpeed;
                 charges--;
 
@@ -123,9 +114,6 @@ public class RaccBehaviour : MonoBehaviour
                 break;
 
             case 4: //Dead
-                if (raccState == RacoonState.dead)
-                    return;
-
                 raccState = RacoonState.dead;
 
                 gameplay.CheckEndGame();

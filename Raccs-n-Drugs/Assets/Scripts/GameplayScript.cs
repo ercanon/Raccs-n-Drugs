@@ -146,10 +146,10 @@ public class GameplayScript : MonoBehaviour
 
         if (racc.GetState() == 0 || racc.GetState() == 1)
         {
-            if (racc.transform.position != position)
-                racc.ChangeState(1);
-            else
+            if (Vector3.Distance(racc.transform.position, position) < 0.01f)
                 racc.ChangeState(0);
+            else
+                racc.ChangeState(1);
         }
 
         racc.transform.SetPositionAndRotation(position, Quaternion.Euler(rotation));
