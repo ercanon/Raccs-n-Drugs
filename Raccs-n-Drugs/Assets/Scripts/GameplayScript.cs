@@ -61,9 +61,9 @@ public class GameplayScript : MonoBehaviour
 
         for (int i = 0; i < size; i++)
         {
-            if (settings.maxPlayers > 0 && i <= 4)
+            if (settings.maxPlayers > 0)
             {
-                if (i > settings.maxPlayers)
+                if (i > 4)
                     return;
 
                 GameObject racc = Instantiate(racoon, raccsPositions[i], raccsYRototation[i]);
