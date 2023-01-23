@@ -55,26 +55,59 @@ public class GameplayScript : MonoBehaviour
 
         for (int i = 0; i < size; i++)
         {
-            if (settings.maxPlayers > 0 && i > settings.maxPlayers)
-                break;
+            if (settings.maxPlayers > 0)
+            {
+                if (i > settings.maxPlayers)
+                    return;
 
-            GameObject racc = Instantiate(racoon, raccsPositions[i], raccsYRototation[i]);
+                GameObject racc = Instantiate(racoon, raccsPositions[i], raccsYRototation[i]);
 
-            RaccBehaviour raccScript = racc.GetComponent<RaccBehaviour>();
-            raccScript.gameplay = this;
+                RaccBehaviour raccScript = racc.GetComponent<RaccBehaviour>();
+                raccScript.gameplay = this;
 
-            SkinnedMeshRenderer render = racc.transform.GetChild(2).GetComponent<SkinnedMeshRenderer>();
-            Color[] list = { racoonColors[i], render.material.GetColor("_EmissionColor") };
-            raccScript.colors = list;
+                SkinnedMeshRenderer render = racc.transform.GetChild(2).GetComponent<SkinnedMeshRenderer>();
+                Color[] list = { racoonColors[i], render.material.GetColor("_EmissionColor") };
+                raccScript.colors = list;
 
-            render.material.SetColor("_EmissionColor",list[0]);
-            render.material.EnableKeyword("_EMISSION");
+                render.material.SetColor("_EmissionColor", list[0]);
+                render.material.EnableKeyword("_EMISSION");
 
-            racc.transform.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = connect.clientsNames[i];
+                TMPro.TextMeshProUGUI headText = racc.transform.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+                headText.text = connect.clientsNames[i];
+                headText.gameObject.GetComponent<RaccTextBehaviour>().mCamera = mainCamera.gameObject;
 
-            if (posRaccList == i)
-                raccScript.owned = true;
-            raccsList.Add(raccScript);
+                if (posRaccList == i)
+                    raccScript.owned = true;
+                raccsList.Add(raccScript);
+            }
+            else
+            {
+                Vector3 bounds = GetComponent<Renderer>().bounds.size;
+                Vector3 randPosition = new Vector3(
+                    (transform.position.x - bounds.x / 2) + Random.Range(settings.offsetCocaineSpawn, bounds.x - settings.offsetCocaineSpawn),
+                    cocaine.transform.position.y,
+                    (transform.position.z - bounds.z / 2) + Random.Range(settings.offsetCocaineSpawn, bounds.z - settings.offsetCocaineSpawn));
+
+                GameObject racc = Instantiate(racoon, randPosition, Random.rotation);
+
+                RaccBehaviour raccScript = racc.GetComponent<RaccBehaviour>();
+                raccScript.gameplay = this;
+
+                SkinnedMeshRenderer render = racc.transform.GetChild(2).GetComponent<SkinnedMeshRenderer>();
+                Color[] list = { Random.ColorHSV(), render.material.GetColor("_EmissionColor") };
+                raccScript.colors = list;
+
+                render.material.SetColor("_EmissionColor", list[0]);
+                render.material.EnableKeyword("_EMISSION");
+
+                TMPro.TextMeshProUGUI headText = racc.transform.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+                headText.text = connect.clientsNames[i];
+                headText.gameObject.GetComponent<RaccTextBehaviour>().mCamera = mainCamera.gameObject;
+
+                if (posRaccList == i)
+                    raccScript.owned = true;
+                raccsList.Add(raccScript);
+            }
         }
     }
 

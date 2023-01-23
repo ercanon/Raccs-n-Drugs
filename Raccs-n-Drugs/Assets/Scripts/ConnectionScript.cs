@@ -335,6 +335,7 @@ public class ConnectionScript : MonoBehaviour
 							reader.ReadInt32());
 						break;
 				}
+				gameplay.settings = settings.gameSettings;
 				break;
 			default:
 				uiScript.customLog("Package is corrupted", "Error");
