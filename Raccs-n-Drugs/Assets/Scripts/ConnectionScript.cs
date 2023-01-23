@@ -23,6 +23,7 @@ public class ConnectionScript : MonoBehaviour
 	private EndPoint remote;
 	private List<EndPoint> clients;
 	[HideInInspector] public List<string> clientsNames;
+	[HideInInspector] public int clientsReady;
 	private List<byte[]> pendingData;
 
 	//public GameObject menuSong;
@@ -95,15 +96,6 @@ public class ConnectionScript : MonoBehaviour
 		protocol = (Protocol)prot;
 		profile = (Profile)prof;
 	}
-
-	public void Rematch()
-    {
-		if (clientsNames != null)
-			clientsNames.Clear();
-		clientsNames = new List<string>();
-
-		clientsNames.Add(uiScript.userName.text);
-	}
 	
 	void Awake()
 	{
@@ -165,7 +157,7 @@ public class ConnectionScript : MonoBehaviour
 		}
 	}
 
-	private byte[] Serialize(int type, string message = "", string sender = "")
+	private byte[] Serialize(int type, string message = "", string sender = "", bool isFirst = false)
 	{
 		MemoryStream stream = new MemoryStream();
 		BinaryWriter writer = new BinaryWriter(stream);
@@ -184,6 +176,7 @@ public class ConnectionScript : MonoBehaviour
 			case 2: //Chat
 				writer.Write(message);
 				writer.Write(sender);
+				writer.Write(isFirst);
 				break;
 			case 3: //CocainePosition	
 				writer.Write(gameplay.cocaineList.Count);
@@ -217,9 +210,7 @@ public class ConnectionScript : MonoBehaviour
 				writer.Write(gameplay.posRaccList);
 				break;
 			case 6: //UserReady
-				writer.Write(gameplay.posRaccList);
-				writer.Write(uiScript.userName.text);
-				writer.Write(clientsNames.Count);
+				writer.Write(clientsReady);
 				break;
 			case 7: //Disconnection
 				writer.Write(gameplay.posRaccList);
@@ -268,7 +259,11 @@ public class ConnectionScript : MonoBehaviour
 				gameplay.posRaccList = reader.ReadInt32();
 				break;
 			case 2: //Chat
-				uiScript.customLog(reader.ReadString(), reader.ReadString());
+				string message = reader.ReadString();
+				string sender = reader.ReadString();
+				if (reader.ReadBoolean() && profile == Profile.host)
+					clientsNames.Add(sender);
+				uiScript.customLog(message, sender);
 				break;
 			case 3: //CocainePosition
 				int maxCocaine = reader.ReadInt32();
@@ -296,17 +291,8 @@ public class ConnectionScript : MonoBehaviour
 				gameplay.ChargeRacoon(reader.ReadInt32());
 				break;
 			case 6: //UserReady
-				int pos = reader.ReadInt32();
-				string name = reader.ReadString();
-				if (profile == Profile.host)
-				{
-					if (clientsNames.IndexOf(name) == pos)
-						clientsNames.RemoveAt(pos);
-					else
-						clientsNames.Insert(pos, name);
-				}
-
-				uiScript.customLog(reader.ReadInt32().ToString() + "/" + clients.Count.ToString() + " users ready!", "Server");
+				clientsReady = reader.ReadInt32();
+				uiScript.customLog(clientsReady.ToString() + "/" + clients.Count.ToString() + " users ready!", "Server");
 				break;
 			case 7: //Disconnection
 				int posRacc = reader.ReadInt32();
@@ -406,7 +392,6 @@ public class ConnectionScript : MonoBehaviour
 		ServerGather = new Thread(GatherAndBroadcast);
 		ServerGather.Start();
 
-		clientsNames.Add(userName);
 		JoinGame("127.0.0.1", portInput, userName);
 	}
 
@@ -497,7 +482,7 @@ public class ConnectionScript : MonoBehaviour
 			if (protocol == Protocol.TCP)
 				socket.Connect(remote);
 
-			SendData(Serialize((int)TypeData.chat, userName + " joined the server!", "Server"), socket, remote);
+			SendData(Serialize((int)TypeData.chat, "have joined the server!", userName, true), socket, remote);
 		}
 		catch (SocketException e)
 		{
@@ -545,7 +530,7 @@ public class ConnectionScript : MonoBehaviour
     {
 		if (profile == Profile.host)
 		{
-			if (clients.Count == clientsNames.Count)
+			if (clients.Count == clientsReady+1)
 			{
 				SendClientData((int)TypeData.start);
 				gameplay.LaunchGame(clients.Count);
@@ -554,7 +539,14 @@ public class ConnectionScript : MonoBehaviour
 				uiScript.customLog("Players are not ready!", "Server");
 		}
 		else
+		{
+			if (check)
+				clientsReady++;
+			else
+				clientsReady--;
+
 			SendClientData((int)TypeData.userReady);
+		}
 
 		//menuSong.SetActive(false);
 		//gameplaySong.SetActive(true);

@@ -35,6 +35,8 @@ public class GameplayScript : MonoBehaviour
         if (raccsList != null)
             DeleteRaccsList();
         raccsList = new List<RaccBehaviour>();
+
+        connect.clientsReady = 0;
     }
 
     private void FixedUpdate()
