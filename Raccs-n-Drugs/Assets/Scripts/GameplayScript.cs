@@ -71,7 +71,7 @@ public class GameplayScript : MonoBehaviour
                 RaccBehaviour raccScript = racc.GetComponent<RaccBehaviour>();
                 raccScript.gameplay = this;
 
-                SkinnedMeshRenderer render = racc.transform.GetChild(2).GetComponent<SkinnedMeshRenderer>();
+                SkinnedMeshRenderer render = racc.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>();
                 Color[] list = { racoonColors[i], render.material.GetColor("_EmissionColor") };
                 raccScript.colors = list;
 
@@ -99,7 +99,7 @@ public class GameplayScript : MonoBehaviour
                 RaccBehaviour raccScript = racc.GetComponent<RaccBehaviour>();
                 raccScript.gameplay = this;
 
-                SkinnedMeshRenderer render = racc.transform.GetChild(2).GetComponent<SkinnedMeshRenderer>();
+                SkinnedMeshRenderer render = racc.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>();
                 Color[] list = { Random.ColorHSV(), render.material.GetColor("_EmissionColor") };
                 raccScript.colors = list;
 

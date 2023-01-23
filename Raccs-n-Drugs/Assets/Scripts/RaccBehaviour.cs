@@ -26,7 +26,7 @@ public class RaccBehaviour : MonoBehaviour
 
         charges = gameplay.settings.maxCharges;
         buffed = transform.GetChild(0).gameObject;
-        mat = transform.GetChild(2).GetComponent<SkinnedMeshRenderer>().material;
+        mat = transform.GetChild(1).GetComponent<SkinnedMeshRenderer>().material;
     }
 
     void Update()
@@ -138,8 +138,9 @@ public class RaccBehaviour : MonoBehaviour
         rBody.velocity = Vector3.zero;
         crown.SetActive(true);
         buffed.SetActive(false);
+        owned = false;
         ChangeState((int)RacoonState.idle);
-        transform.SetPositionAndRotation(new Vector3(-0.11f, 0.021f, -0.24f), Quaternion.Euler(new Vector3(0, 180, 0)));
+        transform.SetPositionAndRotation(new Vector3(-0.11f, 0.021f, -0.1f), Quaternion.Euler(new Vector3(0, 180, 0)));
     }
 
     private void ChargedTransitions()
