@@ -35,13 +35,17 @@ public class ConnectionScript : MonoBehaviour
 	/*---------------------CONFIG-------------------*/
 	void Reset(int prot, int prof)
 	{
+		if (ClientListen != null)
+		{
+			ClientListen.Abort();
+			ClientListen = null;
+		}
+
 		if (socket != null)
 		{
-			if (remote != null)
-			{
-				socket.Shutdown(SocketShutdown.Both);
-				socket.Close();
-			}
+
+			socket.Shutdown(SocketShutdown.Both);
+			socket.Close();
 			socket = null;
 		}
 
@@ -49,25 +53,8 @@ public class ConnectionScript : MonoBehaviour
 			pendingData.Clear();
 		pendingData = new List<byte[]>();
 
-		if (ClientListen != null)
-		{
-			ClientListen.Abort();
-			ClientListen = null;
-		}
-
 		if (profile == Profile.host)
 		{
-			if (socketHost != null)
-			{
-				socketHost.Shutdown(SocketShutdown.Both);
-				socketHost.Close();
-				socketHost = null;
-			}
-
-			if (clients != null)
-				clients.Clear();
-			clients = new List<EndPoint>();
-
 			if (ServerGather != null)
 			{
 				if (protocol == Protocol.TCP)
@@ -79,6 +66,17 @@ public class ConnectionScript : MonoBehaviour
 				ServerGather.Abort();
 				ServerGather = null;
 			}
+
+			if (socketHost != null)
+			{
+				socketHost.Shutdown(SocketShutdown.Both);
+				socketHost.Close();
+				socketHost = null;
+			}
+
+			if (clients != null)
+				clients.Clear();
+			clients = new List<EndPoint>();
 		}
 
 		remote = null;
@@ -94,16 +92,19 @@ public class ConnectionScript : MonoBehaviour
 		profile = (Profile)prof;
 	}
 	
-	void Awake()
+	private void Awake()
 	{
 		uiScript.connect = this;
 		gameplay.connect = this;
 		uiScript.gameplay = gameplay;
+	}
 
+    private void Start()
+    {
 		Reset((int)Protocol.UDP, (int)Profile.client);
 	}
 
-	private string TellIP()
+    private string TellIP()
 	{
 		foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
 		{
@@ -246,7 +247,6 @@ public class ConnectionScript : MonoBehaviour
 		switch (type)
 		{
 			case 0: //LaunchGame
-				uiScript.startButton.isOn = false;
 				int size = reader.ReadInt32();
 				for (int i = 0; i < size; i++)
 					clientsNames.Add(reader.ReadString());
@@ -294,7 +294,10 @@ public class ConnectionScript : MonoBehaviour
 			case 7: //Disconnection
 				int posRacc = reader.ReadInt32();
 				if (posRacc == 0)
+				{
 					uiScript.customLog("Host has disconnected!", "Server");
+					remote = null;
+				}
 				else
 				{
 					uiScript.customLog(reader.ReadString() + "has disconnected!", "Server");
@@ -518,7 +521,8 @@ public class ConnectionScript : MonoBehaviour
 
 	public void Disconnect()
 	{
-		SendData(Serialize((int)TypeData.disconnection), socket, remote);
+		if (remote != null)
+			SendData(Serialize((int)TypeData.disconnection), socket, remote);
 		Reset((int)protocol, (int)profile);
 	}
 

@@ -47,6 +47,9 @@ public class UIScript : MonoBehaviour
     {
         log = null;
         ChatBox.text = null;
+
+        startButtonObject.SetActive(true);
+        startButton.SetIsOnWithoutNotify(false);
     }
 
     void Awake()
