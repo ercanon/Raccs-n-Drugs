@@ -61,7 +61,7 @@ public class GameplayScript : MonoBehaviour
 
         for (int i = 0; i < size; i++)
         {
-            if (settings.maxPlayers > 0)
+            if (settings.maxPlayers > 0 && i <= 4)
             {
                 if (i > settings.maxPlayers)
                     return;
@@ -138,7 +138,7 @@ public class GameplayScript : MonoBehaviour
         songGameplay.SetActive(false);
         songMenu.SetActive(true);
 
-        raccsList[pos].Invoke("IdleEndGame", 2);
+        raccsList[pos].Invoke("IdleEndGame", 0);
         mainCamera.SetInteger("UIState", 6);
     }
 

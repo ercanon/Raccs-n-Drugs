@@ -7,6 +7,7 @@ public class RaccBehaviour : MonoBehaviour
 
     private int charges;
     private float timerCharge = 1f;
+    [SerializeField] private GameObject crown;
 
     [HideInInspector] public bool owned = false;
     [HideInInspector] public Color[] colors;
@@ -135,7 +136,7 @@ public class RaccBehaviour : MonoBehaviour
     {
         mat.SetColor("_EmissionColor", colors[0]);
         rBody.velocity = Vector3.zero;
-        transform.GetChild(1).gameObject.SetActive(true);
+        crown.SetActive(true);
         buffed.SetActive(false);
         ChangeState((int)RacoonState.idle);
         transform.SetPositionAndRotation(new Vector3(-0.11f, 0.021f, -0.24f), Quaternion.Euler(new Vector3(0, 180, 0)));
