@@ -18,7 +18,7 @@ public class SettingsScript : MonoBehaviour
 
     /*---------------------GAME SETTINGS-------------------*/
     private string[] gameTypeName = { "Casual", "Flash", "Chaos", "Personalized" };
-    private string[] mapName = { "BackStreet"};
+    private string[] mapName = { "BackStreet" };
     enum TypeGame { casual, flash, chaos, personalized }; private TypeGame gameType;
     enum LevelMap { backStreet }; private LevelMap map;
     public struct GameSettings
@@ -36,15 +36,15 @@ public class SettingsScript : MonoBehaviour
             this.maxCharges = maxCharges;
         }
 
-        public int     maxPlayers;
-        public int     maxCocaineBags;
-        public float   offsetCocaineSpawn;
-        public float   timerCocaineSpawn;
+        public int maxPlayers;
+        public int maxCocaineBags;
+        public float offsetCocaineSpawn;
+        public float timerCocaineSpawn;
 
-        public float   walkSpeed;
-        public float   buffSpeed;
-        public float   rotateSpeed;
-        public int     maxCharges;
+        public float walkSpeed;
+        public float buffSpeed;
+        public float rotateSpeed;
+        public int maxCharges;
     }
     public GameSettings gameSettings;
 
@@ -99,9 +99,9 @@ public class SettingsScript : MonoBehaviour
             case TypeGame.personalized:
                 gameSettings = new GameSettings(
                     int.Parse(fields[0].text),
-                    int.Parse(fields[1].text), 
-                    float.Parse(fields[2].text), 
-                    float.Parse(fields[3].text), 
+                    int.Parse(fields[1].text),
+                    float.Parse(fields[2].text),
+                    float.Parse(fields[3].text),
                     float.Parse(fields[4].text),
                     float.Parse(fields[5].text),
                     float.Parse(fields[6].text),
@@ -202,4 +202,18 @@ public class SettingsScript : MonoBehaviour
     }
 
     /*---------------------SETTINGS-------------------*/
+    public void MusicVolume(float volume)
+    {
+        AudioListener.volume = volume;
+    }
+
+    public void FXVolume(float volume)
+    {
+
+    }
+
+    public void FullScreen()
+    {
+        Screen.fullScreen = !Screen.fullScreen;
+    }
 }

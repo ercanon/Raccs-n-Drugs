@@ -92,7 +92,7 @@ public class UIScript : MonoBehaviour
     public void OpenInfo()
     {
         bool set = tutorialWindow.activeSelf;
-        tutorialWindow.SetActive(set != true);
+        tutorialWindow.SetActive(set = !set);
     }
 
     public void UIIteration(int uiMenu)
