@@ -22,11 +22,11 @@ public class ConnectionScript : MonoBehaviour
 
 	private EndPoint remote;
 	private List<EndPoint> clients;
-	[HideInInspector] public int clientsReady;
+	[HideInInspector] public List<string> clientsNames;
 	private List<byte[]> pendingData;
 
-	public GameObject menuSong;
-	public GameObject gameplaySong;
+	//public GameObject menuSong;
+	//public GameObject gameplaySong;
 
 	[SerializeField] private GameplayScript gameplay;
 	[SerializeField] private UIScript uiScript;
@@ -84,13 +84,25 @@ public class ConnectionScript : MonoBehaviour
 		}
 
 		remote = null;
-		clientsReady = 0;
+
+		if (clientsNames != null)
+			clientsNames.Clear();
+		clientsNames = new List<string>();
 
 		uiScript.Reset();
 		gameplay.Reset();
 
 		protocol = (Protocol)prot;
 		profile = (Profile)prof;
+	}
+
+	public void Rematch()
+    {
+		if (clientsNames != null)
+			clientsNames.Clear();
+		clientsNames = new List<string>();
+
+		clientsNames.Add(uiScript.userName.text);
 	}
 	
 	void Awake()
@@ -162,7 +174,9 @@ public class ConnectionScript : MonoBehaviour
 		switch (type)
 		{
 			case 0: //LaunchGame
-				writer.Write(clients.Count);
+				writer.Write(clientsNames.Count);
+				foreach (string name in clientsNames)
+					writer.Write(name);
 				break;
 			case 1: //Position List Racoon
 				writer.Write(clients.Count - 1);
@@ -203,11 +217,13 @@ public class ConnectionScript : MonoBehaviour
 				writer.Write(gameplay.posRaccList);
 				break;
 			case 6: //UserReady
-				writer.Write(clientsReady);
+				writer.Write(gameplay.posRaccList);
+				writer.Write(uiScript.userName.text);
+				writer.Write(clientsNames.Count);
 				break;
 			case 7: //Disconnection
 				writer.Write(gameplay.posRaccList);
-				writer.Write(uiScript.userName);
+				writer.Write(uiScript.userName.text);
 				break;
 			case 8: //Game Configuration
 				int gType = settings.GameType();
@@ -243,7 +259,10 @@ public class ConnectionScript : MonoBehaviour
 		{
 			case 0: //LaunchGame
 				uiScript.startButton.isOn = false;
-				gameplay.LaunchGame(reader.ReadInt32());
+				int size = reader.ReadInt32();
+				for (int i = 0; i < size; i++)
+					clientsNames.Add(reader.ReadString());
+				gameplay.LaunchGame(size);
 				break;
 			case 1: //Position List Racoon
 				gameplay.posRaccList = reader.ReadInt32();
@@ -277,8 +296,17 @@ public class ConnectionScript : MonoBehaviour
 				gameplay.ChargeRacoon(reader.ReadInt32());
 				break;
 			case 6: //UserReady
-				clientsReady = reader.ReadInt32();
-				uiScript.customLog(clientsReady.ToString() + "/" + clients.Count.ToString() + " users ready!", "Server");
+				int pos = reader.ReadInt32();
+				string name = reader.ReadString();
+				if (profile == Profile.host)
+				{
+					if (clientsNames.IndexOf(name) == pos)
+						clientsNames.RemoveAt(pos);
+					else
+						clientsNames.Insert(pos, name);
+				}
+
+				uiScript.customLog(reader.ReadInt32().ToString() + "/" + clients.Count.ToString() + " users ready!", "Server");
 				break;
 			case 7: //Disconnection
 				int posRacc = reader.ReadInt32();
@@ -378,6 +406,7 @@ public class ConnectionScript : MonoBehaviour
 		ServerGather = new Thread(GatherAndBroadcast);
 		ServerGather.Start();
 
+		clientsNames.Add(userName);
 		JoinGame("127.0.0.1", portInput, userName);
 	}
 
@@ -516,7 +545,7 @@ public class ConnectionScript : MonoBehaviour
     {
 		if (profile == Profile.host)
 		{
-			if (clients.Count == clientsReady + 1)
+			if (clients.Count == clientsNames.Count)
 			{
 				SendClientData((int)TypeData.start);
 				gameplay.LaunchGame(clients.Count);
@@ -525,16 +554,9 @@ public class ConnectionScript : MonoBehaviour
 				uiScript.customLog("Players are not ready!", "Server");
 		}
 		else
-		{
-			if (check)
-				clientsReady++;
-			else
-				clientsReady--;
-
 			SendClientData((int)TypeData.userReady);
-		}
 
-		menuSong.SetActive(false);
-		gameplaySong.SetActive(true);
+		//menuSong.SetActive(false);
+		//gameplaySong.SetActive(true);
 	}
 }

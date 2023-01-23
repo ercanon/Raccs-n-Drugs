@@ -35,8 +35,6 @@ public class GameplayScript : MonoBehaviour
         if (raccsList != null)
             DeleteRaccsList();
         raccsList = new List<RaccBehaviour>();
-
-        connect.clientsReady = 0;
     }
 
     private void FixedUpdate()
@@ -69,6 +67,8 @@ public class GameplayScript : MonoBehaviour
 
             render.material.SetColor("_EmissionColor",list[0]);
             render.material.EnableKeyword("_EMISSION");
+
+            racc.transform.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = connect.clientsNames[i];
 
             if (posRaccList == i)
                 raccScript.owned = true;
