@@ -24,6 +24,9 @@ public class GameplayScript : MonoBehaviour
     [HideInInspector] public ConnectionScript connect;
     [HideInInspector] public SettingsScript.GameSettings settings;
 
+    public GameObject songGameplay;
+    public GameObject songMenu;
+
 
     /*---------------------MAIN-------------------*/
     public void Reset()
@@ -49,7 +52,8 @@ public class GameplayScript : MonoBehaviour
     {
         mainCamera.SetInteger("UIState", 5);
         ui.SetActive(false);
-
+        songMenu.SetActive(false);
+        songGameplay.SetActive(true);
         if (settings.maxCocaineBags < 0)
             settings.maxCocaineBags = size;
 
@@ -128,6 +132,8 @@ public class GameplayScript : MonoBehaviour
         }
 
         win.SetActive(true);
+        songGameplay.SetActive(false);
+        songMenu.SetActive(true);
         raccsList[pos].Invoke("IdleEndGame", 2);
         mainCamera.SetInteger("UIState", 6);
     }
