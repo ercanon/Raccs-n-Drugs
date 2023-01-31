@@ -14,7 +14,10 @@ The game consist 2 states:
 - Bale collection: Some cocaine bales will spawn one being the real bale and the players gather them until that one appears. The racoon who picked that bag will get the power.
 - Strongest Racoon: The racoon who found the real bale will stand up. The player needs to adjust the trajectory and dash to the rest of the racoons
 
-Controls:
+## Controls:
+- WASD to move racoon in normal state.
+- AD to rotate while strongh state.
+- Space to launch a dash while strongh state.
 
 ## Contributions:
  - Raul Cano: main programmer, fixed connection backend and core mechanics.
