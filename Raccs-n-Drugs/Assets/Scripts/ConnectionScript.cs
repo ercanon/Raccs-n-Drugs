@@ -43,7 +43,6 @@ public class ConnectionScript : MonoBehaviour
 
 		if (socket != null)
 		{
-
 			socket.Shutdown(SocketShutdown.Both);
 			socket.Close();
 			socket = null;
@@ -374,7 +373,7 @@ public class ConnectionScript : MonoBehaviour
 		else if (protocol == Protocol.UDP)
 			socketHost = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-		if (portInput == "")
+		if (string.IsNullOrWhiteSpace(portInput))
 			portInput = 666.ToString();
 					  
 		IPEndPoint ipep = new IPEndPoint(IPAddress.Any, int.Parse(portInput));
@@ -462,6 +461,13 @@ public class ConnectionScript : MonoBehaviour
 	/*---------------------CLIENT-------------------*/
 	public void JoinGame(string IPInput, string portInput, string userName)
 	{
+		if (IPInput.Split('.').Length != 4)
+		{
+			uiScript.customLog("No IP was used!", "Error");
+			remote = null;
+			return;
+		}
+
 		if (remote != null)
 		{
 			uiScript.customLog("You have already joined!", "Error");
@@ -475,7 +481,7 @@ public class ConnectionScript : MonoBehaviour
 			else if (protocol == Protocol.UDP)
 				socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 		}
-			
+
 		remote = new IPEndPoint(IPAddress.Parse(IPInput), int.Parse(portInput == "" ? 666.ToString() : portInput));
 
 		try

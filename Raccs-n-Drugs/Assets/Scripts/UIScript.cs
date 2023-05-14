@@ -122,6 +122,7 @@ public class UIScript : MonoBehaviour
         {
             IPInput.interactable = false;
             actionButton.text = "Create";
+            portInput.text = "666";
             connect.ChangeProfile(0);
         }
         else
@@ -146,13 +147,11 @@ public class UIScript : MonoBehaviour
         }
         else
         {
-            if (IPInput.text == "")
+            if (string.IsNullOrWhiteSpace(IPInput.text))
             {
                 IPInput.text = "Use IP to join!";
                 return;
             }
-            if (IPInput.text == "Use IP to join!")
-                    return;
 
             gameSettings.SetActive(false);
             startButtonText.text = "Ready";
