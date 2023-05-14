@@ -15,7 +15,7 @@ public class GameplayScript : MonoBehaviour
     [Space]
     [SerializeField] private List<Color> racoonColors;
     [SerializeField] private List<Vector3> raccsPositions;
-    [SerializeField] private List<Quaternion> raccsYRototation;
+    [SerializeField] private List<Quaternion> raccsYRotation;
 
     private List<RaccBehaviour> raccsList;
     [HideInInspector] public int posRaccList;
@@ -66,7 +66,7 @@ public class GameplayScript : MonoBehaviour
                 if (i > 4)
                     return;
 
-                GameObject racc = Instantiate(racoon, raccsPositions[i], raccsYRototation[i]);
+                GameObject racc = Instantiate(racoon, raccsPositions[i], raccsYRotation[i]);
 
                 RaccBehaviour raccScript = racc.GetComponent<RaccBehaviour>();
                 raccScript.gameplay = this;
