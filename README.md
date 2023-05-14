@@ -27,4 +27,4 @@ The game consist 2 states:
 
 ## Credits:
 - [Anthonydpc](https://sketchfab.com/tonydpc) ([@nightcow8767](https://www.youtube.com/@nightcow8767))
-  - Own edit from his asset ["Environment Ally With Bar/Strip Club"](https://sketchfab.com/3d-models/environment-ally-with-barstrip-club-a98c2e9748b24b7fb781d452814304ef)
+  - Own edit from asset ["Environment Ally With Bar/Strip Club"](https://sketchfab.com/3d-models/environment-ally-with-barstrip-club-a98c2e9748b24b7fb781d452814304ef)
